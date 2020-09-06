@@ -1,5 +1,7 @@
 import argparse
 import sys
+import math
+import pandas as pd
 from enum import Enum, unique
 
 
@@ -408,6 +410,35 @@ def writeLogisimHexFile(integerList, filepath):
 	outputFile.close()
 
 
+def generateCsvIndex(instructions, instructionIntValues, filepath):
+	'''
+	Will generate a csv index for each instruction
+	'''
+	indexDict = {
+		"Address": [],
+		"instruction": [],
+		"DEC": [],
+		"HEX": [],
+		"BIN": []
+	}
+
+	for address in range(0, len(instructions)):
+		intructionStr = str(instructions[address])
+		intValue = instructionIntValues[address]
+		hexValue = hex(intValue)
+		binValue = format(intValue, "032b")
+		
+		indexDict["Address"].append(address)
+		indexDict["instruction"].append(intructionStr)
+		indexDict["DEC"].append(intValue)
+		indexDict["HEX"].append(hexValue)
+		indexDict["BIN"].append(binValue)
+
+	df = pd.DataFrame(indexDict)
+	df.to_csv(filepath, index=False)
+
+	return df
+
 if __name__ == '__main__':
 
 	#Read command line arguments
@@ -420,17 +451,29 @@ Currently outputs only Logisim hex files.
 
 	parser.add_argument("-asm", action="store", dest="asmPath", help="Filepath to input assembly file")
 	parser.add_argument("-ohex", action="store", dest="hexPath", default="machineCode.hex", help="Path for output hex file. Defaults to \"machineCode.hex\"")
+	parser.add_argument("-oIndex", action="store", dest="indexPath", help="If specified, assembler will output a csv index for each instruction")
 
 	results = parser.parse_args()
 
 	asmPath = results.asmPath
 	hexPath = results.hexPath
+	indexPath = results.indexPath
 
 	#Generate machine code
+	print(" ")
 	if (asmPath):
 		instructions = parseAssemblyFile(asmPath)
 		instructionIntValues = instructionsToInts(instructions)
 		writeLogisimHexFile(instructionIntValues, hexPath)
+
+		if (indexPath):
+			generateCsvIndex(instructions, instructionIntValues, indexPath)
+
+		print("Done!")
+		print ("{} total instructions".format(len(instructionIntValues)))
+		addressBits = math.log(len(instructionIntValues),2)
+		if (addressBits > 24):
+			print ("WARNING: Program too large to run in Logisim")
 	else:
 		print("ERROR: Missing required argument \"-asm\"")
 		sys.exit()
