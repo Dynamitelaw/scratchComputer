@@ -439,6 +439,7 @@ def generateCsvIndex(instructions, instructionIntValues, filepath):
 
 	return df
 
+
 if __name__ == '__main__':
 
 	#Read command line arguments
