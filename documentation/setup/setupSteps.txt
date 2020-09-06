@@ -11,3 +11,20 @@ Setup as default program for .circ files
 ####
 
 install RISC-V syntax highlighting from https://github.com/Andreymazepas/riscv-syntax
+install Verilog and System Verilog highlighting
+
+####
+# Python
+####
+
+Install python
+
+####
+# Verilog setup
+####
+
+https://github.com/steveicarus/iverilog
+https://iverilog.fandom.com/wiki/GTKWAVE
+https://www.youtube.com/watch?v=xd-ZvBJiv3M
+"sudo apt-get install iverilog"
+"sudo apt-get install gtkwave"
