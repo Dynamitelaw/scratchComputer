@@ -1,3 +1,5 @@
+import argparse
+import sys
 from enum import Enum, unique
 
 
@@ -405,29 +407,30 @@ def writeLogisimHexFile(integerList, filepath):
 
 	outputFile.close()
 
-filepath = "C:\\Users\\joeru\\Documents\\gitRepos\\scratchComputer\\testCode\\simpleTest.asm"
-instructions = parseAssemblyFile(filepath)
-print(instructions)
-instructionValues = instructionsToInts(instructions)
-print(instructionValues)
 
-outputPath = "C:\\Users\\joeru\\Documents\\gitRepos\\scratchComputer\\testCode\\simpleTest.hex"
-writeLogisimHexFile(instructionValues, outputPath)
+if __name__ == '__main__':
 
-
-k = hex(27)[2:]
-print(k)
-print(type(k))
+	#Read command line arguments
+	helpdesc = '''
+SC Assembler v1.0 | Converts RISCV assembly files into machine code.
+Currently outputs only Logisim hex files.
 '''
-print(instructions)
-print(7)
-print(format(-1, "03b"))
-print(format(-1, "05b"))
 
-print("#####")
-binString_7 = format(7,"05b")
-print(binString_7)
-seven = int(binString_7, 2)
-print(seven)
+	parser = argparse.ArgumentParser(description = helpdesc)
 
-'''
+	parser.add_argument("-asm", action="store", dest="asmPath", help="Filepath to input assembly file")
+	parser.add_argument("-ohex", action="store", dest="hexPath", default="machineCode.hex", help="Path for output hex file. Defaults to \"machineCode.hex\"")
+
+	results = parser.parse_args()
+
+	asmPath = results.asmPath
+	hexPath = results.hexPath
+
+	#Generate machine code
+	if (asmPath):
+		instructions = parseAssemblyFile(asmPath)
+		instructionIntValues = instructionsToInts(instructions)
+		writeLogisimHexFile(instructionIntValues, hexPath)
+	else:
+		print("ERROR: Missing required argument \"-asm\"")
+		sys.exit()
