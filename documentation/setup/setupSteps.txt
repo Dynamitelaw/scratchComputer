@@ -20,6 +20,8 @@ install Verilog and System Verilog highlighting
 ####
 
 Install python
+Install required libraries:
+	-pandas
 
 ####
 # Verilog setup

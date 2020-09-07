@@ -1,11 +1,10 @@
 //Include dependencies
 `include "globalVariables.v"
 `include "core.v"
+`include "coreTestbench_programInputs.v"
 
 module coreTestbench;
 	//Program memory
-	`define programLength 4
-	`define programFilename "simpleTest.hex"
 	reg [`INSTRUCTION_WIDTH-1:0] programMem [0:`programLength-1];
 
 	//Instantiate core
@@ -31,7 +30,6 @@ module coreTestbench;
 		/*
 		 Setup
 		 */
-		$dumpfile("coreTestbench.vcd");
 		$dumpvars;
 
 		$display("Loading program into memory");
@@ -51,11 +49,17 @@ module coreTestbench;
 		/*
 		 run program
 		 */
+		$display("Running program");
 		while ((programCounter < `programLength-1) || busy) begin
 			#2
 			if (~busy) programCounter <= programCounter + 1;
 		end
 
+		/*
+		 Ouput stats
+		 */
+		$display("Done, program terminated");
+		$display("cycles=%0t", ($time-3)/2);
 		$finish;
 	end
 

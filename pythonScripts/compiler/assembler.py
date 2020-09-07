@@ -402,10 +402,26 @@ def writeLogisimHexFile(integerList, filepath):
 	outputFile = open(filepath, "w")
 
 	outputFile.write("v2.0 raw\n")
+	# for val in integerList:
+	# 	outputFile.write(hex(val)[2:])
+	# 	outputFile.write(" ")
+	# outputFile.write("\n")
 	for val in integerList:
 		outputFile.write(hex(val)[2:])
-		outputFile.write(" ")
-	outputFile.write("\n")
+		outputFile.write("\n")
+
+	outputFile.close()
+
+
+def writeHexFile(integerList, filepath):
+	'''
+	Write a list of integers into a hex file
+	'''
+	outputFile = open(filepath, "w")
+
+	for val in integerList:
+		outputFile.write(hex(val)[2:])
+		outputFile.write("\n")
 
 	outputFile.close()
 
@@ -451,21 +467,32 @@ Currently outputs only Logisim hex files.
 	parser = argparse.ArgumentParser(description = helpdesc)
 
 	parser.add_argument("-asm", action="store", dest="asmPath", help="Filepath to input assembly file")
-	parser.add_argument("-ohex", action="store", dest="hexPath", default="machineCode.hex", help="Path for output hex file. Defaults to \"machineCode.hex\"")
+	parser.add_argument("-ohex", action="store", dest="hexPath", help="Specify path for output hex file. Defaults to same path as input asm")
 	parser.add_argument("-oIndex", action="store", dest="indexPath", help="If specified, assembler will output a csv index for each instruction")
+	parser.add_argument("-logisim", action="store_true", help="If specified, assembler will add the Logisim-required header to the hex file. Note: This will break verilog simulations.")
 
-	results = parser.parse_args()
+	arguments = parser.parse_args()
 
-	asmPath = results.asmPath
-	hexPath = results.hexPath
-	indexPath = results.indexPath
+	asmPath = arguments.asmPath
+	hexPathArg = arguments.hexPath
+	indexPath = arguments.indexPath
+	logisim = arguments.logisim
 
 	#Generate machine code
 	print(" ")
 	if (asmPath):
 		instructions = parseAssemblyFile(asmPath)
 		instructionIntValues = instructionsToInts(instructions)
-		writeLogisimHexFile(instructionIntValues, hexPath)
+
+		outputPath = asmPath.replace(".asm", "") + ".hex"
+		if (hexPathArg):
+			outputPath = hexPathArg
+
+		if (logisim):
+			outputPath = outputPath.replace(".hex", "_logisim.hex")
+			writeLogisimHexFile(instructionIntValues, outputPath)
+		else:
+			writeHexFile(instructionIntValues, outputPath)
 
 		if (indexPath):
 			generateCsvIndex(instructions, instructionIntValues, indexPath)
@@ -473,7 +500,7 @@ Currently outputs only Logisim hex files.
 		print("Done!")
 		print ("{} total instructions".format(len(instructionIntValues)))
 		addressBits = math.log(len(instructionIntValues),2)
-		if (addressBits > 24):
+		if (logisim and (addressBits > 24)):
 			print ("WARNING: Program too large to run in Logisim")
 	else:
 		print("ERROR: Missing required argument \"-asm\"")
