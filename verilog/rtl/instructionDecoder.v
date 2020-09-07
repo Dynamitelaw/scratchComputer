@@ -112,7 +112,6 @@ module instructionDecoder (
 		//result select encoder
 		encoderInput = {1'b0, (slti_flag || sltiu_flag ||  slt_flag || sltu_flag), 1'b0, 1'b0, (remu_flag || rem_flag), (div_flag || divu_flag), mul_flag, (addi_flag || add_flag || sub_flag)};
 		case (encoderInput)
-			8'b00000000 : resultSelect = 0;
 			8'b00000001 : resultSelect = 0;
 			8'b00000010 : resultSelect = 1;
 			8'b00000100 : resultSelect = 2;
@@ -121,6 +120,8 @@ module instructionDecoder (
 			8'b00100000 : resultSelect = 5;
 			8'b01000000 : resultSelect = 6;
 			8'b10000000 : resultSelect = 7;
+
+			default : resultSelect = 0;
 		endcase // encoderInput
 	end
 

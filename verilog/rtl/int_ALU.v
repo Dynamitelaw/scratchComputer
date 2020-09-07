@@ -14,7 +14,7 @@ module flipSign (
 
 	always @(*) begin : adder_proc
 		if (flip) result = (operand ^ flipExtended) + 1;
-		else if (~flip) result = operand;
+		else  result = operand;
 	end
 endmodule
 
@@ -51,7 +51,7 @@ module adder (
 
 	always @(*) begin : adder_proc
 		if (~subtract) result = aOperand + bOperand;
-		else if (subtract) result = aOperand - bOperand;
+		else result = aOperand - bOperand;
 	end
 
 endmodule
