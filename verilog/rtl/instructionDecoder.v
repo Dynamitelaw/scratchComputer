@@ -3,18 +3,18 @@
 
 module instructionDecoder (
 	//Inputs
-	input [`INSTRUCTION_WIDTH] instructionIn,
+	input [`INSTRUCTION_WIDTH-1:0] instructionIn,
 
 	//Outputs
-	output reg [`REGADDR_WIDTH] a_location,
-	output reg [`REGADDR_WIDTH] b_location,
+	output reg [`REGADDR_WIDTH-1:0] a_location,
+	output reg [`REGADDR_WIDTH-1:0] b_location,
 	output reg immediateSelect,
-	output reg [`DATA_WIDTH] immediateVal,
+	output reg [`DATA_WIDTH-1:0] immediateVal,
 	output reg unsignedSelect,
 	output reg subtractEnable,
-	output reg [`REGADDR_WIDTH] writeSelect,
+	output reg [`REGADDR_WIDTH-1:0] writeSelect,
 	output reg writeEnable,
-	output reg [`RESLT_SELCT_WIDTH] resultSelect,
+	output reg [`RESLT_SELCT_WIDTH-1:0] resultSelect,
 	output reg error
 	);
 
@@ -24,13 +24,13 @@ module instructionDecoder (
 	`define FUNCT7_WIDTH 7
 	`define IMM_WIDTH 12
 
-	wire [`OPCODE_WIDTH] opcode;
-	wire [`REGADDR_WIDTH] rd;
-	wire [`FUNCT3_WIDTH] funct3;
-	wire [`REGADDR_WIDTH] rs1;
-	wire [`REGADDR_WIDTH] rs2;
-	wire [`FUNCT7_WIDTH] funct7;
-	wire [`IMM_WIDTH] imm;
+	wire [`OPCODE_WIDTH-1:0] opcode;
+	wire [`REGADDR_WIDTH-1:0] rd;
+	wire [`FUNCT3_WIDTH-1:0] funct3;
+	wire [`REGADDR_WIDTH-1:0] rs1;
+	wire [`REGADDR_WIDTH-1:0] rs2;
+	wire [`FUNCT7_WIDTH-1:0] funct7;
+	wire [`IMM_WIDTH-1:0] imm;
 
 	assign opcode = instructionIn[6:0];
 	assign rd = instructionIn[11:7];
@@ -39,6 +39,7 @@ module instructionDecoder (
 	assign rs2 = instructionIn[24:20];
 	assign funct7 = instructionIn[31:25];
 	assign imm = instructionIn[31:20];
+
 
 	//Hardcoded values of supported opcodes and functions
 	
@@ -79,7 +80,7 @@ module instructionDecoder (
 
 	//Decode logic
 	`define IMM_EXTEN_WIDTH 20
-	reg [8] encoderInput;
+	reg [7:0] encoderInput;
 
 	always @(*) begin : instructionDecode
 		//Check for supported instructions and set decode flags

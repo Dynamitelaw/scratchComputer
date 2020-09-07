@@ -7,116 +7,116 @@ module registers (
 	input clk,
 	input reset,
 	
-	input [`DATA_WIDTH] dataIn,
-	input [`REGADDR_WIDTH] writeSelect,
+	input [`DATA_WIDTH-1:0] dataIn,
+	input [`REGADDR_WIDTH-1:0] writeSelect,
 	input writeEnable,
-	input [`REGADDR_WIDTH] readA_select,
-	input [`REGADDR_WIDTH] readB_select,
+	input [`REGADDR_WIDTH-1:0] readA_select,
+	input [`REGADDR_WIDTH-1:0] readB_select,
 
 	//Outputs
-	output reg [`DATA_WIDTH] readA_out,
-	output reg [`DATA_WIDTH] readB_out
+	output reg [`DATA_WIDTH-1:0] readA_out,
+	output reg [`DATA_WIDTH-1:0] readB_out
 	);
 
 	//General purpose registers
-	wire [`DATA_WIDTH] r0;
+	wire [`DATA_WIDTH-1:0] r0;
 	assign r0 = 0;
-	reg [`DATA_WIDTH] r1;
-	reg [`DATA_WIDTH] r2;
-	reg [`DATA_WIDTH] r3;
-	reg [`DATA_WIDTH] r4;
-	reg [`DATA_WIDTH] r5;
-	reg [`DATA_WIDTH] r6;
-	reg [`DATA_WIDTH] r7;
-	reg [`DATA_WIDTH] r8;
-	reg [`DATA_WIDTH] r9;
-	reg [`DATA_WIDTH] r10;
-	reg [`DATA_WIDTH] r11;
-	reg [`DATA_WIDTH] r12;
-	reg [`DATA_WIDTH] r13;
-	reg [`DATA_WIDTH] r14;
-	reg [`DATA_WIDTH] r15;
-	reg [`DATA_WIDTH] r16;
-	reg [`DATA_WIDTH] r17;
-	reg [`DATA_WIDTH] r18;
-	reg [`DATA_WIDTH] r19;
-	reg [`DATA_WIDTH] r20;
-	reg [`DATA_WIDTH] r21;
-	reg [`DATA_WIDTH] r22;
-	reg [`DATA_WIDTH] r23;
-	reg [`DATA_WIDTH] r24;
-	reg [`DATA_WIDTH] r25;
-	reg [`DATA_WIDTH] r26;
-	reg [`DATA_WIDTH] r27;
-	reg [`DATA_WIDTH] r28;
-	reg [`DATA_WIDTH] r29;
-	reg [`DATA_WIDTH] r30;
-	reg [`DATA_WIDTH] r31;
+	reg [`DATA_WIDTH-1:0] r1;
+	reg [`DATA_WIDTH-1:0] r2;
+	reg [`DATA_WIDTH-1:0] r3;
+	reg [`DATA_WIDTH-1:0] r4;
+	reg [`DATA_WIDTH-1:0] r5;
+	reg [`DATA_WIDTH-1:0] r6;
+	reg [`DATA_WIDTH-1:0] r7;
+	reg [`DATA_WIDTH-1:0] r8;
+	reg [`DATA_WIDTH-1:0] r9;
+	reg [`DATA_WIDTH-1:0] r10;
+	reg [`DATA_WIDTH-1:0] r11;
+	reg [`DATA_WIDTH-1:0] r12;
+	reg [`DATA_WIDTH-1:0] r13;
+	reg [`DATA_WIDTH-1:0] r14;
+	reg [`DATA_WIDTH-1:0] r15;
+	reg [`DATA_WIDTH-1:0] r16;
+	reg [`DATA_WIDTH-1:0] r17;
+	reg [`DATA_WIDTH-1:0] r18;
+	reg [`DATA_WIDTH-1:0] r19;
+	reg [`DATA_WIDTH-1:0] r20;
+	reg [`DATA_WIDTH-1:0] r21;
+	reg [`DATA_WIDTH-1:0] r22;
+	reg [`DATA_WIDTH-1:0] r23;
+	reg [`DATA_WIDTH-1:0] r24;
+	reg [`DATA_WIDTH-1:0] r25;
+	reg [`DATA_WIDTH-1:0] r26;
+	reg [`DATA_WIDTH-1:0] r27;
+	reg [`DATA_WIDTH-1:0] r28;
+	reg [`DATA_WIDTH-1:0] r29;
+	reg [`DATA_WIDTH-1:0] r30;
+	reg [`DATA_WIDTH-1:0] r31;
 
 	//Register alias probes (for easier simulation debug)
-	wire [`DATA_WIDTH] ra;
+	wire [`DATA_WIDTH-1:0] ra;
 	assign ra = r1;
-	wire [`DATA_WIDTH] sp;
+	wire [`DATA_WIDTH-1:0] sp;
 	assign sp = r2;
-	wire [`DATA_WIDTH] gp;
+	wire [`DATA_WIDTH-1:0] gp;
 	assign gp = r3;
-	wire [`DATA_WIDTH] tp;
+	wire [`DATA_WIDTH-1:0] tp;
 	assign tp = r4;
-	wire [`DATA_WIDTH] t0;
+	wire [`DATA_WIDTH-1:0] t0;
 	assign t0 = r5;
-	wire [`DATA_WIDTH] t1;
+	wire [`DATA_WIDTH-1:0] t1;
 	assign t1 = r6;
-	wire [`DATA_WIDTH] t2;
+	wire [`DATA_WIDTH-1:0] t2;
 	assign t2 = r7;
-	wire [`DATA_WIDTH] s0;
+	wire [`DATA_WIDTH-1:0] s0;
 	assign s0 = r8;
-	wire [`DATA_WIDTH] fp;
+	wire [`DATA_WIDTH-1:0] fp;
 	assign fp = r8;
-	wire [`DATA_WIDTH] s1;
+	wire [`DATA_WIDTH-1:0] s1;
 	assign s1 = r9;
-	wire [`DATA_WIDTH] a0;
+	wire [`DATA_WIDTH-1:0] a0;
 	assign a0 = r10;
-	wire [`DATA_WIDTH] a1;
+	wire [`DATA_WIDTH-1:0] a1;
 	assign a1 = r11;
-	wire [`DATA_WIDTH] a2;
+	wire [`DATA_WIDTH-1:0] a2;
 	assign a2 = r12;
-	wire [`DATA_WIDTH] a3;
+	wire [`DATA_WIDTH-1:0] a3;
 	assign a3 = r13;
-	wire [`DATA_WIDTH] a4;
+	wire [`DATA_WIDTH-1:0] a4;
 	assign a4 = r14;
-	wire [`DATA_WIDTH] a5;
+	wire [`DATA_WIDTH-1:0] a5;
 	assign a5 = r15;
-	wire [`DATA_WIDTH] a6;
+	wire [`DATA_WIDTH-1:0] a6;
 	assign a6 = r16;
-	wire [`DATA_WIDTH] a7;
+	wire [`DATA_WIDTH-1:0] a7;
 	assign a7 = r17;
-	wire [`DATA_WIDTH] s2;
+	wire [`DATA_WIDTH-1:0] s2;
 	assign s2 = r18;
-	wire [`DATA_WIDTH] s3;
+	wire [`DATA_WIDTH-1:0] s3;
 	assign s3 = r19;
-	wire [`DATA_WIDTH] s4;
+	wire [`DATA_WIDTH-1:0] s4;
 	assign s4 = r20;
-	wire [`DATA_WIDTH] s5;
+	wire [`DATA_WIDTH-1:0] s5;
 	assign s5 = r21;
-	wire [`DATA_WIDTH] s6;
+	wire [`DATA_WIDTH-1:0] s6;
 	assign s6 = r22;
-	wire [`DATA_WIDTH] s7;
+	wire [`DATA_WIDTH-1:0] s7;
 	assign s7 = r23;
-	wire [`DATA_WIDTH] s8;
+	wire [`DATA_WIDTH-1:0] s8;
 	assign s8 = r24;
-	wire [`DATA_WIDTH] s9;
+	wire [`DATA_WIDTH-1:0] s9;
 	assign s9 = r25;
-	wire [`DATA_WIDTH] s10;
+	wire [`DATA_WIDTH-1:0] s10;
 	assign s10 = r26;
-	wire [`DATA_WIDTH] s11;
+	wire [`DATA_WIDTH-1:0] s11;
 	assign s11 = r27;
-	wire [`DATA_WIDTH] t3;
+	wire [`DATA_WIDTH-1:0] t3;
 	assign t3 = r28;
-	wire [`DATA_WIDTH] t4;
+	wire [`DATA_WIDTH-1:0] t4;
 	assign t4 = r29;
-	wire [`DATA_WIDTH] t5;
+	wire [`DATA_WIDTH-1:0] t5;
 	assign t5 = r30;
-	wire [`DATA_WIDTH] t6;
+	wire [`DATA_WIDTH-1:0] t6;
 	assign t6 = r31;
 
 	//Read output logic

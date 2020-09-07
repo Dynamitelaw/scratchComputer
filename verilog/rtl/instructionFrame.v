@@ -7,16 +7,16 @@ module instructionFrame(
 	input reset,
 
 	//Data inputs
-	input [`DATA_WIDTH] aOperand_in,
-	input [`REGADDR_WIDTH] aLoc_in,
-	input [`DATA_WIDTH] bOperand_in,
-	input [`REGADDR_WIDTH] bLoc_in,
-	input [`DATA_WIDTH] immediateVal_in,
+	input [`DATA_WIDTH-1:0] aOperand_in,
+	input [`REGADDR_WIDTH-1:0] aLoc_in,
+	input [`DATA_WIDTH-1:0] bOperand_in,
+	input [`REGADDR_WIDTH-1:0] bLoc_in,
+	input [`DATA_WIDTH-1:0] immediateVal_in,
 	input immediateSelect_in,
 	input unsignedSelect_in,
 	input subtractEnable_in,
-	input [`RESLT_SELCT_WIDTH] resultSelect_in,
-	input [`REGADDR_WIDTH] writeSelect_in,
+	input [`RESLT_SELCT_WIDTH-1:0] resultSelect_in,
+	input [`REGADDR_WIDTH-1:0] writeSelect_in,
 	input writeEnable_in,
 
 	//Write enable inputs
@@ -33,16 +33,16 @@ module instructionFrame(
 	input writeEnable_we,
 
 	//Data outputs
-	output reg [`DATA_WIDTH] aOperand_out,
-	output reg [`REGADDR_WIDTH] aLoc_out,
-	output reg [`DATA_WIDTH] bOperand_out,
-	output reg [`REGADDR_WIDTH] bLoc_out,
-	output reg [`DATA_WIDTH] immediateVal_out,
+	output reg [`DATA_WIDTH-1:0] aOperand_out,
+	output reg [`REGADDR_WIDTH-1:0] aLoc_out,
+	output reg [`DATA_WIDTH-1:0] bOperand_out,
+	output reg [`REGADDR_WIDTH-1:0] bLoc_out,
+	output reg [`DATA_WIDTH-1:0] immediateVal_out,
 	output reg immediateSelect_out,
 	output reg unsignedSelect_out,
 	output reg subtractEnable_out,
-	output reg [`RESLT_SELCT_WIDTH] resultSelect_out,
-	output reg [`REGADDR_WIDTH] writeSelect_out,
+	output reg [`RESLT_SELCT_WIDTH-1:0] resultSelect_out,
+	output reg [`REGADDR_WIDTH-1:0] writeSelect_out,
 	output reg writeEnable_out
 	);
 

@@ -1,6 +1,6 @@
 module main;
 	reg clk;
-	reg [8] a;
+	reg [7:0] a;
 	reg [8] b;
 	reg [8] c;
 
@@ -9,12 +9,12 @@ module main;
 		$dumpvars;
 		
 		clk <= 1;
-		a <= 0;
+		a <= 8'b0110111;
 		b <= 0;
 		c <= 0;
 
 		#2
-		a <= 1;
+		a <= 8'b0110111;;
 		
 		#2
 		b <= 2;
@@ -23,7 +23,8 @@ module main;
 		c <= a + b;
 
 		#2
-		$display("hello world!");
+		$display("a = %b", a);
+		$display("a = %b", a[3:0]);
 		$finish;
 
 	end

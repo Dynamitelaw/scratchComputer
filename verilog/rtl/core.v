@@ -5,13 +5,14 @@
 `include "instructionFrame.v"
 `include "pipelineStateController.v"
 `include "registers.v"
+`include "int_ALU.v"
 
 
 module core(
 	//Inputs
 	input clk,
 	input reset,
-	input [`INSTRUCTION_WIDTH] instructionIn,
+	input [`INSTRUCTION_WIDTH-1:0] instructionIn,
 	input start,
 
 	//Outputs
@@ -19,19 +20,18 @@ module core(
 	);
 
 	//Instruction decoder
-	wire [`REGADDR_WIDTH] a_location_decodeOut;
-	wire [`REGADDR_WIDTH] b_location_decodeOut;
+	wire [`REGADDR_WIDTH-1:0] a_location_decodeOut;
+	wire [`REGADDR_WIDTH-1:0] b_location_decodeOut;
 	wire immediateSelect_decodeOut;
-	wire [`DATA_WIDTH] immediateVal_decodeOut;
+	wire [`DATA_WIDTH-1:0] immediateVal_decodeOut;
 	wire unsignedSelect_decodeOut;
 	wire subtractEnable_decodeOut;
-	wire [`REGADDR_WIDTH] writeSelect_decodeOut;
+	wire [`REGADDR_WIDTH-1:0] writeSelect_decodeOut;
 	wire writeEnable_decodeOut;
-	wire [`RESLT_SELCT_WIDTH] resultSelect_decodeOut;
+	wire [`RESLT_SELCT_WIDTH-1:0] resultSelect_decodeOut;
 	wire error_decodeOut;
 
 	instructionDecoder instructionDecoder(
-		.clk(clk),
 		.instructionIn(instructionIn),
 
 		.a_location(a_location_decodeOut),
@@ -43,7 +43,7 @@ module core(
 		.writeSelect(writeSelect_decodeOut),
 		.writeEnable(writeEnable_decodeOut),
 		.resultSelect(resultSelect_decodeOut),
-		.error(error_decodeOut),
+		.error(error_decodeOut)
 		);
 
 	//State Controller
@@ -101,19 +101,19 @@ module core(
 		);
 
 	//Instruction frame
-	wire [`DATA_WIDTH] aOperand_frameIn;
-	wire [`DATA_WIDTH] bOperand_frameIn;
+	wire [`DATA_WIDTH-1:0] aOperand_frameIn;
+	wire [`DATA_WIDTH-1:0] bOperand_frameIn;
 
-	wire [`DATA_WIDTH] aOperand_frameOut;
-	wire [`REGADDR_WIDTH] aLoc_frameOut;
-	wire [`DATA_WIDTH] bOperand_frameOut;
-	wire [`REGADDR_WIDTH] bLoc_frameOut;
-	wire [`DATA_WIDTH] immediateVal_frameOut;
+	wire [`DATA_WIDTH-1:0] aOperand_frameOut;
+	wire [`REGADDR_WIDTH-1:0] aLoc_frameOut;
+	wire [`DATA_WIDTH-1:0] bOperand_frameOut;
+	wire [`REGADDR_WIDTH-1:0] bLoc_frameOut;
+	wire [`DATA_WIDTH-1:0] immediateVal_frameOut;
 	wire immediateSelect_frameOut;
 	wire unsignedSelect_frameOut;
 	wire subtractEnable_frameOut;
-	wire [`RESLT_SELCT_WIDTH] resultSelect_frameOut;
-	wire [`REGADDR_WIDTH] writeSelect_frameOut;
+	wire [`RESLT_SELCT_WIDTH-1:0] resultSelect_frameOut;
+	wire [`REGADDR_WIDTH-1:0] writeSelect_frameOut;
 	wire writeEnable_frameOut;
 
 	instructionFrame instructionFrame(
@@ -156,15 +156,14 @@ module core(
 		);
 
 	//Registers
-	reg [`DATA_WIDTH] reg_dataIn;
+	reg [`DATA_WIDTH-1:0] reg_dataIn;
 
-	wire [`DATA_WIDTH] readA_regOut;
-	wire [`DATA_WIDTH] readB_regOut;
-	assign readA_regOut = aOperand_frameIn;
-	assign readB_regOut = bOperand_regOut;
+	wire [`DATA_WIDTH-1:0] readA_regOut;
+	wire [`DATA_WIDTH-1:0] readB_regOut;
+	assign aOperand_frameIn = readA_regOut;
 
 	wire writeEnable_reg;
-	assign writeEnable = result_we && writeEnable_frameOut;
+	assign writeEnable_reg = result_we && writeEnable_frameOut;
 
 	registers registers(
 		.clk(clk),
@@ -180,7 +179,7 @@ module core(
 		);
 
 	//B_operand mux
-	reg [`DATA_WIDTH] bOperand_muxOut;
+	reg [`DATA_WIDTH-1:0] bOperand_muxOut;
 	assign bOperand_frameIn = bOperand_muxOut;
 
 	always @(*) begin : bOperandMux_proc
@@ -191,7 +190,7 @@ module core(
 	end
 
 	//Arithmetic units
-	wire [`DATA_WIDTH] adderOut;
+	wire [`DATA_WIDTH-1:0] adderOut;
 	adder adder (
 		.aOperand(aOperand_frameOut),
 		.bOperand(bOperand_frameOut),
@@ -200,7 +199,7 @@ module core(
 		.result(adderOut)
 		);
 
-	wire [`DATA_WIDTH] mulOut;
+	wire [`DATA_WIDTH-1:0] mulOut;
 	multipler multipler (
 		.aOperand(aOperand_frameOut),
 		.bOperand(bOperand_frameOut),
@@ -208,8 +207,8 @@ module core(
 		.result(mulOut)
 		);
 
-	wire [`DATA_WIDTH] divideOut;
-	wire [`DATA_WIDTH] remOut;
+	wire [`DATA_WIDTH-1:0] divideOut;
+	wire [`DATA_WIDTH-1:0] remOut;
 	divider divider (
 		.aOperand(aOperand_frameOut),
 		.bOperand(bOperand_frameOut),
@@ -219,9 +218,9 @@ module core(
 		.remResult(remOut)
 		);
 	
-	wire [`DATA_WIDTH] greaterThanOut;
-	wire [`DATA_WIDTH] equalOut;
-	wire [`DATA_WIDTH] lessThanOut;
+	wire [`DATA_WIDTH-1:0] greaterThanOut;
+	wire [`DATA_WIDTH-1:0] equalOut;
+	wire [`DATA_WIDTH-1:0] lessThanOut;
 	comparator comparator (
 		.aOperand(aOperand_frameOut),
 		.bOperand(bOperand_frameOut),

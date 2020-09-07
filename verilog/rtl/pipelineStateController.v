@@ -14,20 +14,20 @@ module pipelineStateController (
 	output wire writebackState
 	);
 
-	reg [2] pipelineState;
+	reg [1:0] pipelineState;
 	wire notActive;
 	assign notActive = 	~active;
 
-	reg [4] 2bDecoderOuput;
-	assign decodeState = 2bDecoderOuput[0];
-	assign setupState = 2bDecoderOuput[1];
-	assign executeState = 2bDecoderOuput[2];
-	assign writebackState = 2bDecoderOuput[3];
+	reg [3:0] stateDecoderOutput;
+	assign decodeState = stateDecoderOutput[0];
+	assign setupState = stateDecoderOutput[1];
+	assign executeState = stateDecoderOutput[2];
+	assign writebackState = stateDecoderOutput[3];
 
 	wire sleepState;
 	assign sleepState = decodeState && notActive;
 	wire nextActiveState;
-	assign nextActiveState = ((decodeState && active)||setupState||executeState) || ((start&&sleepState) && ~(active&&writebackState))
+	assign nextActiveState = ((decodeState && active)||setupState||executeState) || ((start&&sleepState) && ~(active&&writebackState));
 
 	//Logic
 	always @ (posedge clk) begin : stateControl
@@ -35,21 +35,24 @@ module pipelineStateController (
 			//reset
 			pipelineState <= 0;
 			active <= 0;
-
-			2bDecoderOuput <= 4'b0001;
 		end else begin
 			active <= nextActiveState;
 
 			if (active) begin
 				pipelineState <= pipelineState + 1;
 			end
+		end
+	end
 
+	always @(*) begin : stateDecoder_proc
+		if (reset) stateDecoderOutput <= 4'b0001;
+		else begin
 			//Pipeline state decoder
 			case (pipelineState)
-				0 : 2bDecoderOuput <= 4'b0001;
-				1 : 2bDecoderOuput <= 4'b0010;
-				2 : 2bDecoderOuput <= 4'b0100;
-				3 : 2bDecoderOuput <= 4'b1000;
+				0 : stateDecoderOutput <= 4'b0001;
+				1 : stateDecoderOutput <= 4'b0010;
+				2 : stateDecoderOutput <= 4'b0100;
+				3 : stateDecoderOutput <= 4'b1000;
 			endcase // pipelineState
 		end
 	end

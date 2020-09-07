@@ -3,14 +3,14 @@
 
 
 module flipSign (
-	input [`DATA_WIDTH] operand,
+	input [`DATA_WIDTH-1:0] operand,
 	input flip,
 
-	output reg [`DATA_WIDTH] result
+	output reg [`DATA_WIDTH-1:0] result
 	);
 
-	wire [`DATA_WIDTH] flipExtended;
-	assign flipExtended = {`DATA_WIDTH{flip}}
+	wire [`DATA_WIDTH-1:0] flipExtended;
+	assign flipExtended = {`DATA_WIDTH{flip}};
 
 	always @(*) begin : adder_proc
 		if (flip) result = (operand ^ flipExtended) + 1;
@@ -20,10 +20,10 @@ endmodule
 
 
 module absoluteValue (
-	input [`DATA_WIDTH] operand,
+	input [`DATA_WIDTH-1:0] operand,
 	input unsignedEn,
 
-	output wire [`DATA_WIDTH] result,
+	output wire [`DATA_WIDTH-1:0] result,
 	output wire isNegative
 	);
 
@@ -42,11 +42,11 @@ endmodule
 
 
 module adder (
-	input [`DATA_WIDTH] aOperand,
-	input [`DATA_WIDTH] bOperand,
+	input [`DATA_WIDTH-1:0] aOperand,
+	input [`DATA_WIDTH-1:0] bOperand,
 	input subtract,
 
-	output reg [`DATA_WIDTH] result
+	output reg [`DATA_WIDTH-1:0] result
 	);
 
 	always @(*) begin : adder_proc
@@ -58,10 +58,10 @@ endmodule
 
 
 module multipler (
-	input [`DATA_WIDTH] aOperand,
-	input [`DATA_WIDTH] bOperand,
+	input [`DATA_WIDTH-1:0] aOperand,
+	input [`DATA_WIDTH-1:0] bOperand,
 
-	output reg [`DATA_WIDTH] result
+	output reg [`DATA_WIDTH-1:0] result
 	);
 
 	always @(*) begin : mul_proc
@@ -72,16 +72,16 @@ endmodule
 
 
 module divider (
-	input [`DATA_WIDTH] aOperand,
-	input [`DATA_WIDTH] bOperand,
+	input [`DATA_WIDTH-1:0] aOperand,
+	input [`DATA_WIDTH-1:0] bOperand,
 	input unsignedEn,
 
-	output wire [`DATA_WIDTH] divResult,
-	output wire [`DATA_WIDTH] remResult
+	output wire [`DATA_WIDTH-1:0] divResult,
+	output wire [`DATA_WIDTH-1:0] remResult
 	);
 
 	//Get absolute val of A
-	wire [`DATA_WIDTH] aOp_abs;
+	wire [`DATA_WIDTH-1:0] aOp_abs;
 	wire a_isNegative;
 	absoluteValue absoluteValue_A(
 		.operand(aOperand),
@@ -92,7 +92,7 @@ module divider (
 		);
 
 	//Get absolute val of B
-	wire [`DATA_WIDTH] bOp_abs;
+	wire [`DATA_WIDTH-1:0] bOp_abs;
 	wire b_isNegative;
 	absoluteValue absoluteValue_B(
 		.operand(bOperand),
@@ -103,8 +103,8 @@ module divider (
 		);
 
 	//Unisgned divider outputs
-	reg [`DATA_WIDTH] divuResult;
-	reg [`DATA_WIDTH] remuResult;
+	reg [`DATA_WIDTH-1:0] divuResult;
+	reg [`DATA_WIDTH-1:0] remuResult;
 
 	//Flip sign of div outputs
 	wire divFlip;
@@ -118,7 +118,7 @@ module divider (
 		);
 
 	//Flip sign of rem outputs	
-	flipSign flipSign_div(
+	flipSign flipSign_rem(
 		.operand(remuResult),
 		.flip(a_isNegative),
 
@@ -134,13 +134,13 @@ endmodule
 
 
 module comparator (
-	input [`DATA_WIDTH] aOperand,
-	input [`DATA_WIDTH] bOperand,
+	input [`DATA_WIDTH-1:0] aOperand,
+	input [`DATA_WIDTH-1:0] bOperand,
 	input unsignedEn,
 
-	output reg [`DATA_WIDTH] greater,
-	output reg [`DATA_WIDTH] equal,
-	output reg [`DATA_WIDTH] less
+	output reg [`DATA_WIDTH-1:0] greater,
+	output reg [`DATA_WIDTH-1:0] equal,
+	output reg [`DATA_WIDTH-1:0] less
 	);
 	
 	//<TODO> properly handle the signs of the operands. Right now it only does unsigned comparisons
