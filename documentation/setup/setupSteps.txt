@@ -5,6 +5,8 @@
 Download from http://www.cburch.com/logisim/download.html
 Setup as default program for .circ files
 
+linux - "sudo apt-get install logisim"
+
 
 ####
 # Sublime Text

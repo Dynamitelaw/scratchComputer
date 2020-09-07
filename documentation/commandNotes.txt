@@ -1,0 +1,10 @@
+#Compile verilog into vpp executable
+iverilog <verilogPath> -o <vppOutPath>
+iverilog rtl/TEST_coreTestbench.v -I rtl -g2005-sv -o TEST_coreTestbench.vvp
+	#add -S flag to sythesize
+
+#Run 
+vvp <vppOutPath>
+
+#View VCD
+gtkwave <vcdPath>
