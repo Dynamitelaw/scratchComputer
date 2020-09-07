@@ -1,0 +1,5 @@
+`define INSTRUCTION_WIDTH 32
+`define REGADDR_WIDTH 5
+`define DATA_WIDTH 32
+
+`define RESLT_SELCT_WIDTH 3
