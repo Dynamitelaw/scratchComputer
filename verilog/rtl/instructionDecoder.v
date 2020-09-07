@@ -125,4 +125,4 @@ module instructionDecoder (
 		endcase // encoderInput
 	end
 
-endmodule : instructionDecoder
+endmodule //instructionDecoder

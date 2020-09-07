@@ -74,4 +74,4 @@ module instructionFrame(
 		end
 	end
 
-endmodule : instructionFrame
+endmodule //instructionFrame

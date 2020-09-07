@@ -57,4 +57,4 @@ module pipelineStateController (
 		end
 	end
 
-endmodule : pipelineStateController
+endmodule //pipelineStateController

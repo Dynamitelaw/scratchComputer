@@ -35,4 +35,4 @@ module frameWriteController(
 	assign writeSlct_we = decodeState;
 	assign writeEnable_we = decodeState;
 
-endmodule : frameWriteController
+endmodule //frameWriteController

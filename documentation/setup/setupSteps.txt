@@ -79,7 +79,7 @@ http://opencircuitdesign.com/magic/
 
 -Install Magic
 	sudo apt-get install magic
-	
+
 	git clone git://opencircuitdesign.com/magic
 	#go into git repo
 	sudo apt-get install mesa-utils
@@ -100,5 +100,7 @@ http://opencircuitdesign.com/magic/
 
 
 -Install Qflow
+	sudo apt-get install qflow
+
 	git clone git://opencircuitdesign.com/qflow
 	#go into git repo

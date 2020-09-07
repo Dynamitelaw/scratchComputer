@@ -245,4 +245,4 @@ module core(
 		endcase  //resultSelect_frameOut
 	end
 
-endmodule : core
+endmodule //core
