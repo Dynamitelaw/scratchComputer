@@ -5625,7 +5625,7 @@ e33 eb3 f33 fb3
     </comp>
     <comp lib="0" loc="(1040,1370)" name="Tunnel">
       <a name="facing" val="east"/>
-      <a name="label" val="STLU"/>
+      <a name="label" val="SLTU"/>
       <a name="labelfont" val="SansSerif plain 10"/>
     </comp>
     <comp lib="0" loc="(1040,1410)" name="Constant">
@@ -5677,7 +5677,7 @@ e33 eb3 f33 fb3
     </comp>
     <comp lib="0" loc="(230,930)" name="Tunnel">
       <a name="width" val="3"/>
-      <a name="label" val="STLU_3"/>
+      <a name="label" val="SLTU_3"/>
       <a name="labelfont" val="SansSerif plain 10"/>
     </comp>
     <comp lib="0" loc="(200,140)" name="Splitter">
@@ -5800,7 +5800,7 @@ e33 eb3 f33 fb3
     </comp>
     <comp lib="0" loc="(1040,1350)" name="Tunnel">
       <a name="facing" val="east"/>
-      <a name="label" val="STL"/>
+      <a name="label" val="SLT"/>
       <a name="labelfont" val="SansSerif plain 10"/>
     </comp>
     <comp lib="3" loc="(710,2330)" name="Comparator">
@@ -5840,7 +5840,7 @@ e33 eb3 f33 fb3
     </comp>
     <comp lib="0" loc="(1040,320)" name="Tunnel">
       <a name="facing" val="east"/>
-      <a name="label" val="STLIU"/>
+      <a name="label" val="SLTIU"/>
       <a name="labelfont" val="SansSerif plain 10"/>
     </comp>
     <comp lib="1" loc="(780,2330)" name="AND Gate">
@@ -6137,12 +6137,12 @@ e33 eb3 f33 fb3
       <a name="labelfont" val="SansSerif plain 10"/>
     </comp>
     <comp lib="0" loc="(810,1820)" name="Tunnel">
-      <a name="label" val="STLI"/>
+      <a name="label" val="SLTI"/>
       <a name="labelfont" val="SansSerif plain 10"/>
     </comp>
     <comp lib="0" loc="(1040,300)" name="Tunnel">
       <a name="facing" val="east"/>
-      <a name="label" val="STLI"/>
+      <a name="label" val="SLTI"/>
       <a name="labelfont" val="SansSerif plain 10"/>
     </comp>
     <comp lib="0" loc="(1060,410)" name="Splitter">
@@ -6187,7 +6187,7 @@ e33 eb3 f33 fb3
     </comp>
     <comp lib="0" loc="(1040,1330)" name="Tunnel">
       <a name="facing" val="east"/>
-      <a name="label" val="STLIU"/>
+      <a name="label" val="SLTIU"/>
       <a name="labelfont" val="SansSerif plain 10"/>
     </comp>
     <comp lib="0" loc="(640,1380)" name="Tunnel">
@@ -6394,7 +6394,7 @@ e33 eb3 f33 fb3
     </comp>
     <comp lib="0" loc="(1040,750)" name="Tunnel">
       <a name="facing" val="east"/>
-      <a name="label" val="STLIU"/>
+      <a name="label" val="SLTIU"/>
       <a name="labelfont" val="SansSerif plain 10"/>
     </comp>
     <comp lib="3" loc="(710,2070)" name="Comparator">
@@ -6432,7 +6432,7 @@ e33 eb3 f33 fb3
     </comp>
     <comp lib="0" loc="(1040,770)" name="Tunnel">
       <a name="facing" val="east"/>
-      <a name="label" val="STLU"/>
+      <a name="label" val="SLTU"/>
       <a name="labelfont" val="SansSerif plain 10"/>
     </comp>
     <comp lib="0" loc="(810,1430)" name="Tunnel">
@@ -6490,7 +6490,7 @@ e33 eb3 f33 fb3
       <a name="labelfont" val="SansSerif plain 10"/>
     </comp>
     <comp lib="0" loc="(810,2330)" name="Tunnel">
-      <a name="label" val="STLU"/>
+      <a name="label" val="SLTU"/>
       <a name="labelfont" val="SansSerif plain 10"/>
     </comp>
     <comp lib="0" loc="(810,1640)" name="Tunnel">
@@ -6525,7 +6525,7 @@ e33 eb3 f33 fb3
     <comp lib="0" loc="(640,2000)" name="Tunnel">
       <a name="facing" val="east"/>
       <a name="width" val="3"/>
-      <a name="label" val="STLU_3"/>
+      <a name="label" val="SLTU_3"/>
       <a name="labelfont" val="SansSerif plain 10"/>
     </comp>
     <comp lib="0" loc="(240,290)" name="Tunnel">
@@ -6595,7 +6595,7 @@ e33 eb3 f33 fb3
     <comp lib="0" loc="(640,1860)" name="Tunnel">
       <a name="facing" val="east"/>
       <a name="width" val="3"/>
-      <a name="label" val="STL_3"/>
+      <a name="label" val="SLT_3"/>
       <a name="labelfont" val="SansSerif plain 10"/>
     </comp>
     <comp lib="3" loc="(710,1930)" name="Comparator">
@@ -6784,7 +6784,7 @@ e33 eb3 f33 fb3
     </comp>
     <comp lib="0" loc="(230,900)" name="Tunnel">
       <a name="width" val="3"/>
-      <a name="label" val="STL_3"/>
+      <a name="label" val="SLT_3"/>
       <a name="labelfont" val="SansSerif plain 10"/>
     </comp>
     <comp lib="0" loc="(240,250)" name="Tunnel">
@@ -6801,7 +6801,7 @@ e33 eb3 f33 fb3
       <a name="mode" val="unsigned"/>
     </comp>
     <comp lib="0" loc="(810,1960)" name="Tunnel">
-      <a name="label" val="STLIU"/>
+      <a name="label" val="SLTIU"/>
       <a name="labelfont" val="SansSerif plain 10"/>
     </comp>
     <comp lib="0" loc="(1470,210)" name="Tunnel">
@@ -6829,7 +6829,7 @@ e33 eb3 f33 fb3
     <comp lib="0" loc="(640,2340)" name="Tunnel">
       <a name="facing" val="east"/>
       <a name="width" val="3"/>
-      <a name="label" val="STLU_3"/>
+      <a name="label" val="SLTU_3"/>
       <a name="labelfont" val="SansSerif plain 10"/>
     </comp>
     <comp lib="0" loc="(300,660)" name="Tunnel">
@@ -6951,7 +6951,7 @@ e33 eb3 f33 fb3
       <a name="labelfont" val="SansSerif plain 10"/>
     </comp>
     <comp lib="0" loc="(810,2130)" name="Tunnel">
-      <a name="label" val="STL"/>
+      <a name="label" val="SLT"/>
       <a name="labelfont" val="SansSerif plain 10"/>
     </comp>
     <comp lib="0" loc="(1470,390)" name="Tunnel">
@@ -7051,7 +7051,7 @@ e33 eb3 f33 fb3
     </comp>
     <comp lib="0" loc="(1040,1310)" name="Tunnel">
       <a name="facing" val="east"/>
-      <a name="label" val="STLI"/>
+      <a name="label" val="SLTI"/>
       <a name="labelfont" val="SansSerif plain 10"/>
     </comp>
     <comp lib="0" loc="(640,1510)" name="Tunnel">
@@ -7068,7 +7068,7 @@ e33 eb3 f33 fb3
     <comp lib="0" loc="(640,2140)" name="Tunnel">
       <a name="facing" val="east"/>
       <a name="width" val="3"/>
-      <a name="label" val="STL_3"/>
+      <a name="label" val="SLT_3"/>
       <a name="labelfont" val="SansSerif plain 10"/>
     </comp>
     <comp lib="0" loc="(640,880)" name="Tunnel">
