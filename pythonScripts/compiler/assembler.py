@@ -24,6 +24,12 @@ class INST(Enum):
     SLTU = 12
     JAL = 13
     J = 14
+    BEQ = 15
+    BNE = 16
+    BLTU = 17
+    BLT = 18
+    BGE = 19
+    BGEU = 20
 
 
 #Mapping of each register ABI name to their hardware address
@@ -136,6 +142,18 @@ def parseInstruction(asmLine):
 		instructionEnum = INST.JAL
 	elif (instructionName == "j"):
 		instructionEnum = INST.J
+	elif (instructionName == "beq"):
+		instructionEnum = INST.BEQ
+	elif (instructionName == "bne"):
+		instructionEnum = INST.BNE
+	elif (instructionName == "blt"):
+		instructionEnum = INST.BLT
+	elif (instructionName == "bltu"):
+		instructionEnum = INST.BLTU
+	elif (instructionName == "bge"):
+		instructionEnum = INST.BGE
+	elif (instructionName == "bgeu"):
+		instructionEnum = INST.BGEU
 
 	if (instructionEnum == -1):
 		raise Exception("Unsupported instruction \"{}\"".format(instructionName))
@@ -388,6 +406,48 @@ def instructionsToInts(instructionList):
 			instructionFields["imm"] = args[0] - programCounter
 			instructionFields["rd"] = 0
 			instructionFields["opcode"] = 111
+		elif (instructionEnum == INST.BEQ):
+			instructionFields["type"] = "B"
+			instructionFields["imm"] = args[2] - programCounter
+			instructionFields["rs2"] = args[1]
+			instructionFields["rs1"] = args[0]
+			instructionFields["funct3"] = 0
+			instructionFields["opcode"] = 99
+		elif (instructionEnum == INST.BNE):
+			instructionFields["type"] = "B"
+			instructionFields["imm"] = args[2] - programCounter
+			instructionFields["rs2"] = args[1]
+			instructionFields["rs1"] = args[0]
+			instructionFields["funct3"] = 1
+			instructionFields["opcode"] = 99
+		elif (instructionEnum == INST.BLT):
+			instructionFields["type"] = "B"
+			instructionFields["imm"] = args[2] - programCounter
+			instructionFields["rs2"] = args[1]
+			instructionFields["rs1"] = args[0]
+			instructionFields["funct3"] = 4
+			instructionFields["opcode"] = 99
+		elif (instructionEnum == INST.BGE):
+			instructionFields["type"] = "B"
+			instructionFields["imm"] = args[2] - programCounter
+			instructionFields["rs2"] = args[1]
+			instructionFields["rs1"] = args[0]
+			instructionFields["funct3"] = 5
+			instructionFields["opcode"] = 99
+		elif (instructionEnum == INST.BLTU):
+			instructionFields["type"] = "B"
+			instructionFields["imm"] = args[2] - programCounter
+			instructionFields["rs2"] = args[1]
+			instructionFields["rs1"] = args[0]
+			instructionFields["funct3"] = 6
+			instructionFields["opcode"] = 99
+		elif (instructionEnum == INST.BEQ):
+			instructionFields["type"] = "B"
+			instructionFields["imm"] = args[2] - programCounter
+			instructionFields["rs2"] = args[1]
+			instructionFields["rs1"] = args[0]
+			instructionFields["funct3"] = 7
+			instructionFields["opcode"] = 99
 
 		#Concatenate instruction fields into binary string
 		binaryString = ""
@@ -446,6 +506,36 @@ def instructionsToInts(instructionList):
 			opcode_string = format(instructionFields["opcode"], "07b")  #7bit value
 
 			binaryString = "{}{}{}".format(imm_stringReordered, rd_string, opcode_string)
+
+		elif (instructionFields["type"] == "B"):
+			imm_string = ""
+			if (instructionFields["imm"] < 0):
+				#handle negative immediate arguments
+				absVal = instructionFields["imm"] * -1
+				absBinString = format(absVal, "013b")  #get binary string of abs value 
+
+				#Convert to 2s compliment negative number
+				flippedBitsString = absBinString.replace("0","z").replace("1","0").replace("z","1")  #Flip all bits
+				unsignedVal = int(flippedBitsString, 2)
+				twoCompInt = unsignedVal + 1
+
+				imm_string = format(twoCompInt, "013b")
+			else:
+				imm_string = format(instructionFields["imm"], "013b")  #12bit value
+
+			
+			#Split imm_string into required parts for B-type
+			immString_12 = imm_string[-13]
+			immString_10_5 = imm_string[-11:-5]
+			immString_4_1 = imm_string[-5:-1]
+			immString_11 = imm_string[-12]
+
+			rs2_string = format(instructionFields["rs2"], "05b")  #5bit value
+			rs1_string = format(instructionFields["rs1"], "05b")  #5bit value
+			funct3_string = format(instructionFields["funct3"], "03b")  #3bit value
+			opcode_string = format(instructionFields["opcode"], "07b")  #7bit value
+
+			binaryString = "{}{}{}{}{}{}{}{}".format(immString_12, immString_10_5, rs2_string, rs1_string, funct3_string, immString_4_1, immString_11, opcode_string)
 
 		else:
 			raise Exception("Unsupported instruction type {}".format(instruction))
