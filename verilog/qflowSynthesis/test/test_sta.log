@@ -1,9 +1,0 @@
-
---------------------------------
-Qflow project setup
---------------------------------
-
-Technology set to osu035 from existing qflow_vars.sh file
-Regenerating files for existing project test
-Synthesis flow stopped on error condition.  Static timing analysis
-will not proceed until error condition is cleared.
