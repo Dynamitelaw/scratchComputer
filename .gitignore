@@ -7,3 +7,4 @@
 #Ignore all synthesized files
 *verilog/qflowSynthesis/*
 *qflowSynthesis/*
+verilog/qflowSynthesis/
