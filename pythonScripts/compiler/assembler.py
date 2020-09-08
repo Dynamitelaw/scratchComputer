@@ -22,6 +22,8 @@ class INST(Enum):
     SLTIU = 10
     SLT = 11
     SLTU = 12
+    JAL = 13
+    J = 14
 
 
 #Mapping of each register ABI name to their hardware address
@@ -130,6 +132,10 @@ def parseInstruction(asmLine):
 		instructionEnum = INST.SLT
 	elif (instructionName == "sltu"):
 		instructionEnum = INST.SLTU
+	elif (instructionName == "jal"):
+		instructionEnum = INST.JAL
+	elif (instructionName == "j"):
+		instructionEnum = INST.J
 
 	if (instructionEnum == -1):
 		raise Exception("Unsupported instruction \"{}\"".format(instructionName))
@@ -167,6 +173,10 @@ def parseInstruction(asmLine):
 		raise Exception("Incorrect number of arguments for \"slt\"")
 	elif ((instructionEnum == INST.SLTU) and (totalArgs < 3)):
 		raise Exception("Incorrect number of arguments for \"sltu\"")
+	elif ((instructionEnum == INST.JAL) and (totalArgs < 1)):
+		raise Exception("Incorrect number of arguments for \"jal\"")
+	elif ((instructionEnum == INST.J) and (totalArgs < 1)):
+		raise Exception("Incorrect number of arguments for \"j\"")
 
 	for arg in instructionArgs:
 		try:
@@ -221,7 +231,7 @@ def parseAssemblyFile(filepath):
 			if (":" in asmLine):
 				#line is a label. Add location index to labels dict
 				labelName = asmLine.split(":")[0]
-				labels[labelName] = len(linedInstructions)
+				labels[labelName] = len(linedInstructions)*4
 			else:
 				#line is an instruction
 				instruction = parseInstruction(asmLine)
@@ -258,7 +268,8 @@ def instructionsToInts(instructionList):
 	'''
 	instructionValues = []
 
-	for instruction in instructionList:
+	for programCounter in range(0,len(instructionList)):
+		instruction = instructionList[programCounter]
 		instructionEnum = instruction[0]
 		args = instruction[1:]
 
@@ -366,6 +377,16 @@ def instructionsToInts(instructionList):
 			instructionFields["funct3"] = 3
 			instructionFields["rd"] = args[0]
 			instructionFields["opcode"] = 51
+		elif (instructionEnum == INST.JAL):
+			instructionFields["type"] = "J"
+			instructionFields["imm"] = args[0] - programCounter
+			instructionFields["rd"] = 1
+			instructionFields["opcode"] = 111
+		elif (instructionEnum == INST.J):
+			instructionFields["type"] = "J"
+			instructionFields["imm"] = args[0] - programCounter
+			instructionFields["rd"] = 0
+			instructionFields["opcode"] = 111
 
 		#Concatenate instruction fields into binary string
 		binaryString = ""
@@ -378,6 +399,7 @@ def instructionsToInts(instructionList):
 			opcode_string = format(instructionFields["opcode"], "07b")  #7bit value
 
 			binaryString = "{}{}{}{}{}{}".format(funct7_string, rs2_string, rs1_string, funct3_string, rd_string, opcode_string)
+
 		elif (instructionFields["type"] == "I"):
 			imm_string = ""
 			if (instructionFields["imm"] < 0):
@@ -400,6 +422,30 @@ def instructionsToInts(instructionList):
 			opcode_string = format(instructionFields["opcode"], "07b")  #7bit value
 
 			binaryString = "{}{}{}{}{}".format(imm_string, rs1_string, funct3_string, rd_string, opcode_string)
+
+		elif (instructionFields["type"] == "J"):
+			imm_string = ""
+			if (instructionFields["imm"] < 0):
+				#handle negative immediate arguments
+				absVal = instructionFields["imm"] * -1
+				absBinString = format(absVal, "021b")  #get binary string of abs value 
+
+				#Convert to 2s compliment negative number
+				flippedBitsString = absBinString.replace("0","z").replace("1","0").replace("z","1")  #Flip all bits
+				unsignedVal = int(flippedBitsString, 2)
+				twoCompInt = unsignedVal + 1
+
+				imm_string = format(twoCompInt, "021b")
+			else:
+				imm_string = format(instructionFields["imm"], "021b")  #12bit value
+
+			
+			imm_stringReordered = "{}{}{}{}".format(imm_string[-21], imm_string[-11:-1], imm_string[-12], imm_string[-20:-12])  #Rearrange imm_stringOrdered to fit J-type bit index format [20|10:1|11|19:12]
+			rd_string = format(instructionFields["rd"], "05b")  #5bit value
+			opcode_string = format(instructionFields["opcode"], "07b")  #7bit value
+
+			binaryString = "{}{}{}".format(imm_stringReordered, rd_string, opcode_string)
+
 		else:
 			raise Exception("Unsupported instruction type {}".format(instruction))
 
