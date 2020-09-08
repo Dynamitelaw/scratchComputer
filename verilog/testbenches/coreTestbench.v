@@ -14,6 +14,7 @@ module coreTestbench;
 	reg start;
 
 	wire busy;
+	wire [`DATA_WIDTH-1:0] tempRegOut;
 
 	core core (
 		.clk(clk),
@@ -21,7 +22,8 @@ module coreTestbench;
 		.instructionIn(instructionIn),
 		.start(start),
 
-		.busy(busy)
+		.busy(busy),
+		.tempRegOut(tempRegOut)
 		);
 
 	integer programCounter;

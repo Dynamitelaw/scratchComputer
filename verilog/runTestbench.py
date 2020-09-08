@@ -16,11 +16,11 @@ help yourself
 	parser.add_argument("-prog", action="store", dest="programPath", help="Path to hex program to run, if supported by the testbench")
 	parser.add_argument("-dump", action="store_true", dest="dumpValues", help="If specified, will create an lxt2 dump file from simulation. Required to view waveforms in Gtkwave")
 
-	results = parser.parse_args()
+	args = parser.parse_args()
 
-	testbenchPath = results.testbenchPath
-	programPath = results.programPath
-	dumpValues = results.dumpValues
+	testbenchPath = args.testbenchPath
+	programPath = args.programPath
+	dumpValues = args.dumpValues
 
 	if (not testbenchPath):
 		print("ERROR: -testbenchPath arg required")

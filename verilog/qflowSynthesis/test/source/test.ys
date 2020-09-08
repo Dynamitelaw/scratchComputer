@@ -1,0 +1,5 @@
+# Synthesis script for yosys created by qflow
+read_liberty -lib -ignore_miss_dir -setattr blackbox /usr/share/qflow/tech/osu035/osu035_stdcells.lib
+read_verilog  test.v
+# Hierarchy check
+hierarchy -check

@@ -16,7 +16,8 @@ module core(
 	input start,
 
 	//Outputs
-	output wire busy
+	output wire busy,
+	output wire [`DATA_WIDTH-1:0] tempRegOut
 	);
 
 	//Instruction decoder
@@ -161,6 +162,8 @@ module core(
 	wire [`DATA_WIDTH-1:0] readA_regOut;
 	wire [`DATA_WIDTH-1:0] readB_regOut;
 	assign aOperand_frameIn = readA_regOut;
+
+	assign tempRegOut = readA_regOut;
 
 	wire writeEnable_reg;
 	assign writeEnable_reg = result_we && writeEnable_frameOut;

@@ -42,6 +42,11 @@ Optional: required for layout and static timing analysis
 http://opencircuitdesign.com/qflow/
 http://opencircuitdesign.com/magic/
 
+sudo apt-get -y install yosys
+sudo apt-get -y install magic
+sudo apt-get -y install qflow
+sudo apt-get -y install graywolf
+
 
 -Installing yosys
 	sudo apt-get install yosys
