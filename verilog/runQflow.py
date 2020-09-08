@@ -64,7 +64,7 @@ help yourself
 
 	parser = argparse.ArgumentParser(description = helpdesc)
 
-	parser.add_argument("-rtl", action="store", dest="verilogPath", help="Filepath to top-level verilog")
+	parser.add_argument("verilogPath", action="store", help="Filepath to top-level verilog")
 
 	parser.add_argument("-synthesize", action="store_true", dest="synthesize", help="Include to run qflow synthesis")
 	parser.add_argument("-sta", action="store_true", dest="sta", help="Include to run qflow static timing analysis")
