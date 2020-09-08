@@ -5,4 +5,4 @@
 *testCode/*.hex
 
 #Ignore all synthesized files
-*qflowSynthesis/*
+**qflowSynthesis/**
