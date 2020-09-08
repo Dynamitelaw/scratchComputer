@@ -3,3 +3,6 @@
 
 #ignore all compiled hex files
 *testCode/*.hex
+
+#Ignore all synthesized files
+*qflowSynthesis/*
