@@ -268,8 +268,9 @@ def instructionsToInts(instructionList):
 	'''
 	instructionValues = []
 
-	for programCounter in range(0,len(instructionList)):
-		instruction = instructionList[programCounter]
+	for index in range(0,len(instructionList)):
+		programCounter = index*4
+		instruction = instructionList[index]
 		instructionEnum = instruction[0]
 		args = instruction[1:]
 
