@@ -1,0 +1,4 @@
+commit message format = "MILESTONE#<mid> <message>"
+
+MID :	Description
+1.0 :	Fully tested logisim/verilog versions of pipeline. Can execute arithmetic instructions in order.
