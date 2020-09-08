@@ -35,7 +35,8 @@ help yourself
 
 		while(line):
 			line = programFile.readline()
-			lineCount += 1
+			if (len(line) > 0):
+				lineCount += 1
 
 		programFile.close()
 

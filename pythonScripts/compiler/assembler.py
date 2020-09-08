@@ -379,7 +379,21 @@ def instructionsToInts(instructionList):
 
 			binaryString = "{}{}{}{}{}{}".format(funct7_string, rs2_string, rs1_string, funct3_string, rd_string, opcode_string)
 		elif (instructionFields["type"] == "I"):
-			imm_string = format(instructionFields["imm"], "012b")  #7bit value
+			imm_string = ""
+			if (instructionFields["imm"] < 0):
+				#handle negative immediate arguments
+				absVal = instructionFields["imm"] * -1
+				absBinString = format(absVal, "012b")  #get binary string of abs value 
+
+				#Convert to 2s compliment negative number
+				flippedBitsString = absBinString.replace("0","z").replace("1","0").replace("z","1")  #Flip all bits
+				unsignedVal = int(flippedBitsString, 2)
+				twoCompInt = unsignedVal + 1
+
+				imm_string = format(twoCompInt, "012b")
+			else:
+				imm_string = format(instructionFields["imm"], "012b")  #12bit value
+
 			rs1_string = format(instructionFields["rs1"], "05b")  #5bit value
 			funct3_string = format(instructionFields["funct3"], "03b")  #3bit value
 			rd_string = format(instructionFields["rd"], "05b")  #5bit value
@@ -420,7 +434,8 @@ def writeHexFile(integerList, filepath):
 	outputFile = open(filepath, "w")
 
 	for val in integerList:
-		outputFile.write(hex(val)[2:])
+		hexVal = hex(val)[2:].zfill(8)
+		outputFile.write(hexVal)
 		outputFile.write("\n")
 
 	outputFile.close()
@@ -460,7 +475,7 @@ if __name__ == '__main__':
 
 	#Read command line arguments
 	helpdesc = '''
-SC Assembler v1.0 | Converts RISCV assembly files into machine code.
+SC Assembler v1.0 | Converts RISC-V assembly files into machine code.
 Currently outputs only Logisim hex files.
 '''
 
@@ -468,7 +483,7 @@ Currently outputs only Logisim hex files.
 
 	parser.add_argument("-asm", action="store", dest="asmPath", help="Filepath to input assembly file")
 	parser.add_argument("-ohex", action="store", dest="hexPath", help="Specify path for output hex file. Defaults to same path as input asm")
-	parser.add_argument("-oIndex", action="store", dest="indexPath", help="If specified, assembler will output a csv index for each instruction")
+	parser.add_argument("-oindex", action="store", dest="indexPath", help="If specified, assembler will output a csv index for each instruction")
 	parser.add_argument("-logisim", action="store_true", help="If specified, assembler will add the Logisim-required header to the hex file. Note: This will break verilog simulations.")
 
 	arguments = parser.parse_args()
