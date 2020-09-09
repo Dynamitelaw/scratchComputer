@@ -2,6 +2,8 @@
 
 module frameWriteController(
 	//Inputs
+	input fetch_RequestState,
+	input fetch_ReceiveState,
 	input decodeState,
 	input setupState,
 	input executeState,
@@ -19,7 +21,12 @@ module frameWriteController(
 	output wire resultSlct_we,
 	output wire writeSlct_we,
 	output wire writeEnable_we,
-	output wire result_we
+	output wire result_we,
+	output wire cir_writeEnable,
+	output wire pc_writeEnable,
+	output wire pcOverwrite_we,
+	output wire branchType_we,
+	output wire jumpInstruction_we
 	);
 
 	assign aOperand_we = setupState;
@@ -34,5 +41,9 @@ module frameWriteController(
 	assign resultSlct_we = decodeState;
 	assign writeSlct_we = decodeState;
 	assign writeEnable_we = decodeState;
+	assign cir_writeEnable = fetch_ReceiveState;
+	assign pcOverwrite_we = decodeState;
+	assign branchType_we = decodeState;
+	assign jumpInstruction_we = decodeState;
 
 endmodule //frameWriteController

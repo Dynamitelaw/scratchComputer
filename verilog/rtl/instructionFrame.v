@@ -18,6 +18,11 @@ module instructionFrame(
 	input [`RESLT_SELCT_WIDTH-1:0] resultSelect_in,
 	input [`REGADDR_WIDTH-1:0] writeSelect_in,
 	input writeEnable_in,
+	input pcOverwrite_in,
+	input [2:0] branchType_in,
+	input jumpInstruction_in,
+	input [`DATA_WIDTH-1:0] aOpCompare_in,
+	input [`DATA_WIDTH-1:0] bOpCompare_in,
 
 	//Write enable inputs
 	input aOperand_we,
@@ -31,6 +36,9 @@ module instructionFrame(
 	input resultSlct_we,
 	input writeSlct_we,
 	input writeEnable_we,
+	input pcOverwrite_we,
+	input branchType_we,
+	input jumpInstruction_we,
 
 	//Data outputs
 	output reg [`DATA_WIDTH-1:0] aOperand_out,
@@ -43,7 +51,12 @@ module instructionFrame(
 	output reg subtractEnable_out,
 	output reg [`RESLT_SELCT_WIDTH-1:0] resultSelect_out,
 	output reg [`REGADDR_WIDTH-1:0] writeSelect_out,
-	output reg writeEnable_out
+	output reg writeEnable_out,
+	output reg pcOverwrite_out,
+	output reg [2:0] branchType_out,
+	output reg jumpInstruction_out,
+	output reg [`DATA_WIDTH-1:0] aOpCompare_out,
+	output reg [`DATA_WIDTH-1:0] bOpCompare_out
 	);
 
 	always @(posedge clk) begin : instructionFrame_proc
@@ -59,6 +72,11 @@ module instructionFrame(
 			resultSelect_out <= 0;
 			writeSelect_out <= 0;
 			writeEnable_out <= 0;
+			pcOverwrite_out <= 0;
+			branchType_out <= 0;
+			jumpInstruction_out <= 0;
+			aOpCompare_out <= 0;
+			bOperand_out <= 0;
 		end else begin
 			if (aOperand_we) aOperand_out <= aOperand_in;
 			if (aLoc_we) aLoc_out <= aLoc_in;
@@ -71,6 +89,11 @@ module instructionFrame(
 			if (resultSlct_we) resultSelect_out <= resultSelect_in;
 			if (writeSlct_we) writeSelect_out <= writeSelect_in;
 			if (writeEnable_we) writeEnable_out <= writeEnable_in;
+			if (pcOverwrite_we) pcOverwrite_out <= pcOverwrite_in;
+			if (branchType_we) branchType_out <= branchType_in;
+			if (jumpInstruction_we) jumpInstruction_out <= jumpInstruction_in;
+			if (aOperand_we) aOpCompare_out <= aOpCompare_in;
+			if (bOperand_we) bOpCompare_out <= bOpCompare_in;
 		end
 	end
 
