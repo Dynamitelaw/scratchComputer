@@ -1,6 +1,6 @@
 ######
-# This code tests all supported instructions
-# If test passes, all registers should store either 42 or 0
+# This code tests branch and jump instructions
+# If test passes, r0 register should store 42
 ######
 
 begin:
@@ -14,12 +14,11 @@ addi t0, zero, 0  #counting variable
 addi t1, zero, 42  #counterLimit
 
 for_loopStart:
-addi a0, a0, 1  #a0 ++
-addi t0, t0, 1  #t0 ++
+	addi a0, a0, 1  #a0 ++
+	addi t0, t0, 1  #t0 ++
 
-beq t0, t1, for_loopExit
-j for_loopStart
-
+	beq t0, t1, for_loopExit
+	j for_loopStart
 for_loopExit:
 
 
