@@ -441,7 +441,7 @@ def instructionsToInts(instructionList):
 			instructionFields["rs1"] = args[0]
 			instructionFields["funct3"] = 6
 			instructionFields["opcode"] = 99
-		elif (instructionEnum == INST.BEQ):
+		elif (instructionEnum == INST.BGEU):
 			instructionFields["type"] = "B"
 			instructionFields["imm"] = args[2] - programCounter
 			instructionFields["rs2"] = args[1]
@@ -583,7 +583,7 @@ def generateCsvIndex(instructions, instructionIntValues, filepath):
 	Will generate a csv index for each instruction
 	'''
 	indexDict = {
-		"Address": [],
+		"ProgramCounter": [],
 		"instruction": [],
 		"DEC": [],
 		"HEX": [],
@@ -596,7 +596,7 @@ def generateCsvIndex(instructions, instructionIntValues, filepath):
 		hexValue = hex(intValue)
 		binValue = format(intValue, "032b")
 		
-		indexDict["Address"].append(address)
+		indexDict["ProgramCounter"].append(address*4)
 		indexDict["instruction"].append(intructionStr)
 		indexDict["DEC"].append(intValue)
 		indexDict["HEX"].append(hexValue)
