@@ -8,7 +8,7 @@ from enum import Enum, unique
 #Enum for supported instruction keys
 @unique
 class INST(Enum):
-    #Integer arithmetic instructions
+    #Integer computational instructions
     ADDI = 0
     ADD = 1
     MOVE = 2
@@ -22,6 +22,8 @@ class INST(Enum):
     SLTIU = 10
     SLT = 11
     SLTU = 12
+
+    #Control transfer instructions
     JAL = 13
     J = 14
     BEQ = 15
@@ -30,6 +32,16 @@ class INST(Enum):
     BLT = 18
     BGE = 19
     BGEU = 20
+
+    #Load and store instructions
+    LW = 21
+    LH = 22
+    LHU = 23
+    LB = 24
+    LBU = 25
+    SW = 26
+    SH = 27
+    SB = 28
 
 
 #Mapping of each register ABI name to their hardware address
@@ -108,8 +120,12 @@ def parseInstruction(asmLine):
 	'''
 	instructionName = asmLine.split(" ")[0]
 
-	#Identify instruction type
+	#########
+	# Identify instruction type
+	#########
+
 	instructionEnum = -1
+	#Integer computational instructions
 	if (instructionName == "addi"):
 		instructionEnum = INST.ADDI
 	elif (instructionName == "add"):
@@ -138,6 +154,7 @@ def parseInstruction(asmLine):
 		instructionEnum = INST.SLT
 	elif (instructionName == "sltu"):
 		instructionEnum = INST.SLTU
+	#Control transfer instructions
 	elif (instructionName == "jal"):
 		instructionEnum = INST.JAL
 	elif (instructionName == "j"):
@@ -154,6 +171,23 @@ def parseInstruction(asmLine):
 		instructionEnum = INST.BGE
 	elif (instructionName == "bgeu"):
 		instructionEnum = INST.BGEU
+	#Load and store instructions
+	elif (instructionName == "lw"):
+		instructionEnum = INST.LW
+	elif (instructionName == "lh"):
+		instructionEnum = INST.LH
+	elif (instructionName == "lhu"):
+		instructionEnum = INST.LHU
+	elif (instructionName == "lb"):
+		instructionEnum = INST.LB
+	elif (instructionName == "lbu"):
+		instructionEnum = INST.LBU
+	elif (instructionName == "sw"):
+		instructionEnum = INST.SW
+	elif (instructionName == "sh"):
+		instructionEnum = INST.SH
+	elif (instructionName == "sb"):
+		instructionEnum = INST.SB
 
 	if (instructionEnum == -1):
 		raise Exception("Unsupported instruction \"{}\"".format(instructionName))
@@ -161,10 +195,13 @@ def parseInstruction(asmLine):
 	instruction = []
 	instruction.append(instructionEnum)
 
-	#Parse instruction args
+	#########
+	# Parse instruction args
+	#########
 	instructionArgs = [i.strip() for i in asmLine.replace(instructionName, "").split(",")]
 
 	totalArgs = len(instructionArgs)
+	#Integer computational instructions
 	if ((instructionEnum == INST.ADDI) and (totalArgs < 3)):
 		raise Exception("Incorrect number of arguments for \"addi\"")
 	elif ((instructionEnum == INST.ADD) and (totalArgs < 3)):
@@ -191,10 +228,43 @@ def parseInstruction(asmLine):
 		raise Exception("Incorrect number of arguments for \"slt\"")
 	elif ((instructionEnum == INST.SLTU) and (totalArgs < 3)):
 		raise Exception("Incorrect number of arguments for \"sltu\"")
+	#Control transfer instructions
 	elif ((instructionEnum == INST.JAL) and (totalArgs < 1)):
 		raise Exception("Incorrect number of arguments for \"jal\"")
 	elif ((instructionEnum == INST.J) and (totalArgs < 1)):
 		raise Exception("Incorrect number of arguments for \"j\"")
+	elif ((instructionEnum == INST.BEQ) and (totalArgs < 3)):
+		raise Exception("Incorrect number of arguments for \"beq\"")
+	elif ((instructionEnum == INST.BNE) and (totalArgs < 3)):
+		raise Exception("Incorrect number of arguments for \"bne\"")
+	elif ((instructionEnum == INST.BLT) and (totalArgs < 3)):
+		raise Exception("Incorrect number of arguments for \"blt\"")
+	elif ((instructionEnum == INST.BLTU) and (totalArgs < 3)):
+		raise Exception("Incorrect number of arguments for \"bltu\"")
+	elif ((instructionEnum == INST.BGE) and (totalArgs < 3)):
+		raise Exception("Incorrect number of arguments for \"bge\"")
+	elif ((instructionEnum == INST.BGEU) and (totalArgs < 3)):
+		raise Exception("Incorrect number of arguments for \"bgeu\"")
+	#Load and store instructions
+		# load rd, rs1, offset
+		# store rs2, rs1, offset
+	elif ((instructionEnum == INST.LW) and (totalArgs < 3)):
+		raise Exception("Incorrect number of arguments for \"lw\"")
+	elif ((instructionEnum == INST.LH) and (totalArgs < 3)):
+		raise Exception("Incorrect number of arguments for \"lh\"")
+	elif ((instructionEnum == INST.LHU) and (totalArgs < 3)):
+		raise Exception("Incorrect number of arguments for \"lhu\"")
+	elif ((instructionEnum == INST.LB) and (totalArgs < 3)):
+		raise Exception("Incorrect number of arguments for \"lb\"")
+	elif ((instructionEnum == INST.LBU) and (totalArgs < 3)):
+		raise Exception("Incorrect number of arguments for \"lbu\"")
+	elif ((instructionEnum == INST.SW) and (totalArgs < 3)):
+		raise Exception("Incorrect number of arguments for \"sw\"")
+	elif ((instructionEnum == INST.SH) and (totalArgs < 3)):
+		raise Exception("Incorrect number of arguments for \"sh\"")
+	elif ((instructionEnum == INST.SB) and (totalArgs < 3)):
+		raise Exception("Incorrect number of arguments for \"sb\"")
+
 
 	for arg in instructionArgs:
 		try:
@@ -210,6 +280,7 @@ def parseInstruction(asmLine):
 				instruction.append(arg)
 
 	return instruction
+
 
 def parseAssemblyFile(filepath):
 	'''
@@ -292,8 +363,12 @@ def instructionsToInts(instructionList):
 		instructionEnum = instruction[0]
 		args = instruction[1:]
 
-		#Determine instruction type and fields
+		#########
+		# Determine instruction type and fields
+		#########
 		instructionFields = {}
+
+		#Integer computational instructions
 		if (instructionEnum == INST.ADDI):
 			instructionFields["type"] = "I"
 			instructionFields["imm"] = args[2]
@@ -396,6 +471,7 @@ def instructionsToInts(instructionList):
 			instructionFields["funct3"] = 3
 			instructionFields["rd"] = args[0]
 			instructionFields["opcode"] = 51
+		#Control transfer instructions
 		elif (instructionEnum == INST.JAL):
 			instructionFields["type"] = "J"
 			instructionFields["imm"] = args[0] - programCounter
@@ -448,9 +524,69 @@ def instructionsToInts(instructionList):
 			instructionFields["rs1"] = args[0]
 			instructionFields["funct3"] = 7
 			instructionFields["opcode"] = 99
+		#Load and store instructions
+		elif (instructionEnum == INST.LW):
+			instructionFields["type"] = "I"
+			instructionFields["imm"] = args[2]
+			instructionFields["rs1"] = args[1]
+			instructionFields["funct3"] = 2
+			instructionFields["rd"] = args[0]
+			instructionFields["opcode"] = 3
+		elif (instructionEnum == INST.LH):
+			instructionFields["type"] = "I"
+			instructionFields["imm"] = args[2]
+			instructionFields["rs1"] = args[1]
+			instructionFields["funct3"] = 1
+			instructionFields["rd"] = args[0]
+			instructionFields["opcode"] = 3
+		elif (instructionEnum == INST.LHU):
+			instructionFields["type"] = "I"
+			instructionFields["imm"] = args[2]
+			instructionFields["rs1"] = args[1]
+			instructionFields["funct3"] = 5
+			instructionFields["rd"] = args[0]
+			instructionFields["opcode"] = 3
+		elif (instructionEnum == INST.LB):
+			instructionFields["type"] = "I"
+			instructionFields["imm"] = args[2]
+			instructionFields["rs1"] = args[1]
+			instructionFields["funct3"] = 0
+			instructionFields["rd"] = args[0]
+			instructionFields["opcode"] = 3
+		elif (instructionEnum == INST.LBU):
+			instructionFields["type"] = "I"
+			instructionFields["imm"] = args[2]
+			instructionFields["rs1"] = args[1]
+			instructionFields["funct3"] = 4
+			instructionFields["rd"] = args[0]
+			instructionFields["opcode"] = 3
+		elif (instructionEnum == INST.SW):
+			instructionFields["type"] = "S"
+			instructionFields["imm"] = args[2]
+			instructionFields["rs2"] = args[0]
+			instructionFields["rs1"] = args[1]
+			instructionFields["funct3"] = 2
+			instructionFields["opcode"] = 35
+		elif (instructionEnum == INST.SH):
+			instructionFields["type"] = "S"
+			instructionFields["imm"] = args[2]
+			instructionFields["rs2"] = args[0]
+			instructionFields["rs1"] = args[1]
+			instructionFields["funct3"] = 1
+			instructionFields["opcode"] = 35
+		elif (instructionEnum == INST.SB):
+			instructionFields["type"] = "S"
+			instructionFields["imm"] = args[2]
+			instructionFields["rs2"] = args[0]
+			instructionFields["rs1"] = args[1]
+			instructionFields["funct3"] = 0
+			instructionFields["opcode"] = 35
 
-		#Concatenate instruction fields into binary string
+		#########
+		# Concatenate instruction fields into binary string
+		#########
 		binaryString = ""
+		#R-type instructions
 		if (instructionFields["type"] == "R"):
 			funct7_string = format(instructionFields["funct7"], "07b")  #7bit value
 			rs2_string = format(instructionFields["rs2"], "05b")  #5bit value
@@ -461,6 +597,7 @@ def instructionsToInts(instructionList):
 
 			binaryString = "{}{}{}{}{}{}".format(funct7_string, rs2_string, rs1_string, funct3_string, rd_string, opcode_string)
 
+		#I-type instructions
 		elif (instructionFields["type"] == "I"):
 			imm_string = ""
 			if (instructionFields["imm"] < 0):
@@ -484,6 +621,7 @@ def instructionsToInts(instructionList):
 
 			binaryString = "{}{}{}{}{}".format(imm_string, rs1_string, funct3_string, rd_string, opcode_string)
 
+		#J-type instructions
 		elif (instructionFields["type"] == "J"):
 			imm_string = ""
 			if (instructionFields["imm"] < 0):
@@ -507,6 +645,7 @@ def instructionsToInts(instructionList):
 
 			binaryString = "{}{}{}".format(imm_stringReordered, rd_string, opcode_string)
 
+		#B-type instructions
 		elif (instructionFields["type"] == "B"):
 			imm_string = ""
 			if (instructionFields["imm"] < 0):
@@ -536,6 +675,35 @@ def instructionsToInts(instructionList):
 			opcode_string = format(instructionFields["opcode"], "07b")  #7bit value
 
 			binaryString = "{}{}{}{}{}{}{}{}".format(immString_12, immString_10_5, rs2_string, rs1_string, funct3_string, immString_4_1, immString_11, opcode_string)
+
+		#S-type instructions
+		elif (instructionFields["type"] == "S"):
+			imm_string = ""
+			if (instructionFields["imm"] < 0):
+				#handle negative immediate arguments
+				absVal = instructionFields["imm"] * -1
+				absBinString = format(absVal, "013b")  #get binary string of abs value 
+
+				#Convert to 2s compliment negative number
+				flippedBitsString = absBinString.replace("0","z").replace("1","0").replace("z","1")  #Flip all bits
+				unsignedVal = int(flippedBitsString, 2)
+				twoCompInt = unsignedVal + 1
+
+				imm_string = format(twoCompInt, "013b")
+			else:
+				imm_string = format(instructionFields["imm"], "013b")  #12bit value
+
+			
+			#Split imm_string into required parts for S-type
+			immString_11_5 = imm_string[-12:-5]
+			immString_4_0 = imm_string[-5:]
+
+			rs2_string = format(instructionFields["rs2"], "05b")  #5bit value
+			rs1_string = format(instructionFields["rs1"], "05b")  #5bit value
+			funct3_string = format(instructionFields["funct3"], "03b")  #3bit value
+			opcode_string = format(instructionFields["opcode"], "07b")  #7bit value
+
+			binaryString = "{}{}{}{}{}{}".format(immString_11_5, rs2_string, rs1_string, funct3_string, immString_4_0, opcode_string)
 
 		else:
 			raise Exception("Unsupported instruction type {}".format(instruction))

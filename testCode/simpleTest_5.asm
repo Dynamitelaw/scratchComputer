@@ -1,6 +1,6 @@
 ######
 # This code tests branch and jump instructions
-# If test passes, r0 register should store 42
+# If test passes, a0 register should store 42
 ######
 
 begin:

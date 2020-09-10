@@ -1,5 +1,5 @@
 commit message format = "MILESTONE#<mid> <message>"
 
 MID :	Description
-1.0 :	Fully tested logisim/verilog versions of pipeline. Can execute arithmetic instructions in order.
-2.0 :	Added flow control support. Can now execute branch and jump instructions.
+1.0 :	Fully tested logisim/verilog versions of pipeline. Can execute arithmetic instructions in order. (9/7/2020)
+2.0 :	Added flow control support. Can now execute branch and jump instructions. (9/9/2020)
