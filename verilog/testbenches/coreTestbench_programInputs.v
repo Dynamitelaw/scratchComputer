@@ -1,2 +1,2 @@
-`define programLength 11
-`define programFilename "../testCode/simpleTest_3.hex"
+`define programLength 36
+`define programFilename "../testCode/simpleTest_2.hex"

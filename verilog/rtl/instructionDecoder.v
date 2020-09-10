@@ -17,7 +17,7 @@ module instructionDecoder (
 	output reg [`RESLT_SELCT_WIDTH-1:0] resultSelect,
 	output reg error,
 	output reg pcOverwrite,
-	output reg branchType,
+	output reg [2:0] branchType,
 	output wire jumpInstruction
 	);
 
@@ -50,7 +50,7 @@ module instructionDecoder (
 	wire [5:0] imm_10_5;
 	wire imm_12;
 
-	assign imm_11 = instructionIn[7];
+	assign immB_11 = instructionIn[7];
 	assign imm_4_1 = instructionIn[11:8];
 	assign imm_10_5 = instructionIn[30:25];
 	assign imm_12 = instructionIn[31];
@@ -86,11 +86,11 @@ module instructionDecoder (
 	`define DIVU_F3 3'h5
 	`define REM_F3 3'h6
 	`define REMU_F3 3'h7
-	`define BEQ_F3 3'h7
-	`define BNE_F3 3'h7
-	`define BLT_F3 3'h7
-	`define BGE_F3 3'h7
-	`define BLTU_F3 3'h7
+	`define BEQ_F3 3'h0
+	`define BNE_F3 3'h1
+	`define BLT_F3 3'h4
+	`define BGE_F3 3'h5
+	`define BLTU_F3 3'h6
 	`define BGEU_F3 3'h7
 
 	//funct7
@@ -128,7 +128,12 @@ module instructionDecoder (
 	`define IMM_EXTEN_WIDTH_I 20
 	`define IMM_EXTEN_WIDTH_B 19
 	`define IMM_EXTEN_WIDTH_J 11
-	reg [7:0] encoderInput;
+	reg [7:0] resultEncoderInput;
+	reg [7:0] branchEncoderInput;
+
+	reg [`DATA_WIDTH-1:0] immediateVal_Itype;
+	reg [`DATA_WIDTH-1:0] immediateVal_Btype;
+	reg [`DATA_WIDTH-1:0] immediateVal_Jtype;
 
 	always @(*) begin : instructionDecode
 		//Check for supported instructions and set decode flags
@@ -155,14 +160,22 @@ module instructionDecoder (
 		//Set branch flag
 		bType_flag = (opcode == `OP_BRANCH);
 
+		///////////////
 		//Determine output control signals
+		///////////////
 		a_location = rs1;
 		b_location = rs2;
 
+		//Determine immediateVal
 		immediateSelect = addi_flag || slti_flag || sltiu_flag || jal_flag || bType_flag;
 		immediateVal_Itype = { {`IMM_EXTEN_WIDTH_I{imm[`IMM_WIDTH-1]}}, imm[`IMM_WIDTH-1:0] };  //sign extend immediate value for I-type instructions
-		immediateVal_Btype = { {`IMM_EXTEN_WIDTH_B{imm_12}}, imm_12, immB_11, imm_10_5, imm_4_1, 0 };  //contruct and sign extend immediate value for B-type instructions
-		immediateVal_Jtype = { {`IMM_EXTEN_WIDTH_J{imm_20}}, imm_20, imm_19_12, immJ_11, imm_10_1, 0 };  //contruct and sign extend immediate value for J-type instructions
+		immediateVal_Btype = { {`IMM_EXTEN_WIDTH_B{imm_12}}, imm_12, immB_11, imm_10_5, imm_4_1, 1'b0 };  //contruct and sign extend immediate value for B-type instructions
+		immediateVal_Jtype = { {`IMM_EXTEN_WIDTH_J{imm_20}}, imm_20, imm_19_12, immJ_11, imm_10_1, 1'b0 };  //contruct and sign extend immediate value for J-type instructions
+
+		if (jal_flag) immediateVal = immediateVal_Jtype;
+		else if (bType_flag) immediateVal = immediateVal_Btype;
+		else immediateVal = immediateVal_Itype;
+
 
 		unsignedSelect = divu_flag || remu_flag || sltiu_flag || sltu_flag || bltu_flag || bgeu_flag;
 		subtractEnable = sub_flag;

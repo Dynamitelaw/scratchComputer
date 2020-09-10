@@ -10,23 +10,18 @@ module coreTestbench;
 	//Instantiate core
 	reg clk;
 	reg reset;
-	reg [`INSTRUCTION_WIDTH-1:0] instructionIn;
-	reg start;
+	reg [`INSTRUCTION_WIDTH-1:0] memoryIn;
 
-	wire busy;
-	wire [`DATA_WIDTH-1:0] tempRegOut;
+	wire [`DATA_WIDTH-1:0] programCounter;
 
 	core core (
 		.clk(clk),
 		.reset(reset),
-		.instructionIn(instructionIn),
-		.start(start),
+		.memoryIn(memoryIn),
 
-		.busy(busy),
-		.tempRegOut(tempRegOut)
+		.programCounter_out(programCounter)
 		);
 
-	integer programCounter;
 
 	initial	begin
 		/*
@@ -40,7 +35,6 @@ module coreTestbench;
 		//posedge clk
 		clk <= 1;
 		reset <= 1;
-		programCounter <= 0;
 
 		#2
 		//posedge clk
@@ -52,16 +46,20 @@ module coreTestbench;
 		 run program
 		 */
 		$display("Running program");
-		while ((programCounter < `programLength-1) || busy) begin
+		
+		while (programCounter <= (`programLength)*4) begin
+			//$display("PC=%d", programCounter);
 			#2
-			if (~busy) programCounter <= programCounter + 1;
+			reset <= 0;  //dummy write to appease iverilog
 		end
+		
+		//#2500
 
 		/*
 		 Ouput stats
 		 */
 		$display("Done, program terminated");
-		$display("cycles=%0t", ($time-3)/2);
+		$display("cycles=%0t", ($time-14)/2);
 		$finish;
 	end
 
@@ -73,12 +71,6 @@ module coreTestbench;
 
 	//Instruction passing
 	always @(*) begin
-		instructionIn = programMem[programCounter];
+		memoryIn = programMem[programCounter/4];
 	end
-
-	//Start sigal
-	always @(*) begin
-		start = (programCounter <= `programLength) && ~busy;
-	end
-
 endmodule

@@ -56,7 +56,7 @@ module instructionFetchController(
 		endcase // branchType
 
 		//Overwrite PC on jump instruction or true branch condition
-		pcOverwriteEnable = jumpInst || (compareEquals && beqFlag) || (~compareEquals && bneFlag) || (compareLess && bltFlag) || (compareGreater && bgeFlag) || (compareLess && bltuFlag) || (compareGreater && bgeuFlag)
+		pcOverwriteEnable = jumpInst || (compareEquals && beqFlag) || (~compareEquals && bneFlag) || (compareLess && bltFlag) || (compareGreater && bgeFlag) || (compareLess && bltuFlag) || (compareGreater && bgeuFlag);
 	end
 
 	always @ (posedge clk) begin : ifcSeq_proc

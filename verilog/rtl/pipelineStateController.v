@@ -4,7 +4,6 @@ module pipelineStateController (
 	//Inputs
 	input clk,
 	input reset,
-	input start,
 
 	//Outputs
 	output wire fetch_RequestState,
