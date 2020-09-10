@@ -198,7 +198,7 @@ def parseInstruction(asmLine):
 	#########
 	# Parse instruction args
 	#########
-	instructionArgs = [i.strip() for i in asmLine.replace(instructionName, "").split(",")]
+	instructionArgs = [i.strip() for i in asmLine.replace(instructionName, "").replace("(",",").replace(")","").split(",")]
 
 	totalArgs = len(instructionArgs)
 	#Integer computational instructions
@@ -246,8 +246,6 @@ def parseInstruction(asmLine):
 	elif ((instructionEnum == INST.BGEU) and (totalArgs < 3)):
 		raise Exception("Incorrect number of arguments for \"bgeu\"")
 	#Load and store instructions
-		# load rd, rs1, offset
-		# store rs2, rs1, offset
 	elif ((instructionEnum == INST.LW) and (totalArgs < 3)):
 		raise Exception("Incorrect number of arguments for \"lw\"")
 	elif ((instructionEnum == INST.LH) and (totalArgs < 3)):
@@ -527,58 +525,58 @@ def instructionsToInts(instructionList):
 		#Load and store instructions
 		elif (instructionEnum == INST.LW):
 			instructionFields["type"] = "I"
-			instructionFields["imm"] = args[2]
-			instructionFields["rs1"] = args[1]
+			instructionFields["imm"] = args[1]
+			instructionFields["rs1"] = args[2]
 			instructionFields["funct3"] = 2
 			instructionFields["rd"] = args[0]
 			instructionFields["opcode"] = 3
 		elif (instructionEnum == INST.LH):
 			instructionFields["type"] = "I"
-			instructionFields["imm"] = args[2]
-			instructionFields["rs1"] = args[1]
+			instructionFields["imm"] = args[1]
+			instructionFields["rs1"] = args[2]
 			instructionFields["funct3"] = 1
 			instructionFields["rd"] = args[0]
 			instructionFields["opcode"] = 3
 		elif (instructionEnum == INST.LHU):
 			instructionFields["type"] = "I"
-			instructionFields["imm"] = args[2]
-			instructionFields["rs1"] = args[1]
+			instructionFields["imm"] = args[1]
+			instructionFields["rs1"] = args[2]
 			instructionFields["funct3"] = 5
 			instructionFields["rd"] = args[0]
 			instructionFields["opcode"] = 3
 		elif (instructionEnum == INST.LB):
 			instructionFields["type"] = "I"
-			instructionFields["imm"] = args[2]
-			instructionFields["rs1"] = args[1]
+			instructionFields["imm"] = args[1]
+			instructionFields["rs1"] = args[2]
 			instructionFields["funct3"] = 0
 			instructionFields["rd"] = args[0]
 			instructionFields["opcode"] = 3
 		elif (instructionEnum == INST.LBU):
 			instructionFields["type"] = "I"
-			instructionFields["imm"] = args[2]
-			instructionFields["rs1"] = args[1]
+			instructionFields["imm"] = args[1]
+			instructionFields["rs1"] = args[2]
 			instructionFields["funct3"] = 4
 			instructionFields["rd"] = args[0]
 			instructionFields["opcode"] = 3
 		elif (instructionEnum == INST.SW):
 			instructionFields["type"] = "S"
-			instructionFields["imm"] = args[2]
+			instructionFields["imm"] = args[1]
 			instructionFields["rs2"] = args[0]
-			instructionFields["rs1"] = args[1]
+			instructionFields["rs1"] = args[2]
 			instructionFields["funct3"] = 2
 			instructionFields["opcode"] = 35
 		elif (instructionEnum == INST.SH):
 			instructionFields["type"] = "S"
-			instructionFields["imm"] = args[2]
+			instructionFields["imm"] = args[1]
 			instructionFields["rs2"] = args[0]
-			instructionFields["rs1"] = args[1]
+			instructionFields["rs1"] = args[2]
 			instructionFields["funct3"] = 1
 			instructionFields["opcode"] = 35
 		elif (instructionEnum == INST.SB):
 			instructionFields["type"] = "S"
-			instructionFields["imm"] = args[2]
+			instructionFields["imm"] = args[1]
 			instructionFields["rs2"] = args[0]
-			instructionFields["rs1"] = args[1]
+			instructionFields["rs1"] = args[2]
 			instructionFields["funct3"] = 0
 			instructionFields["opcode"] = 35
 
