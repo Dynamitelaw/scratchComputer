@@ -58,6 +58,61 @@ addi t1, zero, 0
 # Test signed/unsigned load instructions
 ####
 
+signedBytedTest:
 #Replace upper 2 bytes of word with 0s
 sb zero, 2(sp)
 sb zero, 3(sp)
+
+#Load byte, and make sure result is sign extended to -1
+lb t0, 0(sp)
+addi t1, zero, -1
+
+beq t0, t1, a2_make20
+j unsignedByteTest
+
+a2_make20:
+addi a2, zero, 20
+
+unsignedByteTest:
+#Load unsigned byte, and make sure result is not sign extended
+lbu t0, 0(sp)
+
+#Load 255^2 -1 into t1
+addi t1, zero, 256
+mul t1, t1, t1
+addi t1, t1, -1
+
+beq t0, t1, a2_add22
+j halfwordTest
+
+a2_add22:
+addi a2, a2, 22
+
+#Load halfword, and make sure result is sign extended to -1
+halfwordTest:
+lh t0, 0(sp)
+addi t1, zero, -1
+
+beq t0, t1, a3_make20
+j unsignedHalfwordTest
+
+a3_make20:
+addi a3, zero, 20
+
+unsignedHalfwordTest:
+#Load unsigned byte, and make sure result is not sign extended
+lhu t0, 0(sp)
+
+#Load 255^2 -1 into t1
+addi t1, zero, 256
+mul t1, t1, t1
+addi t1, t1, -1
+
+beq t0, t1, a3_add22
+j exit
+
+a3_add22:
+addi a3, a3, 22
+
+exit:
+addi zero, zero, 0
