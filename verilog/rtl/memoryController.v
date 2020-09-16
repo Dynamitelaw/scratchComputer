@@ -11,16 +11,128 @@ module memoryController(
 	input [`DATA_WIDTH-1:0] length,
 	input storeIn,
 	input loadIn,
-	input loadUnsighed,
-	output [`DATA_WIDTH-1:0] dataReadOut,
+	input loadUnsigned,
+	output wire [`DATA_WIDTH-1:0] dataReadOut,
 
 	//RAM interface
 	input [`DATA_WIDTH-1:0] ramDataRead,
 	output [`DATA_WIDTH-1:0] addressOut,
-	output [`DATA_WIDTH-1:0] ramDataWrite,
-	output [3:0] byteSelect,
+	output wire [`DATA_WIDTH-1:0] ramDataWrite,
+	output wire [3:0] byteSelect,
 	output ramStore,
 	output ramLoad
 	);
+
+	wire addressLower;
+	assign addressLower = addressIn[1:0]
+
+	//Determine which bytes to write
+	reg B0_write;
+	reg B1_write;
+	reg B2_write;
+	reg B3_write;
+	assign byteSelect = {B3_write, B2_write, B1_write, B0_write};
+
+	always @(*) begin : byteSelect_proc
+		B0_write = (addressLower == 0);
+		B1_write = (addressLower == 1) || ((addressLower == 0) && (length > 0));
+		B2_write = (addressLower == 2) || ((addressLower == 0) && (length == 3));
+		B3_write = (addressLower == 3) || ((addressLower == 2) && (length == 1)) || ((addressLower == 0) && (length == 3));
+	end
+
+	//Rearrange data to RAM based on length and address
+	wire [7:0] input_byte0;
+	assign input_byte0 = dataWriteIn[7:0];
+	wire [7:0] input_byte1;
+	assign input_byte1 = dataWriteIn[15:8];
+	wire [7:0] input_byte2;
+	assign input_byte2 = dataWriteIn[23:16];
+	wire [7:0] input_byte3;
+	assign input_byte3 = dataWriteIn[31:24];
+
+	reg ramIn_byte0;
+	reg ramIn_byte1;
+	reg ramIn_byte2;
+	reg ramIn_byte3;
+	assign ramDataWrite = {ramIn_byte3, ramIn_byte2, ramIn_byte1, ramIn_byte0};
+
+	reg ri1_B0select;
+	reg ri1_B1select;
+	reg ri2_B0select;
+	reg ri2_B2select;
+	reg ri3_B0select;
+	reg ri3_B1select;
+	reg ri3_B3select;
+
+	always @(*) begin : dataWriteRearrange_proc
+		//Byte0
+		if (addressLower == 0) ramIn_byte0 = input_byte0;
+		else ramIn_byte0 = 0;
+
+		//Byte1
+		ri1_B0select = (addressLower == 1);
+		ri1_B1select = (addressLower == 0) && (length > 0);
+
+		if (ri1_B0select) ramIn_byte1 = input_byte0;
+		else if (ri1_B1select) ramIn_byte1 = input_byte1;
+		else ramIn_byte1 = 0;
+
+		//Byte2
+		ri2_B0select = (addressLower == 2);
+		ri2_B2select = (addressLower == 0) && (length == 3);
+
+		if (ri2_B0select) ramIn_byte2 = input_byte0;
+		else if (ri2_B2select) ramIn_byte2 = ramIn_byte2;
+		else ramIn_byte2 = 0;
+
+		//Byte 3
+		ri3_B0select = (addressLower == 3);
+		ri3_B1select = (addressLower == 2) && (length == 1);
+		ri3_B3select = (addressLower == 0) && (length == 3);
+
+		if (ri3_B0select) ramIn_byte3 = input_byte0;
+		else if (ri3_B1select) ramIn_byte3 = input_byte1;
+		else if (ri3_B3select) ramIn_byte3 = input_byte3;
+		else ramIn_byte3 = 0;
+	end
+
+
+	//Rearrange and sign extend ram data read based on length
+	wire [7:0] ramRead_byte0;
+	assign ramRead_byte0 = ramDataRead[7:0];
+	wire [7:0] ramRead_byte1;
+	assign ramRead_byte1 = ramDataRead[15:8];
+	wire [7:0] ramRead_byte2;
+	assign ramRead_byte2 = ramDataRead[23:16];
+	wire [7:0] ramRead_byte3;
+	assign ramRead_byte3 = ramDataRead[31:24];
+
+	reg [7:0] readOut_byte0;
+	reg [7:0] readOut_byte1;
+	reg [7:0] readOut_byte2;
+	reg [7:0] readOut_byte3;
+	assign dataReadOut = {readOut_byte3, readOut_byte2, readOut_byte1, readOut_byte0};
+
+	wire [7:0] byte0_extended;
+	assign byte0_extended = {8{ramRead_byte0[7] && ~loadUnsigned}}
+	wire [7:0] byte1_extended;
+	assign byte1_extended = {8{ramRead_byte1[7] && ~loadUnsigned}}
+	wire [7:0] byte2_extended;
+	assign byte2_extended = {8{ramRead_byte2[7] && ~loadUnsigned}}
+
+	always @(*) begin : signExten_proc
+		//Byte0
+		case (addressLower):
+			0 : readOut_byte0 = ramRead_byte0;
+			1 : readOut_byte0 = ramRead_byte1;
+			2 : readOut_byte0 = ramRead_byte2;
+			3 : readOut_byte0 = ramRead_byte3;
+		endcase // addressLower
+
+		//Byte1
+		if ((addressLower==0) && (length==1)) readOut_byte1 = ramRead_byte1;
+	end
+
+
 
 endmodule //memoryController

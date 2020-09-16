@@ -41,10 +41,11 @@ sb t0, 2(sp)
 sb t0, 3(sp)
 #-1 should now be in 0(sp)
 
-lw a1, 0(sp)
+lw t2, 0(sp)
 addi t1, zero, -1
 
-beq a1, t1, a1_make42
+beq t2, t1, a1_make42
+addi a1, zero, -1
 j clearTemps
 
 a1_make42:
@@ -77,10 +78,8 @@ unsignedByteTest:
 #Load unsigned byte, and make sure result is not sign extended
 lbu t0, 0(sp)
 
-#Load 255^2 -1 into t1
-addi t1, zero, 256
-mul t1, t1, t1
-addi t1, t1, -1
+#Load 255 into t1
+addi t1, zero, 255
 
 beq t0, t1, a2_add22
 j halfwordTest
@@ -109,10 +108,26 @@ mul t1, t1, t1
 addi t1, t1, -1
 
 beq t0, t1, a3_add22
-j exit
+j midByteTest
 
 a3_add22:
 addi a3, a3, 22
+
+midByteTest:
+#Make sure bytes stored in the middle of words are read correctly
+sw zero, 0(sp)
+addi t0, zero, 255
+sb t0, 2(sp)
+
+lbu t1, 2(sp)
+addi t2, zero, 255
+
+addi a4, zero, -1
+beq t1, t2, a4_make42
+j exit
+
+a4_make42:
+addi a4, zero, 42
 
 exit:
 addi zero, zero, 0
