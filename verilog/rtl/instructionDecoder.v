@@ -18,7 +18,11 @@ module instructionDecoder (
 	output reg error,
 	output reg pcOverwrite,
 	output reg [2:0] branchType,
-	output wire jumpInstruction
+	output wire jumpInstruction,
+	output wire load,
+	output reg loadUnsigned,
+	output wire store,
+	output reg [1:0] memLength
 	);
 
 	//Wires to separate instruction fields
@@ -66,6 +70,13 @@ module instructionDecoder (
 	assign imm_10_1 = instructionIn[30:21];
 	assign imm_20 = instructionIn[31];
 
+	//S-type parsing
+	wire [4:0] imm_4_0;
+	wire [6:0] imm_11_5;
+
+	assign imm_4_0 = instructionIn[11:7];
+	assign imm_11_5 = instructionIn[31:25];
+
 
 	//Hardcoded values of supported opcodes and functions
 	
@@ -74,6 +85,8 @@ module instructionDecoder (
 	`define OP 7'h33
 	`define OP_JAL 7'h6f
 	`define OP_BRANCH 7'h63
+	`define OP_LOAD 7'h3
+	`define OP_STORE 7'h23
 
 	//funct3
 	`define ADDI_F3 3'h0
@@ -92,6 +105,14 @@ module instructionDecoder (
 	`define BGE_F3 3'h5
 	`define BLTU_F3 3'h6
 	`define BGEU_F3 3'h7
+	`define LW_F3 3'h2
+	`define LH_F3 3'h1
+	`define LHU_F3 3'h5
+	`define LB_F3 3'h0
+	`define LBU_F3 3'h4
+	`define SW_F3 3'h2
+	`define SH_F3 3'h1
+	`define SB_F3 3'h0
 
 	//funct7
 	`define ADD_SLT_F7 7'h0
@@ -119,6 +140,18 @@ module instructionDecoder (
 	reg bge_flag;
 	reg bltu_flag;
 	reg bgeu_flag;
+	reg load_flag;
+	assign load = load_flag;
+	reg lbu_flag;
+	reg lhu_flag;
+	reg lb_flag;
+	reg lh_flag;
+	reg lw_flag;
+	reg store_flag;
+	assign store = store_flag;
+	reg sb_flag;
+	reg sh_flag;
+	reg sw_flag;
 
 	//Misc vars
 	reg bType_flag;
@@ -128,12 +161,14 @@ module instructionDecoder (
 	`define IMM_EXTEN_WIDTH_I 20
 	`define IMM_EXTEN_WIDTH_B 19
 	`define IMM_EXTEN_WIDTH_J 11
+	`define IMM_EXTEN_WIDTH_S 20
 	reg [7:0] resultEncoderInput;
 	reg [7:0] branchEncoderInput;
 
 	reg [`DATA_WIDTH-1:0] immediateVal_Itype;
 	reg [`DATA_WIDTH-1:0] immediateVal_Btype;
 	reg [`DATA_WIDTH-1:0] immediateVal_Jtype;
+	reg [`DATA_WIDTH-1:0] immediateVal_Stype;
 
 	always @(*) begin : instructionDecode
 		//Check for supported instructions and set decode flags
@@ -167,23 +202,25 @@ module instructionDecoder (
 		b_location = rs2;
 
 		//Determine immediateVal
-		immediateSelect = addi_flag || slti_flag || sltiu_flag || jal_flag || bType_flag;
+		immediateSelect = addi_flag || slti_flag || sltiu_flag || jal_flag || bType_flag || load_flag || store_flag;
 		immediateVal_Itype = { {`IMM_EXTEN_WIDTH_I{imm[`IMM_WIDTH-1]}}, imm[`IMM_WIDTH-1:0] };  //sign extend immediate value for I-type instructions
 		immediateVal_Btype = { {`IMM_EXTEN_WIDTH_B{imm_12}}, imm_12, immB_11, imm_10_5, imm_4_1, 1'b0 };  //contruct and sign extend immediate value for B-type instructions
 		immediateVal_Jtype = { {`IMM_EXTEN_WIDTH_J{imm_20}}, imm_20, imm_19_12, immJ_11, imm_10_1, 1'b0 };  //contruct and sign extend immediate value for J-type instructions
+		immediateVal_Stype = { {`IMM_EXTEN_WIDTH_S{imm_11_5[6]}}, imm_11_5, imm_4_0,};  //contruct and sign extend immediate value for S-type instructions
 
 		if (jal_flag) immediateVal = immediateVal_Jtype;
 		else if (bType_flag) immediateVal = immediateVal_Btype;
+		else if (store_flag) immediateVal = immediateVal_Stype;
 		else immediateVal = immediateVal_Itype;
 
 
 		unsignedSelect = divu_flag || remu_flag || sltiu_flag || sltu_flag || bltu_flag || bgeu_flag;
 		subtractEnable = sub_flag;
 		writeSelect = rd;
-		writeEnable = ~bType_flag;
+		writeEnable = ~(bType_flag || store_flag);
 
 		//result select encoder
-		resultEncoderInput = {1'b0, (slti_flag || sltiu_flag ||  slt_flag || sltu_flag), 1'b0, 1'b0, (remu_flag || rem_flag), (div_flag || divu_flag), mul_flag, (addi_flag || add_flag || sub_flag || bType_flag || jal_flag)};
+		resultEncoderInput = {1'b0, (slti_flag || sltiu_flag ||  slt_flag || sltu_flag), 1'b0, 1'b0, (remu_flag || rem_flag), (div_flag || divu_flag), mul_flag, (addi_flag || add_flag || sub_flag || bType_flag || jal_flag || store_flag || load_flag)};
 		case (resultEncoderInput)
 			8'b00000001 : resultSelect = 0;
 			8'b00000010 : resultSelect = 1;
@@ -213,6 +250,14 @@ module instructionDecoder (
 
 			default : branchType = 0;
 		endcase // branchEncoderInput
+
+		//Load unsigned parsing
+		loadUnsigned = lbu_flag || lhu_flag;
+
+		//Determine length of memory access
+		if (lhu_flag || lh_flag || sh_flag) memLength = 1;
+		else if (lw || sw) memLength = 3;
+		else memLength = 0;
 	end
 
 endmodule //instructionDecoder

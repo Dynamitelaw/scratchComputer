@@ -13,10 +13,17 @@ module core(
 	//Inputs
 	input clk,
 	input reset,
-	input [`DATA_WIDTH-1:0] memoryIn,
+	input [`DATA_WIDTH-1:0] InstMemoryIn,
+	input [`DATA_WIDTH-1:0] memoryDataRead,
 
 	//Outputs
-	output wire [`DATA_WIDTH-1:0] programCounter_out
+	output wire [`DATA_WIDTH-1:0] programCounter_out,
+	output wire [`DATA_WIDTH-1:0] memoryAddress,
+	output wire [`DATA_WIDTH-1:0] memoryDataWrite,
+	output wire [1:0] memoryLength,
+	output reg store,
+	output reg load,
+	output wire loadUnsigned 
 	);
 
 	/////////////////
@@ -24,6 +31,7 @@ module core(
 	/////////////////
 
 	reg [`DATA_WIDTH-1:0] aluResult;
+	assign memoryAddress = aluResult;
 
 	wire cir_writeEnable;
 	wire [`DATA_WIDTH-1:0] pcOverwrite;
@@ -42,7 +50,7 @@ module core(
 	instructionFetchController instructionFetchController(
 		.clk(clk),
 		.reset(reset),
-		.memoryIn(memoryIn),
+		.memoryIn(InstMemoryIn),
 		.cir_writeEnable(cir_writeEnable),
 		.pcOverwrite(aluResult),
 		.pc_writeEnable(pc_writeEnable),
@@ -75,6 +83,10 @@ module core(
 	wire [2:0] branchType_decode;
 	wire jumpInst_decode;
 	assign jumpInst_frame = jumpInst_decode;
+	wire load_decode;
+	wire loadUnsigned_decode;
+	wire store_decode;
+	wire [1:0] memLength_decode;
 
 	instructionDecoder instructionDecoder(
 		.instructionIn(instructionOut_ifc),
@@ -91,29 +103,37 @@ module core(
 		.error(error_decodeOut),
 		.pcOverwrite(pcOverwrite_decode),
 		.branchType(branchType_decode),
-		.jumpInstruction(jumpInst_decode)
+		.jumpInstruction(jumpInst_decode),
+		.load(load_decode),
+		.loadUnsigned(loadUnsigned_decode),
+		.store(store_decode),
+		.memLength(memLength_decode)
 		);
 
 	/////////////////
 	//State Controller
 	/////////////////
+	wire loadInst_scIn;
 
 	wire fetch_RequestState;
 	wire fetch_ReceiveState;
 	wire decodeState;
 	wire setupState;
 	wire executeState;
+	wire memReadState;
 	wire writebackState;
 
 	pipelineStateController pipelineStateController(
 		.clk(clk),
 		.reset(reset),
+		.loadInst(loadInst),
 
 		.fetch_RequestState(fetch_RequestState),
 		.fetch_ReceiveState(fetch_ReceiveState),
 		.decodeState(decodeState),
 		.setupState(setupState),
 		.executeState(executeState),
+		.memReadState(memReadState),
 		.writebackState(writebackState)
 		);
 
@@ -136,6 +156,11 @@ module core(
 	wire pcOverwrite_we;
 	wire branchType_we;
 	wire jumpInstruction_we;
+	wire load_we;
+	wire store_we;
+	wire memLength_we;
+	wire storeData_we;
+	wire memEnable;
 
 	frameWriteController frameWriteController(
 		.fetch_RequestState(fetch_RequestState),
@@ -143,6 +168,7 @@ module core(
 		.decodeState(decodeState),
 		.setupState(setupState),
 		.executeState(executeState),
+		.memReadState(memReadState),
 		.writebackState(writebackState),
 
 		.aOperand_we(aOperand_we),
@@ -162,6 +188,11 @@ module core(
 		.pcOverwrite_we(pcOverwrite_we),
 		.branchType_we(branchType_we),
 		.jumpInstruction_we(jumpInstruction_we)
+		.load_we(load_we),
+		.store_we(store_we),
+		.memLength_we(memLength_we),
+		.storeData_we(storeData_we),
+		.memEnable(memEnable)
 		);
 
 	/////////////////
@@ -172,6 +203,7 @@ module core(
 	wire [`DATA_WIDTH-1:0] bOperand_frameIn;
 	wire [`DATA_WIDTH-1:0] aOpCompare_frameIn;
 	wire [`DATA_WIDTH-1:0] bOpCompare_frameIn;
+	wire [`DATA_WIDTH-1:0] storeData_frameIn;
 
 	wire [`DATA_WIDTH-1:0] aOperand_frameOut;
 	wire [`REGADDR_WIDTH-1:0] aLoc_frameOut;
@@ -190,6 +222,14 @@ module core(
 	wire jumpInstruction_frameOut;
 	wire [`DATA_WIDTH-1:0] aOpCompare_frameOut;
 	wire [`DATA_WIDTH-1:0] bOpCompare_frameOut;
+	wire load_frameOut;
+	assign loadInst_scIn = load_frameOut;
+	wire loadUnsigned_frameOut;
+	assign loadUnsigned = loadUnsigned_frameOut;
+	wire store_frameOut;
+	wire [1:0] memLength_frameOut;
+	wire [`DATA_WIDTH-1:0] storeData_frameOut;
+	assign memoryDataWrite = storeData_frameOut;
 
 	instructionFrame instructionFrame(
 		.clk(clk),
@@ -210,6 +250,11 @@ module core(
 		.jumpInstruction_in(jumpInst_decode),
 		.aOpCompare_in(aOpCompare_frameIn),
 		.bOpCompare_in(bOpCompare_frameIn),
+		.load_in(load_decode),
+		.loadUnsigned_in(loadUnsigned_decode),
+		.store_in(store_decode),
+		.memLength_in(memLength_decode),
+		.storeData_in(storeData_frameIn),
 
 		.aOperand_we(aOperand_we),
 		.aLoc_we(aLoc_we),
@@ -242,7 +287,12 @@ module core(
 		.branchType_out(branchType_frameOut),
 		.jumpInstruction_out(jumpInstruction_frameOut),
 		.aOpCompare_out(aOpCompare_frameOut),
-		.bOpCompare_out(bOpCompare_frameOut)
+		.bOpCompare_out(bOpCompare_frameOut),
+		.load_out(load_frameOut),
+		.loadUnsigned_out(loadUnsigned_frameOut),
+		.store_out(store_frameOut),
+		.memLength_out(memLength_frameOut),
+		.storeData_out(storeData_frameOut)
 		);
 
 	/////////////////
@@ -252,6 +302,7 @@ module core(
 	reg [`DATA_WIDTH-1:0] regDataIn;
 	wire [`DATA_WIDTH-1:0] readA_regOut;
 	wire [`DATA_WIDTH-1:0] readB_regOut;
+	assign storeData_frameIn = readB_regOut;
 
 	wire writeEnable_reg;
 	assign writeEnable_reg = result_we && writeEnable_frameOut;
@@ -372,11 +423,21 @@ module core(
 	end
 
 	//Register Data in mux
+	wire [1:0] regInputSelection;
+	assign regInputSelection = {load_frameOut, jumpInstruction_frameOut};
+
 	always @(*) begin : regDataInMux_proc
-		case (jumpInstruction_frameOut)
+		case (regInputSelection)
 			0 : regDataIn = aluResult;
 			1 : regDataIn = programCounter_next;
+			2 : regDataIn = memoryDataRead;
 		endcase // jumpInstruction_frameOut
+	end
+
+	//Memory access control
+	always @(*) begin : memAccessControl_proc
+		store = store_frameOut && memEnable;
+		load = load_frameOut && memEnable;
 	end
 
 endmodule //core

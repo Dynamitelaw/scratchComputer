@@ -7,6 +7,7 @@ module frameWriteController(
 	input decodeState,
 	input setupState,
 	input executeState,
+	input memReadState,
 	input writebackState,
 
 	//Outputs
@@ -26,7 +27,12 @@ module frameWriteController(
 	output wire pc_writeEnable,
 	output wire pcOverwrite_we,
 	output wire branchType_we,
-	output wire jumpInstruction_we
+	output wire jumpInstruction_we,
+	output wire load_we,
+	output wire store_we,
+	output wire memLength_we,
+	output wire storeData_we,
+	output wire memEnable
 	);
 
 	assign aOperand_we = setupState;
@@ -46,5 +52,10 @@ module frameWriteController(
 	assign pcOverwrite_we = decodeState;
 	assign branchType_we = decodeState;
 	assign jumpInstruction_we = decodeState;
+	assign load_we = decodeState;
+	assign store_we = decodeState;
+	assign memLength_we = decodeState;
+	assign storeData_we = setupState;
+	assign memEnable = executeState;
 
 endmodule //frameWriteController

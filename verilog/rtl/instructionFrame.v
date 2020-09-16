@@ -23,6 +23,11 @@ module instructionFrame(
 	input jumpInstruction_in,
 	input [`DATA_WIDTH-1:0] aOpCompare_in,
 	input [`DATA_WIDTH-1:0] bOpCompare_in,
+	input load_in,
+	input loadUnsigned_in,
+	input store_in,
+	input memLength_in,
+	input [`DATA_WIDTH-1:0] storeData_in,
 
 	//Write enable inputs
 	input aOperand_we,
@@ -39,6 +44,10 @@ module instructionFrame(
 	input pcOverwrite_we,
 	input branchType_we,
 	input jumpInstruction_we,
+	input load_we,
+	input store_we,
+	input memLength_we,
+	input storeData_we,
 
 	//Data outputs
 	output reg [`DATA_WIDTH-1:0] aOperand_out,
@@ -56,7 +65,12 @@ module instructionFrame(
 	output reg [2:0] branchType_out,
 	output reg jumpInstruction_out,
 	output reg [`DATA_WIDTH-1:0] aOpCompare_out,
-	output reg [`DATA_WIDTH-1:0] bOpCompare_out
+	output reg [`DATA_WIDTH-1:0] bOpCompare_out,
+	output reg load_out,
+	output reg loadUnsigned_out,
+	output reg store_out,
+	output reg [1:0] memLength_out,
+	output reg [`DATA_WIDTH-1:0] storeData_out
 	);
 
 	always @(posedge clk) begin : instructionFrame_proc
@@ -77,6 +91,11 @@ module instructionFrame(
 			jumpInstruction_out <= 0;
 			aOpCompare_out <= 0;
 			bOperand_out <= 0;
+			load_out <= 0;
+			loadUnsigned_out <= 0;
+			store_out <= 0;
+			memLength_out <= 0;
+			storeData_out <= 0;
 		end else begin
 			if (aOperand_we) aOperand_out <= aOperand_in;
 			if (aLoc_we) aLoc_out <= aLoc_in;
@@ -94,6 +113,11 @@ module instructionFrame(
 			if (jumpInstruction_we) jumpInstruction_out <= jumpInstruction_in;
 			if (aOperand_we) aOpCompare_out <= aOpCompare_in;
 			if (bOperand_we) bOpCompare_out <= bOpCompare_in;
+			if (load_we) load_out <= load_in;
+			if (load_we) loadUnsigned_out <= loadUnsigned_in;
+			if (store_we) store_out <= store_in;
+			if (memLength_we) memLength_out <= memLength_in;
+			if (storeData_we) storeData_out <= storeData_in;
 		end
 	end
 
