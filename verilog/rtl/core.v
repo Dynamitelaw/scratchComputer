@@ -13,14 +13,13 @@ module core(
 	//Inputs
 	input clk,
 	input reset,
-	input [`DATA_WIDTH-1:0] InstMemoryIn,
 	input [`DATA_WIDTH-1:0] memoryDataRead,
 
 	//Outputs
 	output wire [`DATA_WIDTH-1:0] programCounter_out,
-	output wire [`DATA_WIDTH-1:0] memoryAddress,
+	output reg [`DATA_WIDTH-1:0] memoryAddress,
 	output wire [`DATA_WIDTH-1:0] memoryDataWrite,
-	output wire [1:0] memoryLength,
+	output reg [1:0] memoryLength,
 	output reg store,
 	output reg load,
 	output wire loadUnsigned 
@@ -31,7 +30,6 @@ module core(
 	/////////////////
 
 	reg [`DATA_WIDTH-1:0] aluResult;
-	assign memoryAddress = aluResult;
 
 	wire cir_writeEnable;
 	wire [`DATA_WIDTH-1:0] pcOverwrite;
@@ -50,7 +48,7 @@ module core(
 	instructionFetchController instructionFetchController(
 		.clk(clk),
 		.reset(reset),
-		.memoryIn(InstMemoryIn),
+		.memoryIn(memoryDataRead),
 		.cir_writeEnable(cir_writeEnable),
 		.pcOverwrite(aluResult),
 		.pc_writeEnable(pc_writeEnable),
@@ -160,7 +158,6 @@ module core(
 	wire store_we;
 	wire memLength_we;
 	wire storeData_we;
-	wire memEnable;
 
 	frameWriteController frameWriteController(
 		.fetch_RequestState(fetch_RequestState),
@@ -191,8 +188,7 @@ module core(
 		.load_we(load_we),
 		.store_we(store_we),
 		.memLength_we(memLength_we),
-		.storeData_we(storeData_we),
-		.memEnable(memEnable)
+		.storeData_we(storeData_we)
 		);
 
 	/////////////////
@@ -228,7 +224,6 @@ module core(
 	assign loadUnsigned = loadUnsigned_frameOut;
 	wire store_frameOut;
 	wire [1:0] memLength_frameOut;
-	assign memoryLength = memLength_frameOut;
 	wire [`DATA_WIDTH-1:0] storeData_frameOut;
 	assign memoryDataWrite = storeData_frameOut;
 
@@ -426,7 +421,10 @@ module core(
 		endcase  //resultSelect_frameOut
 	end
 
+	/////////////////
 	//Register Data in mux
+	/////////////////
+	
 	wire [1:0] regInputSelection;
 	assign regInputSelection = {load_frameOut, jumpInstruction_frameOut};
 
@@ -438,10 +436,19 @@ module core(
 		endcase // jumpInstruction_frameOut
 	end
 
+	/////////////////
 	//Memory access control
+	/////////////////
+
 	always @(*) begin : memAccessControl_proc
-		store = store_frameOut && memEnable;
-		load = load_frameOut && memEnable;
+		if (writebackState) memoryAddress = programCounter;
+		else memoryAddress = aluResult;
+
+		if (writebackState) memoryLength = 3;
+		else memoryLength = memLength_frameOut;
+
+		store = store_frameOut && executeState;
+		load = (load_frameOut && executeState) || writebackState;
 	end
 
 endmodule //core

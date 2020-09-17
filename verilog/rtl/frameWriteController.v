@@ -31,8 +31,7 @@ module frameWriteController(
 	output wire load_we,
 	output wire store_we,
 	output wire memLength_we,
-	output wire storeData_we,
-	output wire memEnable
+	output wire storeData_we
 	);
 
 	assign aOperand_we = setupState;
@@ -56,6 +55,5 @@ module frameWriteController(
 	assign store_we = decodeState;
 	assign memLength_we = decodeState;
 	assign storeData_we = setupState;
-	assign memEnable = executeState;
 
 endmodule //frameWriteController
