@@ -187,7 +187,7 @@ module core(
 		.pc_writeEnable(pc_writeEnable),
 		.pcOverwrite_we(pcOverwrite_we),
 		.branchType_we(branchType_we),
-		.jumpInstruction_we(jumpInstruction_we)
+		.jumpInstruction_we(jumpInstruction_we),
 		.load_we(load_we),
 		.store_we(store_we),
 		.memLength_we(memLength_we),
@@ -228,6 +228,7 @@ module core(
 	assign loadUnsigned = loadUnsigned_frameOut;
 	wire store_frameOut;
 	wire [1:0] memLength_frameOut;
+	assign memoryLength = memLength_frameOut;
 	wire [`DATA_WIDTH-1:0] storeData_frameOut;
 	assign memoryDataWrite = storeData_frameOut;
 
@@ -270,7 +271,10 @@ module core(
 		.pcOverwrite_we(pcOverwrite_we),
 		.branchType_we(branchType_we),
 		.jumpInstruction_we(jumpInstruction_we),
-		
+		.load_we(load_we),
+		.store_we(store_we),
+		.memLength_we(memLength_we),
+		.storeData_we(storeData_we),
 
 		.aOperand_out(aOperand_frameOut),
 		.aLoc_out(aLoc_frameOut),

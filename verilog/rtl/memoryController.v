@@ -8,7 +8,7 @@ module memoryController(
 	//CPU interface
 	input [`DATA_WIDTH-1:0] addressIn,
 	input [`DATA_WIDTH-1:0] dataWriteIn,
-	input [`DATA_WIDTH-1:0] length,
+	input [1:0] length,
 	input storeIn,
 	input loadIn,
 	input loadUnsigned,
@@ -16,15 +16,19 @@ module memoryController(
 
 	//RAM interface
 	input [`DATA_WIDTH-1:0] ramDataRead,
-	output [`DATA_WIDTH-1:0] addressOut,
+	output wire [`DATA_WIDTH-1:0] addressOut,
 	output wire [`DATA_WIDTH-1:0] ramDataWrite,
 	output wire [3:0] byteSelect,
-	output ramStore,
-	output ramLoad
+	output wire ramStore,
+	output wire ramLoad
 	);
 
-	wire addressLower;
-	assign addressLower = addressIn[1:0]
+	assign addressOut = addressIn;
+	assign ramStore = storeIn;
+	assign ramLoad = loadIn;
+
+	wire [1:0] addressLower;
+	assign addressLower = addressIn[1:0];
 
 	//Determine which bytes to write
 	reg B0_write;
@@ -50,10 +54,10 @@ module memoryController(
 	wire [7:0] input_byte3;
 	assign input_byte3 = dataWriteIn[31:24];
 
-	reg ramIn_byte0;
-	reg ramIn_byte1;
-	reg ramIn_byte2;
-	reg ramIn_byte3;
+	reg [7:0] ramIn_byte0;
+	reg [7:0] ramIn_byte1;
+	reg [7:0] ramIn_byte2;
+	reg [7:0] ramIn_byte3;
 	assign ramDataWrite = {ramIn_byte3, ramIn_byte2, ramIn_byte1, ramIn_byte0};
 
 	reg ri1_B0select;
@@ -114,15 +118,15 @@ module memoryController(
 	assign dataReadOut = {readOut_byte3, readOut_byte2, readOut_byte1, readOut_byte0};
 
 	wire [7:0] byte0_extended;
-	assign byte0_extended = {8{ramRead_byte0[7] && ~loadUnsigned}}
+	assign byte0_extended = {8{ramRead_byte0[7] && ~loadUnsigned}};
 	wire [7:0] byte1_extended;
-	assign byte1_extended = {8{ramRead_byte1[7] && ~loadUnsigned}}
+	assign byte1_extended = {8{ramRead_byte1[7] && ~loadUnsigned}};
 	wire [7:0] byte2_extended;
-	assign byte2_extended = {8{ramRead_byte2[7] && ~loadUnsigned}}
+	assign byte2_extended = {8{ramRead_byte2[7] && ~loadUnsigned}};
 
 	always @(*) begin : signExten_proc
 		//Byte0
-		case (addressLower):
+		case (addressLower)
 			0 : readOut_byte0 = ramRead_byte0;
 			1 : readOut_byte0 = ramRead_byte1;
 			2 : readOut_byte0 = ramRead_byte2;
@@ -131,6 +135,20 @@ module memoryController(
 
 		//Byte1
 		if ((addressLower==0) && (length==1)) readOut_byte1 = ramRead_byte1;
+		else if ((addressLower==2) && (length==1)) readOut_byte1 = ramRead_byte3;
+		else if ((addressLower==2) && (length==0)) readOut_byte1 = byte2_extended;
+		else readOut_byte1 = byte0_extended;
+
+		//Byte2
+		if ((addressLower==0) && (length==3)) readOut_byte2 = ramRead_byte2;
+		else if ((addressLower==0) && (length==1)) readOut_byte2 = byte1_extended;
+		else readOut_byte2 = byte0_extended;
+
+		//Byte3
+		if ((addressLower==0) && (length==3)) readOut_byte3 = ramRead_byte3;
+		else if ((addressLower==0) && (length==1)) readOut_byte3 = byte1_extended;
+		else if ((addressLower==2) && (length==1)) readOut_byte3 = byte2_extended;
+		else readOut_byte3 = byte0_extended;
 	end
 
 

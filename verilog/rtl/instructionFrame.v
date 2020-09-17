@@ -26,7 +26,7 @@ module instructionFrame(
 	input load_in,
 	input loadUnsigned_in,
 	input store_in,
-	input memLength_in,
+	input [1:0] memLength_in,
 	input [`DATA_WIDTH-1:0] storeData_in,
 
 	//Write enable inputs

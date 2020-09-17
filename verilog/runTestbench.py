@@ -2,6 +2,16 @@ import argparse
 import os
 import sys
 
+class COLORS:
+	DEFAULT = '\033[0m'
+	HEADER = '\033[95m'
+	OKBLUE = '\033[94m'
+	OKGREEN = '\033[92m'
+	WARNING = '\033[93m'
+	ERROR = '\033[91m'
+	BOLD = '\033[1m'
+	UNDERLINE = '\033[4m'
+
 
 if __name__ == '__main__':
 
@@ -14,12 +24,14 @@ help yourself
 
 	parser.add_argument("-bench", action="store", dest="testbenchPath", help="Filepath to verilog testbench")
 	parser.add_argument("-prog", action="store", dest="programPath", help="Path to hex program to run, if supported by the testbench")
+	parser.add_argument("-mem", action="store", dest="memorySize", help="Size of main memory to allocate in bytes")
 	parser.add_argument("-dump", action="store_true", dest="dumpValues", help="If specified, will create an lxt2 dump file from simulation. Required to view waveforms in Gtkwave")
 
 	args = parser.parse_args()
 
 	testbenchPath = args.testbenchPath
 	programPath = args.programPath
+	memorySize = int(args.memorySize)
 	dumpValues = args.dumpValues
 
 	if (not testbenchPath):
@@ -45,6 +57,7 @@ help yourself
 
 		programInputsFile.write("`define programLength {}\n".format(lineCount))
 		programInputsFile.write("`define programFilename \"{}\"\n".format(programPath))
+		programInputsFile.write("`define memorySize {}\n".format(memorySize))
 
 		programInputsFile.close()
 
@@ -56,9 +69,10 @@ help yourself
 		os.mkdir("simulation/{}".format(testbenchName))
 
 	#Compile into vvp with icarus verilog
-	command = "iverilog {} -I rtl -I testbenches -g2005-sv -o simulation/{}/{}.vvp".format(testbenchPath, testbenchName, testbenchName)
-	print("+ {}".format(command))
+	command = "iverilog {} -I rtl -I testbenches -g2005-sv -o simulation/{}/{}.vvp | grep error".format(testbenchPath, testbenchName, testbenchName)
+	print("+ {}{}".format(command, COLORS.ERROR))
 	os.system(command)
+	print(COLORS.DEFAULT)
 
 	#Run vvp
 	dumpFlag = ""

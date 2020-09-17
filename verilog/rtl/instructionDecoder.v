@@ -191,6 +191,16 @@ module instructionDecoder (
 		bge_flag = (opcode == `OP_BRANCH) && (funct3 == `BGE_F3);
 		bltu_flag = (opcode == `OP_BRANCH) && (funct3 == `BLTU_F3);
 		bgeu_flag = (opcode == `OP_BRANCH) && (funct3 == `BGEU_F3);
+		load_flag = (opcode == `OP_LOAD);
+		lbu_flag = (opcode == `OP_LOAD) && (funct3 == `LBU_F3);
+		lhu_flag = (opcode == `OP_LOAD) && (funct3 == `LHU_F3);
+		lb_flag = (opcode == `OP_LOAD) && (funct3 == `LB_F3);
+		lh_flag = (opcode == `OP_LOAD) && (funct3 == `LH_F3);
+		lw_flag = (opcode == `OP_LOAD) && (funct3 == `LW_F3);
+		store_flag = (opcode == `OP_STORE);
+		sb_flag = (opcode == `OP_STORE) && (funct3 == `SB_F3);
+		sh_flag = (opcode == `OP_STORE) && (funct3 == `SH_F3);
+		sw_flag = (opcode == `OP_STORE) && (funct3 == `SW_F3);
 
 		//Set branch flag
 		bType_flag = (opcode == `OP_BRANCH);
@@ -206,7 +216,7 @@ module instructionDecoder (
 		immediateVal_Itype = { {`IMM_EXTEN_WIDTH_I{imm[`IMM_WIDTH-1]}}, imm[`IMM_WIDTH-1:0] };  //sign extend immediate value for I-type instructions
 		immediateVal_Btype = { {`IMM_EXTEN_WIDTH_B{imm_12}}, imm_12, immB_11, imm_10_5, imm_4_1, 1'b0 };  //contruct and sign extend immediate value for B-type instructions
 		immediateVal_Jtype = { {`IMM_EXTEN_WIDTH_J{imm_20}}, imm_20, imm_19_12, immJ_11, imm_10_1, 1'b0 };  //contruct and sign extend immediate value for J-type instructions
-		immediateVal_Stype = { {`IMM_EXTEN_WIDTH_S{imm_11_5[6]}}, imm_11_5, imm_4_0,};  //contruct and sign extend immediate value for S-type instructions
+		immediateVal_Stype = { {`IMM_EXTEN_WIDTH_S{imm_11_5[6]}}, imm_11_5, imm_4_0};  //contruct and sign extend immediate value for S-type instructions
 
 		if (jal_flag) immediateVal = immediateVal_Jtype;
 		else if (bType_flag) immediateVal = immediateVal_Btype;
@@ -256,7 +266,7 @@ module instructionDecoder (
 
 		//Determine length of memory access
 		if (lhu_flag || lh_flag || sh_flag) memLength = 1;
-		else if (lw || sw) memLength = 3;
+		else if (lw_flag || sw_flag) memLength = 3;
 		else memLength = 0;
 	end
 
