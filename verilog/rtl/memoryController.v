@@ -134,7 +134,7 @@ module memoryController(
 		endcase // addressLower
 
 		//Byte1
-		if ((addressLower==0) && (length==1)) readOut_byte1 = ramRead_byte1;
+		if ((addressLower==0) && (length >= 1)) readOut_byte1 = ramRead_byte1;
 		else if ((addressLower==2) && (length==1)) readOut_byte1 = ramRead_byte3;
 		else if ((addressLower==2) && (length==0)) readOut_byte1 = byte2_extended;
 		else readOut_byte1 = byte0_extended;

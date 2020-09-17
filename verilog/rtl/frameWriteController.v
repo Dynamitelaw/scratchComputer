@@ -43,12 +43,12 @@ module frameWriteController(
 	assign immSlct_we = decodeState;
 	assign unsigned_we = decodeState;
 	assign subEnable_we = decodeState;
-	assign result_we = executeState || writebackState;
+	assign result_we = executeState || memReadState;
 	assign resultSlct_we = decodeState;
 	assign writeSlct_we = decodeState;
 	assign writeEnable_we = decodeState;
 	assign cir_writeEnable = fetch_ReceiveState;
-	assign pc_writeEnable = writebackState;
+	assign pc_writeEnable = executeState;
 	assign pcOverwrite_we = decodeState;
 	assign branchType_we = decodeState;
 	assign jumpInstruction_we = decodeState;

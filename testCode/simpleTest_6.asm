@@ -9,7 +9,9 @@ addi a0, zero, 21	# a0 = 21
 addi a1, zero, 2	# a1 = 2
 
 #Set stack pointer to starting value
-addi sp, zero, 32
+addi sp, zero, 256
+mul sp, sp, sp
+
 
 #Allocate 8 bytes for the 2 integers
 addi sp, sp, -8
