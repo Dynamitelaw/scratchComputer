@@ -4,3 +4,4 @@ MID :	Description
 1.0 :	Fully tested logisim/verilog versions of pipeline. Can execute arithmetic instructions in order. (9/7/2020)
 2.0 :	Added flow control support. Can now execute branch and jump instructions. (9/9/2020)
 3.0 :	Added support for load and store instructions. (9/16/2020)
+3.1 :	Moved instructions to main memory rather than separate program memory. (9/16/20)
