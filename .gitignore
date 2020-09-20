@@ -1,5 +1,7 @@
 #ignore all simulation outputs
 *verilog/simulation/*
+*verilog/*.lx2
+*verilog/*.vcd
 
 #ignore all compiled files
 *testCode/*.hex
