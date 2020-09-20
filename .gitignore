@@ -1,8 +1,11 @@
 #ignore all simulation outputs
 *verilog/simulation/*
 
-#ignore all compiled hex files
+#ignore all compiled files
 *testCode/*.hex
+*testCode/assemblyTest/*.hex
+*testCode/c_Code/*.hex
+*testCode/c_Code/*.asm
 
 #Ignore all synthesized files
 *verilog/qflowSynthesis/*
