@@ -71,13 +71,10 @@ class scopeController:
 				variableObj = self.variableDict[variableName]
 
 				if (variableObj.register != branchVariableObj.register):
-					assemblyString += "###RESTORING {}\n".format(variableName)
 					if (variableObj.register):
-						assemblyString += "###MOVE\n"
 						#Variable should be in a different register
 						assemblyString += scopeBranch.moveVariable(variableName, variableObj.register, indentLevel=indentLevel)
 					else:
-						assemblyString += "###STORE\n"
 						#Variable should be on stack
 						assemblyString += scopeBranch.storeStack(variableName, indentLevel=indentLevel)
 
@@ -324,7 +321,6 @@ def operandToRegister(operandItem, scope, indentLevel=0):
 
 	operandReg = ""
 	if isinstance(operandItem, c_ast.ID):
-		assemblyString += "###opName = {}\n".format(operandItem.name)
 		#operand is variable
 		operandReg = scope.getRegisterLocation(operandItem.name)
 		if (operandReg == None):
@@ -407,13 +403,13 @@ def convertIfItem(item, scope, indentLevel=0):
 	scopeBranch = copy.deepcopy(scope)
 	assemblyString += "{}{}:\n".format(indentString, onTrueLabel)
 	assemblyString += convertAstItem(item.iftrue, scopeBranch, indentLevel=indentLevel+1)
-	assemblyString += scope.mergeScopeBranch(scopeBranch, indentLevel=indentLevel+1)
+	assemblyString += scope.mergeScopeBranch(scopeBranch, indentLevel=indentLevel+1)  #<TODO> Skip this part if the true section ends with a return
 	assemblyString += "{}j {}\n".format(indentString, ifExitLabel)
 
 	scopeBranch = copy.deepcopy(scope)
 	assemblyString += "{}{}:\n".format(indentString, onFalseLabel)
 	assemblyString += convertAstItem(item.iffalse, scopeBranch, indentLevel=indentLevel+1)
-	assemblyString += scope.mergeScopeBranch(scopeBranch, indentLevel=indentLevel+1)
+	assemblyString += scope.mergeScopeBranch(scopeBranch, indentLevel=indentLevel+1)  #<TODO> Skip this part if the false section ends with a return
 	assemblyString += "{}{}:\n".format(indentString, ifExitLabel)
 
 	return assemblyString
@@ -428,20 +424,17 @@ def convertBinaryOpItem(item, scope, targetReg=None, indentLevel=0):
 
 	regDest = ""
 	if (targetReg):
-		print("###{}".format(targetReg))
 		assemblyString += scope.releaseRegister(targetReg, indentLevel=indentLevel)
 		regDest = targetReg
 	else:
 		regDest = scope.getFreeRegister()
 
 	#Get left operand into register
-	assemblyString += "{}#Left operator\n".format(indentString)
 	leftOperand = item.left
 	assemblyTemp, leftOperandReg = operandToRegister(leftOperand, scope, indentLevel=indentLevel)
 	assemblyString += assemblyTemp
 
 	#Get right operand into register
-	assemblyString += "{}#Right operator\n".format(indentString)
 	rightOperand = item.right
 	assemblyTemp, rightOperandReg = operandToRegister(rightOperand, scope, indentLevel=indentLevel)
 	assemblyString += assemblyTemp
