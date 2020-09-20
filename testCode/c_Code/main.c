@@ -10,7 +10,7 @@ Bing bing bong bong
 // \desc	Finds the Greatest Common Denominator of x and y
 // 			via Euclid's algorithm
 
-int globalInteger = 0;
+int globalInteger = 0;  //<TODO> Implement global variables
 
 int greatestCommonDenominator(int x, int y)
 {
@@ -26,8 +26,9 @@ int greatestCommonDenominator(int x, int y)
 	}
 }
 
-unsigned char isPrime(int x)
+bool isPrime(int x)
 {
+	int k;
 	for (int i=2; i<x; i++)
 	{
 		if ((x % i) == 0)
@@ -46,10 +47,10 @@ int getAverage(int x, int y)
 }
 
 
-unsigned char areCoprime(int x, int y)
+bool areCoprime(int x, int y)
 {
 	int gcd = greatestCommonDenominator(x, y);
-	unsigned char areCoprime;
+	bool areCoprime;
 	if (gcd == 1)
 		areCoprime = true;
 	else
@@ -58,7 +59,7 @@ unsigned char areCoprime(int x, int y)
 	return areCoprime;
 }
 
-void addThreeInts(int x, int y, int z)
+int addThreeInts(int x, int y, int z)
 {
 	return x + y + z;
 }
@@ -74,19 +75,23 @@ int main()
 
 	/*
 	Find out if x and y are prime
-	*/ unsigned char fakeVariable;
-	unsigned char isPrime_x;
+	*/ bool fakeVariable;
+	bool isPrime_x;
 	isPrime_x = isPrime(x);
 
-	unsigned char isPrime_y = isPrime(y);
+	bool isPrime_y = isPrime(y);
 
-	//Are x and y copime?
-	unsigned char xYcoprime = areCoprime(x, y);
+	//Are x and y coprime?
+	bool xYcoprime = areCoprime(x, y);
 
 	if ((average == 42) && (isPrime_x))
 	{
-		if (!(isPrime_y)) return -1;
+		if (!(isPrime_y))
+		{
+			//if (addThreeInts(21, 25, -4) == 42) return 42;  //<TODO> fix this
+			return 42;
+		}
 	}
 
-	return 0;
+	return -1;
 }
