@@ -92,6 +92,8 @@ endmodule //RAM
 
 
 module coreTestbench;
+	int cycleCount;
+
 	//Instantiate core
 	reg clk;
 	reg reset;
@@ -171,7 +173,8 @@ module coreTestbench;
 		 Setup
 		 */
 		$dumpvars;
-		
+		cycleCount <= 0;
+
 		//posedge clk
 		clk <= 1;
 		reset <= 1;
@@ -187,11 +190,25 @@ module coreTestbench;
 		 */
 		$display("Running program");
 		
-		while (programCounter <= (`programLength)*4) begin
-			//$display("PC=%d", programCounter);
-			#2
-			reset <= 0;  //dummy write to appease iverilog
-		end
+		`ifdef MAX_CYLCLES
+			while ((programCounter <= (`programLength)*4) && (cycleCount < `MAX_CYLCLES)) begin
+				//$display("PC=%d", programCounter);
+				#2
+				reset <= 0;  //dummy write to appease iverilog
+				cycleCount <= cycleCount + 1;
+			end
+
+			if (cycleCount >= `MAX_CYLCLES) begin
+				$display("Max cycle count exceeded. Ending simulation");
+			end
+		`else
+			while (programCounter <= (`programLength)*4) begin
+				//$display("PC=%d", programCounter);
+				#2
+				reset <= 0;  //dummy write to appease iverilog
+				cycleCount <= cycleCount + 1;
+			end
+		`endif
 		
 		//#2500
 
@@ -199,7 +216,7 @@ module coreTestbench;
 		 Ouput stats
 		 */
 		$display("Done, program terminated");
-		$display("cycles=%0t", ($time-14)/2);
+		$display("cycles=%d", cycleCount);
 		$finish;
 	end
 

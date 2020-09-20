@@ -32,40 +32,41 @@ def printColor(text, color=COLORS.DEFAULT, resetColor=True):
 #Enum for supported instruction keys
 @unique
 class INST(Enum):
-    #Integer computational instructions
-    ADDI = 0
-    ADD = 1
-    MOVE = 2
-    SUB = 3
-    MUL = 4
-    DIV = 5
-    DIVU = 6
-    REM = 7
-    REMU = 8
-    SLTI = 9
-    SLTIU = 10
-    SLT = 11
-    SLTU = 12
+	#Integer computational instructions
+	ADDI = 0
+	ADD = 1
+	MOVE = 2
+	SUB = 3
+	MUL = 4
+	DIV = 5
+	DIVU = 6
+	REM = 7
+	REMU = 8
+	SLTI = 9
+	SLTIU = 10
+	SLT = 11
+	SLTU = 12
 
-    #Control transfer instructions
-    JAL = 13
-    J = 14
-    BEQ = 15
-    BNE = 16
-    BLTU = 17
-    BLT = 18
-    BGE = 19
-    BGEU = 20
+	#Control transfer instructions
+	JAL = 13
+	J = 14
+	JR = 15
+	BNE = 16
+	BLTU = 17
+	BLT = 18
+	BGE = 19
+	BGEU = 20
+	BEQ = 21
 
-    #Load and store instructions
-    LW = 21
-    LH = 22
-    LHU = 23
-    LB = 24
-    LBU = 25
-    SW = 26
-    SH = 27
-    SB = 28
+	#Load and store instructions
+	LH = 22
+	LHU = 23
+	LB = 24
+	LBU = 25
+	LW = 26
+	SW = 27
+	SH = 28
+	SB = 29
 
 
 #Mapping of each register ABI name to their hardware address
@@ -183,6 +184,8 @@ def parseInstruction(asmLine):
 		instructionEnum = INST.JAL
 	elif (instructionName == "j"):
 		instructionEnum = INST.J
+	elif (instructionName == "jr"):
+		instructionEnum = INST.JR
 	elif (instructionName == "beq"):
 		instructionEnum = INST.BEQ
 	elif (instructionName == "bne"):
@@ -256,6 +259,8 @@ def parseInstruction(asmLine):
 	elif ((instructionEnum == INST.JAL) and (totalArgs < 1)):
 		raise Exception("Incorrect number of arguments for \"jal\"")
 	elif ((instructionEnum == INST.J) and (totalArgs < 1)):
+		raise Exception("Incorrect number of arguments for \"j\"")
+	elif ((instructionEnum == INST.JR) and (totalArgs < 1)):
 		raise Exception("Incorrect number of arguments for \"j\"")
 	elif ((instructionEnum == INST.BEQ) and (totalArgs < 3)):
 		raise Exception("Incorrect number of arguments for \"beq\"")
@@ -505,6 +510,14 @@ def instructionsToInts(instructionList):
 				instructionFields["imm"] = args[0] - programCounter
 				instructionFields["rd"] = 0
 				instructionFields["opcode"] = 111
+			elif (instructionEnum == INST.JR):
+				#<TODO> add support for JR and JALR
+				instructionFields["type"] = "I"
+				instructionFields["imm"] = args[2]
+				instructionFields["rs1"] = args[1]
+				instructionFields["funct3"] = 3
+				instructionFields["rd"] = args[0]
+				instructionFields["opcode"] = 19
 			elif (instructionEnum == INST.BEQ):
 				instructionFields["type"] = "B"
 				instructionFields["imm"] = args[2] - programCounter

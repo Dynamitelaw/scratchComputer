@@ -25,6 +25,7 @@ help yourself
 	parser.add_argument("-bench", action="store", dest="testbenchPath", help="Filepath to verilog testbench")
 	parser.add_argument("-prog", action="store", dest="programPath", help="Path to hex program to run, if supported by the testbench")
 	parser.add_argument("-mem", action="store", dest="memorySize", help="Size of main memory to allocate in bytes")
+	parser.add_argument("-cycles", action="store", dest="maxSimCycles", help="If specified, simulation will end if total cycles exceed this limit")
 	parser.add_argument("-dump", action="store_true", dest="dumpValues", help="If specified, will create an lxt2 dump file from simulation. Required to view waveforms in Gtkwave")
 
 	args = parser.parse_args()
@@ -32,6 +33,7 @@ help yourself
 	testbenchPath = args.testbenchPath
 	programPath = args.programPath
 	memorySize = int(args.memorySize)
+	maxSimCycles = args.maxSimCycles
 	dumpValues = args.dumpValues
 
 	if (not testbenchPath):
@@ -58,6 +60,8 @@ help yourself
 		programInputsFile.write("`define programLength {}\n".format(lineCount))
 		programInputsFile.write("`define programFilename \"{}\"\n".format(programPath))
 		programInputsFile.write("`define memorySize {}\n".format(memorySize))
+		if (maxSimCycles):
+			programInputsFile.write("`define MAX_CYLCLES {}\n".format(int(maxSimCycles)))
 
 		programInputsFile.close()
 

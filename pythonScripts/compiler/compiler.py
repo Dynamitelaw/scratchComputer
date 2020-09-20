@@ -1,5 +1,6 @@
 import os
 import sys
+import traceback
 import argparse
 import copy
 from collections import OrderedDict
@@ -7,6 +8,29 @@ from collections import OrderedDict
 from pycparser import c_parser, c_ast, parse_file, c_generator
 import assembler
 
+
+#Colored printed for errors
+class COLORS:
+	DEFAULT = '\033[0m'
+	HEADER = '\033[95m'
+	OKBLUE = '\033[94m'
+	OKGREEN = '\033[92m'
+	WARNING = '\033[93m'
+	ERROR = '\033[91m'
+	BOLD = '\033[1m'
+	UNDERLINE = '\033[4m'
+
+
+def printColor(text, color=COLORS.DEFAULT, resetColor=True):
+	'''
+	Prints colored text to the terminal
+	'''
+	if (resetColor):
+		formattedText = "{}{}{}".format(color, text, COLORS.DEFAULT)
+		print(formattedText)
+	else:
+		formattedText = "{}{}".format(color, text)
+		print(formattedText)
 
 
 #Global vars
@@ -1070,59 +1094,64 @@ Currently only supports a subset of the C language
 	else:
 		hexPath = hexPathArg
 
-	#########
-	# Translate C file into assembly file
-	#########
+	try:
+		#########
+		# Translate C file into assembly file
+		#########
 
-	#Parse C file
-	cleanFilePath = precleanCFile(cFilePath)
-	ast = parse_file(cleanFilePath, use_cpp=True)
+		#Parse C file
+		cleanFilePath = precleanCFile(cFilePath)
+		ast = parse_file(cleanFilePath, use_cpp=True)
 
-	#Translate functions into assembly snippets
-	definedFunctions = {}
-	globalVarDelcarations = []
-	definedFunctions, globalVarDelcarations = getFunctionDefinitions(ast)  #<TODO> handle global variables
-	
-	if ("main" in definedFunctions):
-		for functionName in definedFunctions:
-			#<TODO> multithread these translations
-			funcDef = definedFunctions[functionName]
-			covertFuncToAssembly(funcDef)
-			#print("\n".join(funcDef.coord))
-	else:
-		print("ERROR: main function is not defined")
-		sys.exit()
-	
-	#Create final assembly file
-	outputDirectory, hexFilename = os.path.split(hexPath)
-	assemblyFilePath = os.path.join(outputDirectory, "{}.asm".format(hexFilename.split(".")[0]))
-	
-	asmFile = open(assemblyFilePath, "w")
-	
-	if (memorySize):
-		#Initialize sp
-		stackPointerStart = int(4 * int(int(memorySize) / 4))
-		asmFile.write("addi sp, zero, {}\n".format(int(stackPointerStart)))
-	asmFile.write("addi ra, zero, PROGRAM_END\n")  #initialize return address for main
+		#Translate functions into assembly snippets
+		definedFunctions = {}
+		globalVarDelcarations = []
+		definedFunctions, globalVarDelcarations = getFunctionDefinitions(ast)  #<TODO> handle global variables
+		
+		if ("main" in definedFunctions):
+			for functionName in definedFunctions:
+				#<TODO> multithread these translations
+				funcDef = definedFunctions[functionName]
+				covertFuncToAssembly(funcDef)
+				#print("\n".join(funcDef.coord))
+		else:
+			printColor("ERROR: main function is not defined", color=COLORS.ERROR)
+			sys.exit()
+		
+		#Create final assembly file
+		outputDirectory, hexFilename = os.path.split(hexPath)
+		assemblyFilePath = os.path.join(outputDirectory, "{}.asm".format(hexFilename.split(".")[0]))
+		
+		asmFile = open(assemblyFilePath, "w")
+		
+		if (memorySize):
+			#Initialize sp
+			stackPointerStart = int(4 * int(int(memorySize) / 4))
+			asmFile.write("addi sp, zero, {}\n".format(int(stackPointerStart)))
+		asmFile.write("addi ra, zero, PROGRAM_END\n")  #initialize return address for main
 
-	#Write main first
-	instructions = definedFunctions["main"].coord
-	asmFile.write("\n".join(instructions))
-	asmFile.write("\n")
-	del definedFunctions["main"]
-
-	#Write other functions
-	for functionName in definedFunctions:
-		instructions = definedFunctions[functionName].coord
+		#Write main first
+		instructions = definedFunctions["main"].coord
 		asmFile.write("\n".join(instructions))
 		asmFile.write("\n")
+		del definedFunctions["main"]
 
-	asmFile.write("PROGRAM_END:\nadd zero, zero, zero\n")  #Program end label/nop
-	asmFile.close()
+		#Write other functions
+		for functionName in definedFunctions:
+			instructions = definedFunctions[functionName].coord
+			asmFile.write("\n".join(instructions))
+			asmFile.write("\n")
+
+		asmFile.write("PROGRAM_END:\nadd zero, zero, zero\n")  #Program end label/nop
+		asmFile.close()
 
 
-	#Convert assembly file to hex
-	assembler.main(assemblyFilePath, hexPath, indexPath, logisim)
+		#Convert assembly file to hex
+		assembler.main(assemblyFilePath, hexPath, indexPath, logisim)
 
-	#Cleanup
-	os.remove(cleanFilePath)
+		#Cleanup
+		os.remove(cleanFilePath)
+
+	except Exception as e:
+		printColor(traceback.format_exc(), color=COLORS.ERROR)
+		sys.exit()
