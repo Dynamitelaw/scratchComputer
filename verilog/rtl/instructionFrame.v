@@ -18,9 +18,10 @@ module instructionFrame(
 	input [`RESLT_SELCT_WIDTH-1:0] resultSelect_in,
 	input [`REGADDR_WIDTH-1:0] writeSelect_in,
 	input writeEnable_in,
-	input pcOverwrite_in,
+	input branchInst_in,
 	input [2:0] branchType_in,
-	input jumpInstruction_in,
+	input jumpLink_in,
+	input jumpRegister_in,
 	input [`DATA_WIDTH-1:0] aOpCompare_in,
 	input [`DATA_WIDTH-1:0] bOpCompare_in,
 	input load_in,
@@ -41,7 +42,7 @@ module instructionFrame(
 	input resultSlct_we,
 	input writeSlct_we,
 	input writeEnable_we,
-	input pcOverwrite_we,
+	input branchInst_we,
 	input branchType_we,
 	input jumpInstruction_we,
 	input load_we,
@@ -61,9 +62,10 @@ module instructionFrame(
 	output reg [`RESLT_SELCT_WIDTH-1:0] resultSelect_out,
 	output reg [`REGADDR_WIDTH-1:0] writeSelect_out,
 	output reg writeEnable_out,
-	output reg pcOverwrite_out,
+	output reg branchInst_out,
 	output reg [2:0] branchType_out,
-	output reg jumpInstruction_out,
+	output reg jumpLink_out,
+	output reg jumpRegister_out,
 	output reg [`DATA_WIDTH-1:0] aOpCompare_out,
 	output reg [`DATA_WIDTH-1:0] bOpCompare_out,
 	output reg load_out,
@@ -86,9 +88,10 @@ module instructionFrame(
 			resultSelect_out <= 0;
 			writeSelect_out <= 0;
 			writeEnable_out <= 0;
-			pcOverwrite_out <= 0;
+			branchInst_out <= 0;
 			branchType_out <= 0;
-			jumpInstruction_out <= 0;
+			jumpLink_out <= 0;
+			jumpRegister_out <= 0;
 			aOpCompare_out <= 0;
 			bOperand_out <= 0;
 			load_out <= 0;
@@ -108,9 +111,10 @@ module instructionFrame(
 			if (resultSlct_we) resultSelect_out <= resultSelect_in;
 			if (writeSlct_we) writeSelect_out <= writeSelect_in;
 			if (writeEnable_we) writeEnable_out <= writeEnable_in;
-			if (pcOverwrite_we) pcOverwrite_out <= pcOverwrite_in;
+			if (branchInst_we) branchInst_out <= branchInst_in;
 			if (branchType_we) branchType_out <= branchType_in;
-			if (jumpInstruction_we) jumpInstruction_out <= jumpInstruction_in;
+			if (jumpInstruction_we) jumpLink_out <= jumpLink_in;
+			if (jumpInstruction_we) jumpRegister_out <= jumpRegister_in;
 			if (aOperand_we) aOpCompare_out <= aOpCompare_in;
 			if (bOperand_we) bOpCompare_out <= bOpCompare_in;
 			if (load_we) load_out <= load_in;

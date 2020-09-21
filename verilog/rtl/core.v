@@ -35,7 +35,7 @@ module core(
 	wire [`DATA_WIDTH-1:0] pcOverwrite;
 	wire pc_writeEnable;
 	wire [2:0] branchType_frame;
-	wire jumpInst_frame;
+	wire jumpInst_ifc;
 	wire compareGreater;
 	wire compareEquals;
 	wire compareLess;
@@ -53,7 +53,7 @@ module core(
 		.pcOverwrite(aluResult),
 		.pc_writeEnable(pc_writeEnable),
 		.branchType(branchType_frame),
-		.jumpInst(jumpInst_frame),
+		.jumpInst(jumpInst_ifc),
 		.compareGreater(compareGreater),
 		.compareEquals(compareEquals),
 		.compareLess(compareLess),
@@ -77,10 +77,10 @@ module core(
 	wire writeEnable_decodeOut;
 	wire [`RESLT_SELCT_WIDTH-1:0] resultSelect_decodeOut;
 	wire error_decodeOut;
-	wire pcOverwrite_decode;
+	wire branchInst_decode;
 	wire [2:0] branchType_decode;
-	wire jumpInst_decode;
-	assign jumpInst_frame = jumpInst_decode;
+	wire jumpLink_decode;
+	wire jumpRegister_decode;
 	wire load_decode;
 	wire loadUnsigned_decode;
 	wire store_decode;
@@ -99,9 +99,10 @@ module core(
 		.writeEnable(writeEnable_decodeOut),
 		.resultSelect(resultSelect_decodeOut),
 		.error(error_decodeOut),
-		.pcOverwrite(pcOverwrite_decode),
+		.branchInst(branchInst_decode),
 		.branchType(branchType_decode),
-		.jumpInstruction(jumpInst_decode),
+		.jumpLink(jumpLink_decode),
+		.jumpRegister(jumpRegister_decode),
 		.load(load_decode),
 		.loadUnsigned(loadUnsigned_decode),
 		.store(store_decode),
@@ -124,7 +125,7 @@ module core(
 	pipelineStateController pipelineStateController(
 		.clk(clk),
 		.reset(reset),
-		.loadInst(loadInst),
+		.loadInst(loadInst_scIn),
 
 		.fetch_RequestState(fetch_RequestState),
 		.fetch_ReceiveState(fetch_ReceiveState),
@@ -151,7 +152,7 @@ module core(
 	wire writeSlct_we;
 	wire writeEnable_we;
 	wire result_we;
-	wire pcOverwrite_we;
+	wire branchInst_we;
 	wire branchType_we;
 	wire jumpInstruction_we;
 	wire load_we;
@@ -182,7 +183,7 @@ module core(
 		.result_we(result_we),
 		.cir_writeEnable(cir_writeEnable),
 		.pc_writeEnable(pc_writeEnable),
-		.pcOverwrite_we(pcOverwrite_we),
+		.branchInst_we(branchInst_we),
 		.branchType_we(branchType_we),
 		.jumpInstruction_we(jumpInstruction_we),
 		.load_we(load_we),
@@ -212,10 +213,12 @@ module core(
 	wire [`RESLT_SELCT_WIDTH-1:0] resultSelect_frameOut;
 	wire [`REGADDR_WIDTH-1:0] writeSelect_frameOut;
 	wire writeEnable_frameOut;
-	wire pcOverwrite_frameOut;
+	wire branchInst_frameOut;
 	wire [2:0] branchType_frameOut;
 	assign branchType_frame = branchType_frameOut;
-	wire jumpInstruction_frameOut;
+	wire jumpLink_frameOut;
+	wire jumpRegister_frameOut;
+	assign jumpInst_ifc = jumpLink_frameOut || jumpRegister_frameOut;
 	wire [`DATA_WIDTH-1:0] aOpCompare_frameOut;
 	wire [`DATA_WIDTH-1:0] bOpCompare_frameOut;
 	wire load_frameOut;
@@ -241,9 +244,10 @@ module core(
 		.resultSelect_in(resultSelect_decodeOut),
 		.writeSelect_in(writeSelect_decodeOut),
 		.writeEnable_in(writeEnable_decodeOut),
-		.pcOverwrite_in(pcOverwrite_decode),
+		.branchInst_in(branchInst_decode),
 		.branchType_in(branchType_decode),
-		.jumpInstruction_in(jumpInst_decode),
+		.jumpLink_in(jumpLink_decode),
+		.jumpRegister_in(jumpRegister_decode),
 		.aOpCompare_in(aOpCompare_frameIn),
 		.bOpCompare_in(bOpCompare_frameIn),
 		.load_in(load_decode),
@@ -263,7 +267,7 @@ module core(
 		.resultSlct_we(resultSlct_we),
 		.writeSlct_we(writeSlct_we),
 		.writeEnable_we(writeEnable_we),
-		.pcOverwrite_we(pcOverwrite_we),
+		.branchInst_we(branchInst_we),
 		.branchType_we(branchType_we),
 		.jumpInstruction_we(jumpInstruction_we),
 		.load_we(load_we),
@@ -282,9 +286,10 @@ module core(
 		.resultSelect_out(resultSelect_frameOut),
 		.writeSelect_out(writeSelect_frameOut),
 		.writeEnable_out(writeEnable_frameOut),
-		.pcOverwrite_out(pcOverwrite_frameOut),
+		.branchInst_out(branchInst_frameOut),
 		.branchType_out(branchType_frameOut),
-		.jumpInstruction_out(jumpInstruction_frameOut),
+		.jumpLink_out(jumpLink_frameOut),
+		.jumpRegister_out(jumpRegister_frameOut),
 		.aOpCompare_out(aOpCompare_frameOut),
 		.bOpCompare_out(bOpCompare_frameOut),
 		.load_out(load_frameOut),
@@ -328,10 +333,10 @@ module core(
 	assign aOperand_frameIn = aOperand_muxOut;
 
 	always @(*) begin : aOperandMux_proc
-		case (pcOverwrite_frameOut)
+		case (branchInst_frameOut || jumpLink_frameOut)
 			0 : aOperand_muxOut = readA_regOut;
 			1 : aOperand_muxOut = programCounter;
-		endcase // pcOverwrite_frameOut
+		endcase // branchInst_frameOut
 	end
 
 	//B_operand mux
@@ -353,7 +358,7 @@ module core(
 	assign bOpCompare_frameIn = bOpCompare_muxOut;
 
 	always @(*) begin : bOpCompareMux_proc
-		if (immediateSelect_frameOut && ~pcOverwrite_frameOut) bOpCompare_muxOut = immediateVal_frameOut;
+		if (immediateSelect_frameOut && ~branchInst_frameOut) bOpCompare_muxOut = immediateVal_frameOut;
 		else bOpCompare_muxOut = readB_regOut;
 	end
 
@@ -426,7 +431,7 @@ module core(
 	/////////////////
 	
 	wire [1:0] regInputSelection;
-	assign regInputSelection = {load_frameOut, jumpInstruction_frameOut};
+	assign regInputSelection = {load_frameOut, jumpLink_frameOut || jumpRegister_frameOut};
 
 	always @(*) begin : regDataInMux_proc
 		case (regInputSelection)

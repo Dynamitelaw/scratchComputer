@@ -25,7 +25,7 @@ module frameWriteController(
 	output wire result_we,
 	output wire cir_writeEnable,
 	output wire pc_writeEnable,
-	output wire pcOverwrite_we,
+	output wire branchInst_we,
 	output wire branchType_we,
 	output wire jumpInstruction_we,
 	output wire load_we,
@@ -48,7 +48,7 @@ module frameWriteController(
 	assign writeEnable_we = decodeState;
 	assign cir_writeEnable = fetch_ReceiveState;
 	assign pc_writeEnable = executeState;
-	assign pcOverwrite_we = decodeState;
+	assign branchInst_we = decodeState;
 	assign branchType_we = decodeState;
 	assign jumpInstruction_we = decodeState;
 	assign load_we = decodeState;

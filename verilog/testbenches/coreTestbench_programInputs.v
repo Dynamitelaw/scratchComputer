@@ -1,4 +1,4 @@
-`define programLength 81
-`define programFilename "../testCode/c_Code/superSimple.hex"
-`define memorySize 4092
-`define MAX_CYLCLES 5000
+`define programLength 212
+`define programFilename "../testCode/c_Code/main.hex"
+`define memorySize 2048
+`define MAX_CYLCLES 10000

@@ -35,8 +35,7 @@ module pipelineStateController (
 			pipelineState <= 0;
 		end else begin
 			//Increment pipeline from 0 to 6
-			if (memReadState)	pipelineState <= 0;
-			else if (executeState && ~loadInst) pipelineState <= pipelineState + 2;  //skip memRead state if not required
+			if ((memReadState) || (executeState && ~loadInst))	pipelineState <= 0; //skip memRead state if not required
 			else pipelineState <= pipelineState + 1;
 		end
 	end

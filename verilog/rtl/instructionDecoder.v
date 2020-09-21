@@ -16,9 +16,10 @@ module instructionDecoder (
 	output reg writeEnable,
 	output reg [`RESLT_SELCT_WIDTH-1:0] resultSelect,
 	output reg error,
-	output reg pcOverwrite,
+	output wire branchInst,
 	output reg [2:0] branchType,
-	output wire jumpInstruction,
+	output wire jumpLink,
+	output wire jumpRegister,
 	output wire load,
 	output reg loadUnsigned,
 	output wire store,
@@ -84,6 +85,7 @@ module instructionDecoder (
 	`define OP_IMM 7'h13
 	`define OP 7'h33
 	`define OP_JAL 7'h6f
+	`define OP_JALR 7'h67
 	`define OP_BRANCH 7'h63
 	`define OP_LOAD 7'h3
 	`define OP_STORE 7'h23
@@ -113,6 +115,7 @@ module instructionDecoder (
 	`define SW_F3 3'h2
 	`define SH_F3 3'h1
 	`define SB_F3 3'h0
+	`define JALR_F3 3'h0
 
 	//funct7
 	`define ADD_SLT_F7 7'h0
@@ -133,7 +136,11 @@ module instructionDecoder (
 	reg slt_flag;
 	reg sltu_flag;
 	reg jal_flag;
-	assign jumpInstruction = jal_flag;
+	assign jumpLink = jal_flag;
+	reg jalr_flag;
+	assign jumpRegister = jalr_flag;
+	reg branch_flag;
+	assign branchInst = branch_flag;
 	reg beq_flag;
 	reg bne_flag;
 	reg blt_flag;
@@ -185,6 +192,8 @@ module instructionDecoder (
 		slt_flag = (opcode == `OP) && (funct3 == `SLT_F3) && (funct7 == `ADD_SLT_F7);
 		sltu_flag = (opcode == `OP) && (funct3 == `SLTU_F3) && (funct7 == `ADD_SLT_F7);
 		jal_flag = (opcode == `OP_JAL);
+		jalr_flag = (opcode == `OP_JALR);
+		branch_flag = (opcode == `OP_BRANCH);
 		beq_flag = (opcode == `OP_BRANCH) && (funct3 == `BEQ_F3);
 		bne_flag = (opcode == `OP_BRANCH) && (funct3 == `BNE_F3);
 		blt_flag = (opcode == `OP_BRANCH) && (funct3 == `BLT_F3);
@@ -212,7 +221,7 @@ module instructionDecoder (
 		b_location = rs2;
 
 		//Determine immediateVal
-		immediateSelect = addi_flag || slti_flag || sltiu_flag || jal_flag || bType_flag || load_flag || store_flag;
+		immediateSelect = addi_flag || slti_flag || sltiu_flag || jal_flag || jalr_flag || bType_flag || load_flag || store_flag;
 		immediateVal_Itype = { {`IMM_EXTEN_WIDTH_I{imm[`IMM_WIDTH-1]}}, imm[`IMM_WIDTH-1:0] };  //sign extend immediate value for I-type instructions
 		immediateVal_Btype = { {`IMM_EXTEN_WIDTH_B{imm_12}}, imm_12, immB_11, imm_10_5, imm_4_1, 1'b0 };  //contruct and sign extend immediate value for B-type instructions
 		immediateVal_Jtype = { {`IMM_EXTEN_WIDTH_J{imm_20}}, imm_20, imm_19_12, immJ_11, imm_10_1, 1'b0 };  //contruct and sign extend immediate value for J-type instructions
@@ -230,7 +239,7 @@ module instructionDecoder (
 		writeEnable = ~(bType_flag || store_flag);
 
 		//result select encoder
-		resultEncoderInput = {1'b0, (slti_flag || sltiu_flag ||  slt_flag || sltu_flag), 1'b0, 1'b0, (remu_flag || rem_flag), (div_flag || divu_flag), mul_flag, (addi_flag || add_flag || sub_flag || bType_flag || jal_flag || store_flag || load_flag)};
+		resultEncoderInput = {1'b0, (slti_flag || sltiu_flag ||  slt_flag || sltu_flag), 1'b0, 1'b0, (remu_flag || rem_flag), (div_flag || divu_flag), mul_flag, (addi_flag || add_flag || sub_flag || bType_flag || jal_flag || jalr_flag || store_flag || load_flag)};
 		case (resultEncoderInput)
 			8'b00000001 : resultSelect = 0;
 			8'b00000010 : resultSelect = 1;
@@ -244,7 +253,6 @@ module instructionDecoder (
 			default : resultSelect = 0;
 		endcase // resultEncoderInput
 
-		pcOverwrite = jal_flag || bType_flag;
 
 		//branch type encoder
 		branchEncoderInput = {1'b0, bgeu_flag, bltu_flag, bge_flag, blt_flag, bne_flag, beq_flag, ~(bgeu_flag || bltu_flag || bge_flag || blt_flag || bne_flag || beq_flag)};
