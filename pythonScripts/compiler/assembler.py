@@ -51,22 +51,23 @@ class INST(Enum):
 	JAL = 13
 	J = 14
 	JR = 15
-	BNE = 16
-	BLTU = 17
-	BLT = 18
-	BGE = 19
-	BGEU = 20
-	BEQ = 21
+	JALR = 16
+	BNE = 17
+	BLTU = 18
+	BLT = 19
+	BGE = 20
+	BGEU = 21
+	BEQ = 22
 
 	#Load and store instructions
-	LH = 22
-	LHU = 23
-	LB = 24
-	LBU = 25
-	LW = 26
-	SW = 27
-	SH = 28
-	SB = 29
+	LH = 23
+	LHU = 24
+	LB = 25
+	LBU = 26
+	LW = 27
+	SW = 28
+	SH = 29
+	SB = 30
 
 
 #Mapping of each register ABI name to their hardware address
@@ -186,6 +187,8 @@ def parseInstruction(asmLine):
 		instructionEnum = INST.J
 	elif (instructionName == "jr"):
 		instructionEnum = INST.JR
+	elif (instructionName == "jalr"):
+		instructionEnum = INST.JR
 	elif (instructionName == "beq"):
 		instructionEnum = INST.BEQ
 	elif (instructionName == "bne"):
@@ -261,7 +264,9 @@ def parseInstruction(asmLine):
 	elif ((instructionEnum == INST.J) and (totalArgs < 1)):
 		raise Exception("Incorrect number of arguments for \"j\"")
 	elif ((instructionEnum == INST.JR) and (totalArgs < 1)):
-		raise Exception("Incorrect number of arguments for \"j\"")
+		raise Exception("Incorrect number of arguments for \"jr\"")
+	elif ((instructionEnum == INST.JALR) and (totalArgs < 2)):
+		raise Exception("Incorrect number of arguments for \"jalr\"")
 	elif ((instructionEnum == INST.BEQ) and (totalArgs < 3)):
 		raise Exception("Incorrect number of arguments for \"beq\"")
 	elif ((instructionEnum == INST.BNE) and (totalArgs < 3)):
@@ -511,13 +516,19 @@ def instructionsToInts(instructionList):
 				instructionFields["rd"] = 0
 				instructionFields["opcode"] = 111
 			elif (instructionEnum == INST.JR):
-				#<TODO> add support for JR and JALR
 				instructionFields["type"] = "I"
-				instructionFields["imm"] = args[2]
-				instructionFields["rs1"] = args[1]
-				instructionFields["funct3"] = 3
-				instructionFields["rd"] = args[0]
-				instructionFields["opcode"] = 19
+				instructionFields["imm"] = 0
+				instructionFields["rs1"] = args[0]
+				instructionFields["funct3"] = 0
+				instructionFields["rd"] = 0
+				instructionFields["opcode"] = 103
+			elif (instructionEnum == INST.JALR):
+				instructionFields["type"] = "I"
+				instructionFields["imm"] = 0
+				instructionFields["rs1"] = args[0]
+				instructionFields["funct3"] = 0
+				instructionFields["rd"] = args[1]
+				instructionFields["opcode"] = 103
 			elif (instructionEnum == INST.BEQ):
 				instructionFields["type"] = "B"
 				instructionFields["imm"] = args[2] - programCounter

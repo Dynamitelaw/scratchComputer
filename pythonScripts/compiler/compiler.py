@@ -765,7 +765,7 @@ def convertFuncCallItem(item, scope, indentLevel=0):
 	instructions += scope.saveTemps(indentLevel=indentLevel)
 
 	#Call function
-	instructions.append("{}j {}".format(indentString, functionName))
+	instructions.append("{}jal {}".format(indentString, functionName))
 
 	return instructions
 
@@ -821,7 +821,7 @@ def convertReturnItem(item, scope, indentLevel=0):
 		#Restore save variables, deallocate stack, then return
 		instructions += scope.restoreSaves(indentLevel=indentLevel)
 		instructions += scope.deallocateStack(indentLevel=indentLevel)
-		instructions.append("{}j ra".format(indentString))
+		instructions.append("{}jr ra".format(indentString))
 
 	elif isinstance(item.expr, c_ast.FuncCall):
 		#Call function, then return result
@@ -830,7 +830,7 @@ def convertReturnItem(item, scope, indentLevel=0):
 		#Restore save variables, deallocate stack, then return
 		instructions += scope.restoreSaves(indentLevel=indentLevel)
 		instructions += scope.deallocateStack(indentLevel=indentLevel)
-		instructions.append("{}j ra".format(indentString))
+		instructions.append("{}jr ra".format(indentString))
 
 	elif isinstance(item.expr, c_ast.Constant):
 		#Return constant value
@@ -846,7 +846,7 @@ def convertReturnItem(item, scope, indentLevel=0):
 		#Restore save variables, deallocate stack, then return
 		instructions += scope.restoreSaves(indentLevel=indentLevel)
 		instructions += scope.deallocateStack(indentLevel=indentLevel)
-		instructions.append("{}j ra".format(indentString))
+		instructions.append("{}jr ra".format(indentString))
 
 	elif isinstance(item.expr, c_ast.BinaryOp):
 		instructionsTemp, resultVariableName = convertBinaryOpItem(item.expr, scope, targetReg="a0", indentLevel=indentLevel)
@@ -855,7 +855,7 @@ def convertReturnItem(item, scope, indentLevel=0):
 		#Restore save variables then return
 		instructions += scope.restoreSaves(indentLevel=indentLevel)
 		instructions += scope.deallocateStack(indentLevel=1)
-		instructions.append("{}j ra".format(indentString))
+		instructions.append("{}jr ra".format(indentString))
 	elif isinstance(item.expr, c_ast.UnaryOp):
 		instructionsTemp, resultVariableName = convertUnaryOpItem(item.expr, scope, targetReg="a0", indentLevel=indentLevel)
 		instructions += instructionsTemp
@@ -863,7 +863,7 @@ def convertReturnItem(item, scope, indentLevel=0):
 		#Restore save variables, deallocate stack, then return
 		instructions += scope.restoreSaves(indentLevel=indentLevel)
 		instructions += scope.deallocateStack(indentLevel=indentLevel)
-		instructions.append("{}j ra".format(indentString))
+		instructions.append("{}jr ra".format(indentString))
 	else:
 		instructions.append("{}#UNSUPPORTED ITEM | convertReturnItem".format(indentString))
 		instructions.append("{}".format(item))
@@ -1032,7 +1032,7 @@ def covertFuncToAssembly(funcDef):
 	instructions += scope.deallocateStack(indentLevel=1)
 
 	#Return to caller
-	instructions.append("\tj ra")
+	instructions.append("\tjr ra")
 
 	funcDef.coord = instructions  #Borrow coord variable, since it seems to be unused by pycparser
 
