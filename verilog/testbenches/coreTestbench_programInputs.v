@@ -1,4 +1,4 @@
-`define programLength 212
+`define programLength 236
 `define programFilename "../testCode/c_Code/main.hex"
-`define memorySize 2048
+`define memorySize 4048
 `define MAX_CYLCLES 10000

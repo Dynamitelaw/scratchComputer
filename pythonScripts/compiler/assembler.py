@@ -29,6 +29,14 @@ def printColor(text, color=COLORS.DEFAULT, resetColor=True):
 		print(formattedText)
 
 
+class dataDefinition:
+	def __init__(self, label, size, value=None, address=None):
+		self.label = label
+		self.value = value
+		self.size = size
+		self.address = address
+
+
 #Enum for supported instruction keys
 @unique
 class INST(Enum):
@@ -280,21 +288,21 @@ def parseInstruction(asmLine):
 	elif ((instructionEnum == INST.BGEU) and (totalArgs < 3)):
 		raise Exception("Incorrect number of arguments for \"bgeu\"")
 	#Load and store instructions
-	elif ((instructionEnum == INST.LW) and (totalArgs < 3)):
+	elif ((instructionEnum == INST.LW) and (totalArgs < 2)):
 		raise Exception("Incorrect number of arguments for \"lw\"")
-	elif ((instructionEnum == INST.LH) and (totalArgs < 3)):
+	elif ((instructionEnum == INST.LH) and (totalArgs < 2)):
 		raise Exception("Incorrect number of arguments for \"lh\"")
-	elif ((instructionEnum == INST.LHU) and (totalArgs < 3)):
+	elif ((instructionEnum == INST.LHU) and (totalArgs <2)):
 		raise Exception("Incorrect number of arguments for \"lhu\"")
-	elif ((instructionEnum == INST.LB) and (totalArgs < 3)):
+	elif ((instructionEnum == INST.LB) and (totalArgs < 2)):
 		raise Exception("Incorrect number of arguments for \"lb\"")
-	elif ((instructionEnum == INST.LBU) and (totalArgs < 3)):
+	elif ((instructionEnum == INST.LBU) and (totalArgs < 2)):
 		raise Exception("Incorrect number of arguments for \"lbu\"")
-	elif ((instructionEnum == INST.SW) and (totalArgs < 3)):
+	elif ((instructionEnum == INST.SW) and (totalArgs < 2)):
 		raise Exception("Incorrect number of arguments for \"sw\"")
-	elif ((instructionEnum == INST.SH) and (totalArgs < 3)):
+	elif ((instructionEnum == INST.SH) and (totalArgs < 2)):
 		raise Exception("Incorrect number of arguments for \"sh\"")
-	elif ((instructionEnum == INST.SB) and (totalArgs < 3)):
+	elif ((instructionEnum == INST.SB) and (totalArgs < 2)):
 		raise Exception("Incorrect number of arguments for \"sb\"")
 
 
@@ -320,12 +328,15 @@ def parseAssemblyFile(filepath):
 		instruction tuple = [<lineNumber>, [<instruction_enum>,<arg1>,<arg2>,...]]
 	'''
 	labels = {}
+	dataDefDict = {}
 	linedInstructions = []
 
 	assemblyFile = open(filepath, "r")
 
 	asmLine = " "
 	lineNumber = 0
+	inTextSection = False
+	inDataSection = False
 	while (asmLine):
 		#Filter comments
 		commentIndex = asmLine.find("#")
@@ -350,13 +361,46 @@ def parseAssemblyFile(filepath):
 		#Identify line
 		try:
 			if (":" in asmLine):
-				#line is a label. Add location index to labels dict
-				labelName = asmLine.split(":")[0]
-				labels[labelName] = len(linedInstructions)*4
+				if (inTextSection):
+					#line is a label. Add location index to labels dict
+					labelName = asmLine.split(":")[0]
+					labels[labelName] = len(linedInstructions)*4
+				elif (inDataSection):
+					#line is data definition. Add to data segment
+					dataLabel, dataType, dataVal = asmLine.split(" ")
+					dataLabel = dataLabel.replace(":", "")
+
+					size = 0
+					if (dataType == ".byte"):
+						size = 1
+					elif (dataType == ".half"):
+						size = 2
+					elif (dataType == ".word"):
+						size = 4
+					elif (dataType == ".double"):
+						size = 8
+
+					value = None
+					if (dataVal != "?"):
+						value = int(dataVal)
+
+					dataDefDict[dataLabel] = dataDefinition(dataLabel, size, value=value)
+					
+			elif ("." == asmLine[0]):
+				#Section definition
+				if (".text" in asmLine):
+					inTextSection = True
+					inDataSection = False
+				elif (".data" in asmLine):
+					inDataSection = True
+					inTextSection = False
 			else:
 				#line is an instruction
-				instruction = parseInstruction(asmLine)
-				linedInstructions.append([lineNumber, instruction])
+				if (inTextSection):
+					instruction = parseInstruction(asmLine)
+					linedInstructions.append([lineNumber, instruction])
+				else:
+					raise Exception("ERROR: {} , line #{} | instruction defined in data section".format(filepath, lineNumber, e))
 		except Exception as e:
 			raise Exception("ERROR: {} , line #{} | {}".format(filepath, lineNumber, e))
 
@@ -365,21 +409,43 @@ def parseAssemblyFile(filepath):
 
 	assemblyFile.close()
 
+	#Add dataDefinitions to labels
+	initializedData = []
+	uninitData = []
+	for dataLabel in dataDefDict:
+		dataDef = dataDefDict[dataLabel]
+		if (dataDef.value):
+			initializedData.append(dataDef)
+		else:
+			uninitData.append(dataDef)
+
+	dataAddress = (len(linedInstructions)+1)*4
+	for dataDef in initializedData:
+		dataDef.address = dataAddress
+		dataAddress += dataDef.size
+	for dataDef in uninitData:
+		dataDef.address = dataAddress
+		dataAddress += dataDef.size
+
+
 	#Link labels in linedInstructions
 	finalInstructions = []
-	for instructionElement in linedInstructions:
+	for instIndex in range(0, len(linedInstructions)):
+		instructionElement = linedInstructions[instIndex]
 		lineNumber, instruction = instructionElement
-		for index in range(1, len(instruction)):
-			arg = instruction[index]
+		for argIndex in range(1, len(instruction)):
+			arg = instruction[argIndex]
 			if (isinstance(arg, str)):
-				try:
-					instruction[index] = labels[arg]
-				except Exception as e:
+				if (arg in labels):
+					instruction[argIndex] = labels[arg]
+				elif (arg in dataDefDict):
+					instruction[argIndex] = dataDefDict[arg].address
+				else:
 					raise Exception("ERROR: {} , line #{} | Unkown label \"{}\"".format(filepath, lineNumber, arg))
 
 		finalInstructions.append(instruction)
 
-	return finalInstructions
+	return finalInstructions, initializedData
 
 
 def instructionsToInts(instructionList):
@@ -574,36 +640,66 @@ def instructionsToInts(instructionList):
 			#Load and store instructions
 			elif (instructionEnum == INST.LW):
 				instructionFields["type"] = "I"
-				instructionFields["imm"] = args[1]
-				instructionFields["rs1"] = args[2]
+				if (len(args) == 3):
+					instructionFields["imm"] = args[1]
+					instructionFields["rs1"] = args[2]
+				elif (len(args) == 2):
+					instructionFields["imm"] = args[1]
+					instructionFields["rs1"] = 0  #<TODO> fix this once we have AUIPC support
+				else:
+					raise Exception("Invalid number of args for \"lw\"")
 				instructionFields["funct3"] = 2
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 3
 			elif (instructionEnum == INST.LH):
 				instructionFields["type"] = "I"
-				instructionFields["imm"] = args[1]
-				instructionFields["rs1"] = args[2]
+				if (len(args) == 3):
+					instructionFields["imm"] = args[1]
+					instructionFields["rs1"] = args[2]
+				elif (len(args) == 2):
+					instructionFields["imm"] = args[1]
+					instructionFields["rs1"] = 0  #<TODO> fix this once we have AUIPC support
+				else:
+					raise Exception("Invalid number of args for \"lh\"")
 				instructionFields["funct3"] = 1
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 3
 			elif (instructionEnum == INST.LHU):
 				instructionFields["type"] = "I"
-				instructionFields["imm"] = args[1]
-				instructionFields["rs1"] = args[2]
+				if (len(args) == 3):
+					instructionFields["imm"] = args[1]
+					instructionFields["rs1"] = args[2]
+				elif (len(args) == 2):
+					instructionFields["imm"] = args[1]
+					instructionFields["rs1"] = 0  #<TODO> fix this once we have AUIPC support
+				else:
+					raise Exception("Invalid number of args for \"lhu\"")
 				instructionFields["funct3"] = 5
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 3
 			elif (instructionEnum == INST.LB):
 				instructionFields["type"] = "I"
-				instructionFields["imm"] = args[1]
-				instructionFields["rs1"] = args[2]
+				if (len(args) == 3):
+					instructionFields["imm"] = args[1]
+					instructionFields["rs1"] = args[2]
+				elif (len(args) == 2):
+					instructionFields["imm"] = args[1]
+					instructionFields["rs1"] = 0  #<TODO> fix this once we have AUIPC support
+				else:
+					raise Exception("Invalid number of args for \"lb\"")
 				instructionFields["funct3"] = 0
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 3
 			elif (instructionEnum == INST.LBU):
 				instructionFields["type"] = "I"
-				instructionFields["imm"] = args[1]
-				instructionFields["rs1"] = args[2]
+				if (len(args) == 3):
+					instructionFields["imm"] = args[1]
+					instructionFields["rs1"] = args[2]
+				elif (len(args) == 2):
+					instructionFields["imm"] = args[1]
+					instructionFields["rs1"] = 0  #<TODO> fix this once we have AUIPC support
+				else:
+					raise Exception("Invalid number of args for \"lbu\"")
 				instructionFields["funct3"] = 4
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 3
@@ -829,8 +925,10 @@ def generateCsvIndex(instructions, instructionIntValues, filepath):
 
 def main(asmPath, hexPathArg, indexPath, logisim):
 	try:
-		instructions = parseAssemblyFile(asmPath)
-		instructionIntValues = instructionsToInts(instructions)
+		instructions, initializedData = parseAssemblyFile(asmPath)
+		programIntValues = instructionsToInts(instructions)
+		programIntValues.append(0)
+		programIntValues += [dataDef.value for dataDef in initializedData]
 
 		outputPath = asmPath.replace(".asm", "") + ".hex"
 		if (hexPathArg):
@@ -838,16 +936,16 @@ def main(asmPath, hexPathArg, indexPath, logisim):
 
 		if (logisim):
 			outputPath = outputPath.replace(".hex", "_logisim.hex")
-			writeLogisimHexFile(instructionIntValues, outputPath)
+			writeLogisimHexFile(programIntValues, outputPath)
 		else:
-			writeHexFile(instructionIntValues, outputPath)
+			writeHexFile(programIntValues, outputPath)
 
 		if (indexPath):
-			generateCsvIndex(instructions, instructionIntValues, indexPath)
+			generateCsvIndex(instructions, programIntValues, indexPath)
 
 		printColor("\nDone!", color=COLORS.OKGREEN)
-		print("{} total instructions".format(len(instructionIntValues)))
-		addressBits = math.log(len(instructionIntValues),2)
+		print("{} total instructions".format(len(instructions)))
+		addressBits = math.log(len(programIntValues),2)
 		if (logisim and (addressBits > 24)):
 			printColor ("WARNING: Program too large to run in Logisim", color=COLORS.WARNING)
 	except Exception as e:
@@ -883,3 +981,5 @@ SC Assembler v1.0 | Converts RISC-V assembly files into machine code.
 	else:
 		print("ERROR: Missing required argument \"-asm\"")
 		sys.exit()
+
+	#<TODO> add support for AUIPC instruction

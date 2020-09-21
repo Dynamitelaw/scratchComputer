@@ -88,8 +88,8 @@ int main()
 	{
 		if (!(isPrime_y))
 		{
-			//if (addThreeInts(21, 25, -4) == 42) return 42;  //<TODO> fix this
-			return 42;
+			if (addThreeInts(-4020, 40040, 22) == 42) return 42;  //<TODO> fix this
+			//return 42;
 		}
 	}
 

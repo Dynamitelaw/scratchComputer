@@ -39,6 +39,17 @@ g_forCounter = 0
 g_ifCounter = 0
 g_variableNameCoutners = {}
 
+g_dataSegment = {}
+
+
+class dataElement:
+	def __init__(self, label, value=None, dataType=None, size=4, signed=True):
+		self.label = label
+		self.value = value
+		self.dataType = dataType
+		self.size = size
+		self.signed = signed
+
 
 class variable:
 	'''
@@ -320,13 +331,14 @@ class scopeController:
 		return self.variableDict[variableName].register
 
 
-	def getFreeRegister(self, preferTemp=False, tempsAllowed=True, forceFree=True, indentLevel=0):
+	def getFreeRegister(self, preferTemp=False, tempsAllowed=True, forceFree=True, regOverride=None, indentLevel=0):
 		'''
 		Returns the name of an available register to the caller.
 		params:
 			preferTemp - if True, will prioritize returning a temporary register. Else, will priotize returning save register
 			tempsAllowed - if False, will only return save registers
 			forceFree - if True, will deallocate a register if no free registers exist. if False, will return None
+			regOverride - if specified, function will allocate the specified register
 
 		returnType:
 			( [<str> instructions], <str> registerName )
@@ -336,6 +348,12 @@ class scopeController:
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
 		registerName = None
+
+		if (regOverride):
+			registerName = regOverride
+			instructions += self.releaseRegister(registerName, indentLevel=indentLevel)
+			self.availableRegisters.remove(registerName)
+			return instructions, registerName
 
 		if (preferTemp):
 			#Check for free temp register
@@ -554,10 +572,12 @@ class scopeController:
 		return instructions
 
 
-def operandToRegister(operandItem, scope, indentLevel=0):
+def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 	'''
 	Moved the operandItem into an register.
 	
+	params:
+		targetReg - if degined, operand will be stored in specified register 
 	returnType:
 		( [<str> instructions], <str> registerName )
 	'''
@@ -567,10 +587,14 @@ def operandToRegister(operandItem, scope, indentLevel=0):
 	operandReg = ""
 	if isinstance(operandItem, c_ast.ID):
 		#operand is variable
-		operandReg = scope.getRegisterLocation(operandItem.name)
-		if (operandReg == None):
-			instructions += scope.loadStack(operandItem.name, indentLevel=indentLevel)
+		if (targetReg):
+			operandReg = targetReg
+			instructions += scope.moveVariable(operandItem.name, operandReg)
+		else:
 			operandReg = scope.getRegisterLocation(operandItem.name)
+			if (operandReg == None):
+				instructions += scope.loadStack(operandItem.name, indentLevel=indentLevel)
+				operandReg = scope.getRegisterLocation(operandItem.name)
 	elif isinstance(operandItem, c_ast.Constant):
 		# operand is contant
 		value = None
@@ -586,16 +610,27 @@ def operandToRegister(operandItem, scope, indentLevel=0):
 			operandReg = "zero"
 		elif (value < 2048) and (value >= -2048):
 			#Value is small enough for addi
-			instructionsTemp, operandReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
-			instructions += instructionsTemp
+			if (targetReg):
+				instructionsTemp, operandReg = scope.getFreeRegister(regOverride=targetReg)
+				instructions += instructionsTemp
+			else:
+				instructionsTemp, operandReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+				instructions += instructionsTemp
 			instructions.append("{}addi {}, zero, {}".format(indentString, operandReg, value))
 		else:
-			#Must load value from memory
-			#<TODO>
-			operandReg = "TOO_LARGE"
+			#Too large for immediate. Must load value from memory.
+			#Add value to data segment
+			dataType = "int"
+			dataLabelName = "data_{}_{}".format(dataType, value)
+			g_dataSegment[dataLabelName] = dataElement(dataLabelName, value=value, size=4)
+			#Load into register
+			instructionsTemp, operandReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+			instructions += instructionsTemp
+			instructions.append("{}lw {}, {}".format(indentString, operandReg, dataLabelName))
+
 	elif isinstance(operandItem, c_ast.BinaryOp):
 		#Operand is binary op
-		instructionsTemp, resultVariableName = convertBinaryOpItem(operandItem, scope, indentLevel=indentLevel)
+		instructionsTemp, resultVariableName = convertBinaryOpItem(operandItem, scope, targetReg=targetReg, indentLevel=indentLevel)
 		instructions += instructionsTemp
 		operandReg = scope.getRegisterLocation(resultVariableName)
 	elif isinstance(operandItem, c_ast.FuncCall):
@@ -906,6 +941,14 @@ def convertFuncCallItem(item, scope, indentLevel=0):
 			#Function argument is binary op
 			instructionsTemp, resultVariableName = convertBinaryOpItem(argument, scope, targetReg=argumentRegister, indentLevel=indentLevel)
 			instructions += instructionsTemp
+		elif isinstance(argument, c_ast.UnaryOp):
+			#Function argument is binary op
+			instructionsTemp, resultVariableName = convertUnaryOpItem(argument, scope, targetReg=argumentRegister, indentLevel=indentLevel)
+			instructions += instructionsTemp
+		elif isinstance(argument, c_ast.Constant):
+			#Function argument is a contant
+			instructionsTemp, operandReg = operandToRegister(argument, scope, targetReg=argumentRegister, indentLevel=indentLevel)
+			instructions += instructionsTemp
 		else:
 			instructions.append("{}#UNSUPPORTED ITEM | convertFuncCallItem".format(indentString))
 			instructions.append("{}".format(item))
@@ -1007,8 +1050,13 @@ def convertReturnItem(item, scope, indentLevel=0):
 			instructions.append("{}addi {}, zero, {}".format(indentString, "a0", value))
 		else:
 			#Must load value from memory
-			#<TODO>
-			instructions.append("###TOO_LARGE | convertReturnItem")
+			#Too large for immediate. Must load value from memory.
+			#Add value to data segment
+			dataType = "int"
+			dataLabelName = "data_{}_{}".format(dataType, value)
+			g_dataSegment[dataLabelName] = dataElement(dataLabelName, value=value, size=4)
+			#Load into register
+			instructions.append("{}lw a0, {}".format(indentString, dataLabelName))
 
 		#Restore save variables, deallocate scope, then return
 		instructions += scope.restoreSaves(indentLevel=indentLevel)
@@ -1065,9 +1113,13 @@ def convertDeclItem(item, scope, indentLevel=0):
 				#Value is small enough for addi
 				instructions.append("{}addi {}, zero, {}".format(indentString, destinationRegister, value))
 			else:
-				#Must load value from memory
-				#<TODO>
-				instructions.append("###TOO_LARGE | convertDeclItem")
+				#Too large for immediate. Must load value from memory.
+				#Add value to data segment
+				dataType = "int"
+				dataLabelName = "data_{}_{}".format(dataType, value)
+				g_dataSegment[dataLabelName] = dataElement(dataLabelName, value=value, size=4)
+				#Load into register
+				instructions.append("{}lw {}, {}".format(indentString, destinationRegister, dataLabelName))
 
 		elif isinstance(item.init, c_ast.BinaryOp):
 			#Initialized variable is result of binary expression
@@ -1343,11 +1395,17 @@ Currently only supports a subset of the C language
 		assemblyFilePath = os.path.join(outputDirectory, "{}.asm".format(hexFilename.split(".")[0]))
 		
 		asmFile = open(assemblyFilePath, "w")
+		asmFile.write(".text\n")
 		
 		if (memorySize):
 			#Initialize sp
 			stackPointerStart = int(4 * int(int(memorySize) / 4))
-			asmFile.write("addi sp, zero, {}\n".format(int(stackPointerStart)))
+			if (stackPointerStart < 2048):
+				asmFile.write("addi sp, zero, {}\n".format(int(stackPointerStart)))
+			else:
+				g_dataSegment["stackPointerStart"] = dataElement("stackPointerStart", value=stackPointerStart, size=4)
+				asmFile.write("lw sp, stackPointerStart\n")
+
 		asmFile.write("addi ra, zero, PROGRAM_END\n")  #initialize return address for main
 
 		#Write main first
@@ -1363,6 +1421,32 @@ Currently only supports a subset of the C language
 			asmFile.write("\n")
 
 		asmFile.write("PROGRAM_END:\nadd zero, zero, zero\n")  #Program end label/nop
+
+		#Write data section
+		asmFile.write(".data\n")
+
+		for dataLabel in g_dataSegment:
+			dataElement = g_dataSegment[dataLabel]
+			value = dataElement.value
+			size = dataElement.size
+
+			valueStr = "?"
+			if (value):
+				valueStr = str(value)
+
+			typeStr = ""
+			if (size == 1):
+				typeStr = ".byte"
+			elif (size == 2):
+				typeStr = ".half"
+			elif (size == 4):
+				typeStr = ".word"
+			elif (size == 8):
+				typeStr = ".double"
+
+			dataDef = "{}: {} {}\n".format(dataLabel, typeStr, valueStr)
+			asmFile.write(dataDef)
+
 		asmFile.close()
 
 

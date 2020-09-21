@@ -50,6 +50,8 @@ help yourself
 		while(line):
 			line = programFile.readline()
 			if (len(line) > 0):
+				if ("00000000" in line):
+					break
 				lineCount += 1
 
 		programFile.close()
