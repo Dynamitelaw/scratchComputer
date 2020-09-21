@@ -6,8 +6,10 @@
 #ignore all compiled files
 *testCode/*.hex
 *testCode/assemblyTest/*.hex
+*testCode/assemblyTest/*.csv
 *testCode/c_Code/*.hex
 *testCode/c_Code/*.asm
+*testCode/c_Code/*.csv
 
 #Ignore all synthesized files
 *verilog/qflowSynthesis/*
