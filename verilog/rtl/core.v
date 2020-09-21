@@ -61,7 +61,7 @@ module core(
 		.instructionOut(instructionOut_ifc),
 		.programCounter(programCounter),
 		.programCounter_next(programCounter_next)
-	);
+		);
 
 	/////////////////
 	//Instruction decoder
