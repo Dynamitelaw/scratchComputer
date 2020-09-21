@@ -41,6 +41,14 @@ g_variableNameCoutners = {}
 
 
 class variable:
+	'''
+	This class is used to represent all explicit and implicit variables in a given scope.
+	This acts as a place to store:
+		variable name
+		current register location
+		variable type
+		variable size (in bytes)
+	'''
 	def __init__(self, name, register=None, varType=None, size=None, signed=True):
 		self.name = name
 		self.register = register
@@ -68,6 +76,14 @@ class variable:
 
 
 class scopeController:
+	'''
+	This class manages and controls the local scope of any given function.
+	The scopeController is responsible for 
+		storing and managing variables within the scope
+		managing register usage
+		managing local stack
+		maintaining variable coherency
+	'''
 	def __init__(self, name):
 		self.name = name
 		self.variableDict = {}
@@ -84,6 +100,14 @@ class scopeController:
 
 
 	def mergeScopeBranch(self, scopeBranch, indentLevel=0):
+		'''
+		Will undro any differences between this scope and the current branch scope.
+		All variable locations and the state of the stack will be reverted from the branched state to this scope.
+		
+		Returns a list of instructions.
+		returnType:
+			[<str> instructions]
+		'''
 		instructions = []
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
@@ -120,6 +144,13 @@ class scopeController:
 	
 
 	def createExpressionResult(self, varType=None, size=4, signed=True):
+		'''
+		Will create an variable to represent the implicit variable of an expression result.
+		Returns the variable name to caller
+
+		returnType:
+			<str> variableName
+		'''
 		variableName = "<EXPR_RESULT>_{}".format(self.expressionCounter)
 		self.expressionCounter += 1
 		self.addVariable(variableName, varType=varType, size=size, signed=signed)
@@ -128,6 +159,11 @@ class scopeController:
 
 
 	def addVariable(self, variableName, register=None, varType=None, size=4, signed=True):
+		'''
+		Declare a new variable in this scope.
+		If register keyword is included, the variable will be initialized the the value currently stored in specified register. 
+		Specified register will be removed from available registers.
+		'''
 		self.variableDict[variableName] = variable(variableName, register=register, varType=varType, size=size, signed=signed)
 		if (register):
 			self.usedRegisters[register] = variableName
@@ -136,6 +172,9 @@ class scopeController:
 
 
 	def removeVariable(self, variableName):
+		'''
+		Remove an existing variable from this scope.
+		'''
 		try:
 			variableObj = self.variableDict[variableName]
 			self.usedRegisters.remove(variableObj.register)
@@ -147,6 +186,13 @@ class scopeController:
 
 
 	def storeStack(self, variableName, indentLevel=0):
+		'''
+		Store the specified variable onto the stack.
+		Returns a list of instruction strings.
+
+		returnType:
+			[<str> instructions]
+		'''
 		instructions = []
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
@@ -193,9 +239,20 @@ class scopeController:
 
 
 	def loadStack(self, variableName, regDestOverride=None, indentLevel=0):
+		'''
+		Load the specified variable from the stack into a register.
+		Returns a list of instruction strings.
+
+		params:
+			regDestOverride - if defined, the variable will be loaded into the specified register. Else, it can be loaded into any regsiter. 
+		
+		returnType:
+			[<str> instructions]
+		'''
 		instructions = []
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
+		#Get variable object
 		variableObj = None
 		if (variableName in self.variableDict):
 			variableObj = self.variableDict[variableName]
@@ -254,10 +311,26 @@ class scopeController:
 
 
 	def getRegisterLocation(self, variableName):
+		'''
+		Returns None if variable is not currently in a register
+
+		returnType:
+			<str> registerName
+		'''
 		return self.variableDict[variableName].register
 
 
 	def getFreeRegister(self, preferTemp=False, tempsAllowed=True, forceFree=True, indentLevel=0):
+		'''
+		Returns the name of an available register to the caller.
+		params:
+			preferTemp - if True, will prioritize returning a temporary register. Else, will priotize returning save register
+			tempsAllowed - if False, will only return save registers
+			forceFree - if True, will deallocate a register if no free registers exist. if False, will return None
+
+		returnType:
+			( [<str> instructions], <str> registerName )
+		'''
 		#<TODO> implement forceFree
 		instructions = []
 		indentString = "".join(["\t" for i in range(indentLevel)])
@@ -265,36 +338,42 @@ class scopeController:
 		registerName = None
 
 		if (preferTemp):
+			#Check for free temp register
 			t_Registers = [i for i in self.availableRegisters if "t" in i]
 			if (len(t_Registers) > 0):
 				registerName = t_Registers[0]
 				self.availableRegisters.remove(registerName)
 				return instructions, registerName
 
+			#Check for free argument register
 			a_Registers = [i for i in self.availableRegisters if "a" in i]
 			if (len(a_Registers) > 0):
 				registerName = a_Registers[0]
 				self.availableRegisters.remove(registerName)
 				return instructions, registerName
 
+			#Check for free save register
 			s_Registers = [i for i in self.availableRegisters if "s" in i]
 			if (len(s_Registers) > 0):
 				registerName = s_Registers[0]
 				self.availableRegisters.remove(registerName)
 				#don't return yet. must check if it is virgin save reg
 		else:
+			#Check for free save register
 			s_Registers = [i for i in self.availableRegisters if "s" in i]
 			if (len(s_Registers) > 0):
 				registerName = s_Registers[0]
 				self.availableRegisters.remove(registerName)
 			
 			if (not registerName and tempsAllowed):
+				#Check for free temp register
 				t_Registers = [i for i in self.availableRegisters if "t" in i]
 				if (len(t_Registers) > 0):
 					registerName = t_Registers[0]
 					self.availableRegisters.remove(registerName)
 					return instructions, registerName
 
+				#Check for free argument register
 				a_Registers = [i for i in self.availableRegisters if "a" in i]
 				if (len(a_Registers) > 0):
 					registerName = a_Registers[0]
@@ -313,18 +392,25 @@ class scopeController:
 
 
 	def releaseRegister(self, registerName, indentLevel=0):
+		'''
+		Deallocates the specified register. If in use, variable will be stored on the stack.
+
+		returnType:
+			[<str> instructions]
+		'''
 		instructions = []
 
 		if (registerName in self.virginSaveRegisters):
 			#Requesting a save register that doesn't belong to us yet. Save onto stack
 			variableName = "<SAVE>_{}".format(registerName)
 			self.addVariable(variableName, register=registerName)
-			self.storeStack(variableName)
+			instructions += self.storeStack(variableName)
 			self.virginSaveRegisters.remove(registerName)
 
 		if (registerName in self.availableRegisters):
 			pass
 		elif (registerName in self.usedRegisters):
+			#Register in use. Eject current variable
 			ejectVariableName = self.usedRegisters[registerName]
 			instructions += self.storeStack(ejectVariableName, indentLevel=indentLevel)
 
@@ -337,6 +423,12 @@ class scopeController:
 
 
 	def moveVariable(self, variableName, regDest, indentLevel=0):
+		'''
+		Moves the specified variable into the specified destination register.
+
+		returnType:
+			[<str> instructions]
+		'''
 		instructions = []
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
@@ -351,6 +443,7 @@ class scopeController:
 		if (regDest != oldRegister):
 			instructions += self.releaseRegister(regDest, indentLevel=indentLevel)
 			if (oldRegister):
+				#Variable currently in register
 				instructions.append("{}mv {}, {}".format(indentString, regDest, oldRegister))
 				variableObj.register = regDest
 				self.usedRegisters[regDest] = variableName
@@ -359,6 +452,7 @@ class scopeController:
 				self.availableRegisters.append(oldRegister)
 				self.availableRegisters.sort()
 			else:
+				#Variable not in register. Check the stack
 				if (variableName in self.localStack):
 					instructions += self.loadStack(variableName, regDestOverride=regDest, indentLevel=indentLevel)
 				else:
@@ -371,6 +465,13 @@ class scopeController:
 
 
 	def saveTemps(self, indentLevel=0):
+		'''
+		Saves the state of all temporary registers currently in use.
+		Will prioritize saving data into save registers, then the stack.
+
+		returnType:
+			[<str> instructions]
+		'''
 		instructions = []
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
@@ -384,14 +485,22 @@ class scopeController:
 				instructionsTemp, freeReg = self.getFreeRegister(tempsAllowed=False, forceFree=False, indentLevel=indentLevel)
 				instructions += instructionsTemp
 				if (freeReg):
+					#Save register available
 					instructions += self.moveVariable(variableName, freeReg, indentLevel=indentLevel)
 				else:
+					#No free register. Save to stack
 					instructions += self.storeStack(variableName, indentLevel=indentLevel)
 
 		return instructions
 
 
 	def saveReturnAddress(self, indentLevel=0):
+		'''
+		Saves the current value of the ra register onto the stack
+
+		returnType:
+			[<str> instructions]
+		'''
 		instructions = []
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
@@ -404,6 +513,12 @@ class scopeController:
 
 
 	def restoreSaves(self, indentLevel=0):
+		'''
+		Restores the value of all save registers touched within this scope.
+
+		returnType:
+			[<str> instructions]
+		'''
 		instructions = []
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
@@ -415,7 +530,14 @@ class scopeController:
 		return instructions
 
 
-	def deallocateStack(self, indentLevel=0):
+	def deallocateScope(self, indentLevel=0):
+		'''
+		Deallocates the current stack. All variables stored on the stack will be lost.
+		This instance of scopeController cannot be used after this method is called.
+
+		returnType:
+			[<str> instructions]
+		'''
 		instructions = []
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
@@ -432,30 +554,13 @@ class scopeController:
 		return instructions
 
 
-def getFunctionDefinitions(ast):
-	'''
-	Returns a dictionary of function definitions in the following format
-		{"<functionName>": c_ast.FuncDef, ...}
-	Also returns a list of global variable declarations
-		[c_ast.Decl, ...]
-	'''
-	if ast is None:
-		return {}, []
-
-	childrens = [item[1] for item in ast.children()]
-	functions = {}
-	globalVarDelcarations = []
-
-	for item in childrens:
-		if isinstance(item,c_ast.FuncDef):
-			functions[item.decl.name] = item
-		elif isinstance(item, c_ast.Decl):
-			globalVarDelcarations.append(item)
-
-	return functions, globalVarDelcarations
-
-
 def operandToRegister(operandItem, scope, indentLevel=0):
+	'''
+	Moved the operandItem into an register.
+	
+	returnType:
+		( [<str> instructions], <str> registerName )
+	'''
 	instructions = []
 	indentString = "".join(["\t" for i in range(indentLevel)])
 
@@ -506,9 +611,23 @@ def operandToRegister(operandItem, scope, indentLevel=0):
 
 
 def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, targetReg=None, resultSize=4, resultType=None, indentLevel=0):
+	'''
+	Converts a c_ast.UnaryOp object into an assembly snippet.
+	Returns a list of instructions, as well as the variable name of the operation result
+
+	params:
+		branch - if defined and unary op is logical, will branch to specified label if result=True
+		targetVariableName - if defined, result will be stored in specified variable
+		targetReg - if degined, result will be stored in specified register 
+	
+	returnType:
+		( [<str> instructions], <str> variableName )
+	'''
+
 	instructions = []
 	indentString = "".join(["\t" for i in range(indentLevel)])
 
+	#Get operand into register
 	instructionsTemp, operandReg = operandToRegister(item.expr, scope, indentLevel=indentLevel)
 	instructions += instructionsTemp
 
@@ -516,6 +635,7 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 	if isinstance(item.expr, c_ast.ID):
 		variableName = item.expr.name
 
+	#Determine operation to perform
 	operator = item.op
 
 	if (operator == "p++"):
@@ -523,12 +643,14 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 	elif (operator == "p--"):
 		instructions.append("{}addi {}, {}, -1".format(indentString, operandReg, operandReg))
 	elif (operator == "-"):
+		#Get or create variable name for result of negation
 		if (targetVariableName):
 			scope.addVariable(targetVariableName, size=resultSize, varType=resultType)
 			resultVariableName = targetVariableName
 		else:
 			resultVariableName = scope.createExpressionResult()
 
+		#Get a register to store result
 		regDest = ""
 		if (targetReg):
 			instructions += scope.releaseRegister(targetReg, indentLevel=indentLevel)
@@ -540,20 +662,24 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 		instructionsTemp, tempRegister = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
 		instructions += instructionsTemp
 
+		#Negate operand
 		instructions.append("{}addi {}, zero, -1".format(indentString, tempRegister))
 		instructions.append("{}mul {}, {}, {}".format(indentString, regDest, operandReg, tempRegister))
 
 		instructions += scope.releaseRegister(tempRegister)
 	elif (operator == "!"):
+		#Logical invert
 		if (branch):
 			instructions.append("{}beq {}, zero, {}".format(indentString, operandReg, branch))
 		else:
+			#Get or create variable name for result
 			if (targetVariableName):
 				scope.addVariable(targetVariableName, size=resultSize, varType=resultType)
 				resultVariableName = targetVariableName
 			else:
 				resultVariableName = scope.createExpressionResult()
 
+			#Get a register to store result
 			regDest = ""
 			if (targetReg):
 				instructions += scope.releaseRegister(targetReg, indentLevel=indentLevel)
@@ -562,7 +688,7 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 				instructionsTemp, regDest = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
 				instructions += instructionsTemp
 
-
+			#Logically invert operand
 			instructions.append("{}sltu {}, {}, zero".format(indentString, regDest, operandReg))
 	else:
 		instructions.append("{}###UNSUPPORTED OPERATOR \"{}\"| convertUnaryOpItem".format(indentString, operator))
@@ -571,6 +697,18 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 
 
 def convertBinaryOpItem(item, scope, branch=None, targetVariableName=None, targetReg=None, resultSize=4, resultType=None, indentLevel=0):
+	'''
+	Converts a c_ast.BinaryOp object into an assembly snippet.
+	Returns a list of instructions, as well as the variable name of the operation result
+	
+	params:
+		branch - if defined and binary op is logical, will branch to specified label if result=True
+		targetVariableName - if defined, result will be stored in specified variable
+		targetReg - if degined, result will be stored in specified register
+
+	returnType:
+		( [<str> instructions], <str> variableName )
+	'''
 	instructions = []
 	indentString = "".join(["\t" for i in range(indentLevel)])
 
@@ -583,6 +721,7 @@ def convertBinaryOpItem(item, scope, branch=None, targetVariableName=None, targe
 		else:
 			resultVariableName = scope.createExpressionResult()
 
+	#Get a register to store result
 	regDest = ""
 	if (not branch):
 		if (targetReg):
@@ -693,6 +832,13 @@ def convertBinaryOpItem(item, scope, branch=None, targetVariableName=None, targe
 
 
 def convertIfItem(item, scope, indentLevel=0):
+	'''
+	Converts a c_ast.If object into an assembly snippet.
+	Returns a list of instructions
+	
+	returnType:
+		[<str> instructions]
+	'''
 	global g_ifCounter
 
 	instructions = []
@@ -735,11 +881,19 @@ def convertIfItem(item, scope, indentLevel=0):
 
 
 def convertFuncCallItem(item, scope, indentLevel=0):
+	'''
+	Converts a c_ast.FuncCall object into an assembly snippet.
+	Returns a list of instructions
+	
+	returnType:
+		[<str> instructions]
+	'''
 	instructions = []
 	indentString = "".join(["\t" for i in range(indentLevel)])
 
 	functionName = item.name.name
 
+	#Sets up function parameters into argument registers
 	argIndex = 0
 	for argument in item.args.exprs:
 		argumentRegister = "a{}".format(argIndex)
@@ -771,6 +925,13 @@ def convertFuncCallItem(item, scope, indentLevel=0):
 
 
 def convertAssignmentItem(item, scope, indentLevel=0):
+	'''
+	Converts a c_ast.Assignment object into an assembly snippet.
+	Returns a list of instructions
+	
+	returnType:
+		[<str> instructions]
+	'''
 	instructions = []
 	indentString = "".join(["\t" for i in range(indentLevel)])
 
@@ -801,6 +962,13 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 
 
 def convertReturnItem(item, scope, indentLevel=0):
+	'''
+	Converts a c_ast.Return object into an assembly snippet.
+	Returns a list of instructions
+	
+	returnType:
+		[<str> instructions]
+	'''
 	#<TODO> Prevent uneeded saving of variables onto stack when we are returning
 	instructions = []
 	indentString = "".join(["\t" for i in range(indentLevel)])
@@ -812,24 +980,23 @@ def convertReturnItem(item, scope, indentLevel=0):
 
 		if (not currentRegister):
 			#variable on stack. Load into a0
-			pass
-			#instructions += scope.loadStack(variableName, regDestOverride="a0", indentLevel=indentLevel)
+			instructions += scope.loadStack(variableName, regDestOverride="a0", indentLevel=indentLevel)
 		else:
 			#variable in register. Move into a0
 			instructions += scope.moveVariable(variableName, "a0", indentLevel=indentLevel)
 		
-		#Restore save variables, deallocate stack, then return
+		#Restore save variables, deallocate scope, then return
 		instructions += scope.restoreSaves(indentLevel=indentLevel)
-		instructions += scope.deallocateStack(indentLevel=indentLevel)
+		instructions += scope.deallocateScope(indentLevel=indentLevel)
 		instructions.append("{}jr ra".format(indentString))
 
 	elif isinstance(item.expr, c_ast.FuncCall):
 		#Call function, then return result
 		instructions += convertFuncCallItem(item.expr, scope, indentLevel=indentLevel)
 
-		#Restore save variables, deallocate stack, then return
+		#Restore save variables, deallocate scope, then return
 		instructions += scope.restoreSaves(indentLevel=indentLevel)
-		instructions += scope.deallocateStack(indentLevel=indentLevel)
+		instructions += scope.deallocateScope(indentLevel=indentLevel)
 		instructions.append("{}jr ra".format(indentString))
 
 	elif isinstance(item.expr, c_ast.Constant):
@@ -843,26 +1010,26 @@ def convertReturnItem(item, scope, indentLevel=0):
 			#<TODO>
 			instructions.append("###TOO_LARGE | convertReturnItem")
 
-		#Restore save variables, deallocate stack, then return
+		#Restore save variables, deallocate scope, then return
 		instructions += scope.restoreSaves(indentLevel=indentLevel)
-		instructions += scope.deallocateStack(indentLevel=indentLevel)
+		instructions += scope.deallocateScope(indentLevel=indentLevel)
 		instructions.append("{}jr ra".format(indentString))
 
 	elif isinstance(item.expr, c_ast.BinaryOp):
 		instructionsTemp, resultVariableName = convertBinaryOpItem(item.expr, scope, targetReg="a0", indentLevel=indentLevel)
 		instructions += instructionsTemp
 
-		#Restore save variables then return
+		#Restore save variables, deallocate scope, then return
 		instructions += scope.restoreSaves(indentLevel=indentLevel)
-		instructions += scope.deallocateStack(indentLevel=1)
+		instructions += scope.deallocateScope(indentLevel=1)
 		instructions.append("{}jr ra".format(indentString))
 	elif isinstance(item.expr, c_ast.UnaryOp):
 		instructionsTemp, resultVariableName = convertUnaryOpItem(item.expr, scope, targetReg="a0", indentLevel=indentLevel)
 		instructions += instructionsTemp
 
-		#Restore save variables, deallocate stack, then return
+		#Restore save variables, deallocate scope, then return
 		instructions += scope.restoreSaves(indentLevel=indentLevel)
-		instructions += scope.deallocateStack(indentLevel=indentLevel)
+		instructions += scope.deallocateScope(indentLevel=indentLevel)
 		instructions.append("{}jr ra".format(indentString))
 	else:
 		instructions.append("{}#UNSUPPORTED ITEM | convertReturnItem".format(indentString))
@@ -873,12 +1040,20 @@ def convertReturnItem(item, scope, indentLevel=0):
 
 
 def convertDeclItem(item, scope, indentLevel=0):
+	'''
+	Converts a c_ast.Decl(Declaration) object into an assembly snippet.
+	Returns a list of instructions, along with the variableName of the declared variable
+	
+	returnType:
+		( [<str> instructions], <str> variableName )
+	'''
 	instructions = []
 	indentString = "".join(["\t" for i in range(indentLevel)])
 
 	variableName = item.name
 
 	if (item.init):
+		#Declared with initial value
 		if isinstance(item.init, c_ast.Constant):
 			#Initialized variable to a constant value
 			instructionsTemp, destinationRegister = scope.getFreeRegister(indentLevel=indentLevel)
@@ -916,6 +1091,13 @@ def convertDeclItem(item, scope, indentLevel=0):
 
 
 def convertForItem(item, scope, indentLevel=0):
+	'''
+	Converts a c_ast.For(For Loop) object into an assembly snippet.
+	Returns a list of instructions
+	
+	returnType:
+		[<str> instructions]
+	'''
 	global g_forCounter
 
 	instructions = []
@@ -976,6 +1158,13 @@ def convertForItem(item, scope, indentLevel=0):
 
 
 def convertAstItem(item, scope, indentLevel=0):
+	'''
+	Converts a c_ast object into an assembly snippet.
+	Returns a list of instructions
+	
+	returnType:
+		[<str> instructions]
+	'''
 	instructions = []
 	indentString = "".join(["\t" for i in range(indentLevel)])
 
@@ -1003,7 +1192,8 @@ def convertAstItem(item, scope, indentLevel=0):
 
 def covertFuncToAssembly(funcDef):
 	'''
-	Converts the funcDef node into an assembly snippet. Adds asm string as object variable funcDef.coord
+	Converts the c_ast.funcDef object into an assembly snippet.
+	Writes list of instructions to object variable funcDef.coord
 	'''
 	instructions = []
 	scope = scopeController(funcDef.decl.name)
@@ -1029,7 +1219,7 @@ def covertFuncToAssembly(funcDef):
 	instructions += scope.restoreSaves(indentLevel=1)
 
 	#Deallocate local stack
-	instructions += scope.deallocateStack(indentLevel=1)
+	instructions += scope.deallocateScope(indentLevel=1)
 
 	#Return to caller
 	instructions.append("\tjr ra")
@@ -1037,7 +1227,37 @@ def covertFuncToAssembly(funcDef):
 	funcDef.coord = instructions  #Borrow coord variable, since it seems to be unused by pycparser
 
 
+def getFunctionDefinitions(ast):
+	'''
+	Returns a dictionary of function definitions in the following format
+		{"<functionName>": c_ast.FuncDef, ...}
+	Also returns a list of global variable declarations
+		[c_ast.Decl, ...]
+	'''
+	if ast is None:
+		return {}, []
+
+	childrens = [item[1] for item in ast.children()]
+	functions = {}
+	globalVarDelcarations = []
+
+	for item in childrens:
+		if isinstance(item,c_ast.FuncDef):
+			functions[item.decl.name] = item
+		elif isinstance(item, c_ast.Decl):
+			globalVarDelcarations.append(item)
+
+	return functions, globalVarDelcarations
+
+
 def precleanCFile(filepath):
+	'''
+	Preprocesses C file into a clean one for parsing.
+	Returns filepath of clean C file
+	
+	returnType:
+		<str> filePath
+	'''
 	cFileIn = open(filepath, "r")
 
 	cOutPath = "{}.temp".format(os.path.split(filepath)[-1])

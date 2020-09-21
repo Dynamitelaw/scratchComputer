@@ -776,10 +776,6 @@ def writeLogisimHexFile(integerList, filepath):
 	outputFile = open(filepath, "w")
 
 	outputFile.write("v2.0 raw\n")
-	# for val in integerList:
-	# 	outputFile.write(hex(val)[2:])
-	# 	outputFile.write(" ")
-	# outputFile.write("\n")
 	for val in integerList:
 		outputFile.write(hex(val)[2:])
 		outputFile.write("\n")
