@@ -23,6 +23,10 @@ Install python
 Install required libraries:
 	-pandas
 	-pycparser
+	#Debugger dependencies
+	-sudo apt-get install python3-pyqt5
+	-sudo apt-get install python3-matplotlib
+
 
 ####
 # Verilog setup

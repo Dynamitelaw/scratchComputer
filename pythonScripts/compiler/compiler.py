@@ -405,6 +405,7 @@ class scopeController:
 			self.addVariable(variableName, register=registerName)
 			instructions += self.storeStack(variableName, indentLevel=indentLevel)
 			self.virginSaveRegisters.remove(registerName)
+			self.availableRegisters.remove(registerName)
 
 		return instructions, registerName
 
@@ -640,7 +641,7 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 		operandReg = "a0"
 		if (targetReg):
 			instructionsTemp, operandReg = scope.getFreeRegister(regOverride=targetReg, indentLevel=indentLevel)
-			intstructions += instructionsTemp
+			instructions += instructionsTemp
 			instructions.append("{}mv {}, a0".format(indentString, operandReg))
 	else:
 		instructions.append("{}#UNSUPPORTED OPERAND".format(indentString))
@@ -954,6 +955,30 @@ def convertFuncCallItem(item, scope, indentLevel=0):
 			#Function argument is a contant
 			instructionsTemp, operandReg = operandToRegister(argument, scope, targetReg=argumentRegister, indentLevel=indentLevel)
 			instructions += instructionsTemp
+		elif isinstance(argument, c_ast.FuncCall):
+			#Function argument is another function call
+			argumentSaves = {}
+			if (argIndex != 0):
+				#Save current values of prepared arugements
+				for saveIndex in range(0,argIndex):
+					instructionsTemp, tempSaveReg = scope.getFreeRegister(tempsAllowed=False, indentLevel=indentLevel)
+					instructions += instructionsTemp
+					instructions.append("{}mv {}, a{}".format(indentString, tempSaveReg, saveIndex))
+
+					argumentSaves[saveIndex] = tempSaveReg
+
+			instructions += convertFuncCallItem(argument, scope, indentLevel=indentLevel)
+			
+			if (argIndex != 0):
+				#Move return value into required argument register
+				instructions.append("{}mv {}, a0".format(indentString, argumentRegister))
+
+				#Restore previous argument values
+				for saveIndex in range(0,argIndex):
+					tempSaveReg = argumentSaves[saveIndex]
+					instructions.append("{}mv a{}, {}".format(indentString, saveIndex, tempSaveReg))
+					scope.releaseRegister(tempSaveReg)
+
 		else:
 			instructions.append("{}#UNSUPPORTED ITEM | convertFuncCallItem".format(indentString))
 			instructions.append("{}".format(item))
@@ -1402,30 +1427,48 @@ Currently only supports a subset of the C language
 		asmFile = open(assemblyFilePath, "w")
 		asmFile.write(".text\n")
 		
+		programCounter = 0
 		if (memorySize):
 			#Initialize sp
 			stackPointerStart = int(4 * int(int(memorySize) / 4))
 			if (stackPointerStart < 2048):
-				asmFile.write("addi sp, zero, {}\n".format(int(stackPointerStart)))
+				asmFile.write("addi sp, zero, {}\t\t#PC = {}\n".format(int(stackPointerStart, programCounter)))
 			else:
 				g_dataSegment["stackPointerStart"] = dataElement("stackPointerStart", value=stackPointerStart, size=4)
-				asmFile.write("lw sp, stackPointerStart\n")
+				asmFile.write("lw sp, stackPointerStart\t\t#PC = {}\n".format(programCounter))
+			programCounter += 4
 
-		asmFile.write("addi ra, zero, PROGRAM_END\n")  #initialize return address for main
+		asmFile.write("addi ra, zero, PROGRAM_END\t\t#PC = {}\n".format(programCounter))  #initialize return address for main
+		programCounter += 4
 
 		#Write main first
 		instructions = definedFunctions["main"].coord
-		asmFile.write("\n".join(instructions))
+		for inst in instructions:
+			if not (":" in inst):
+				asmFile.write("{}\t\t#PC = {}\n".format(inst, programCounter))
+			else:
+				asmFile.write("{}\n".format(inst, programCounter))
+
+			if not (("#" in inst) or (":" in inst)):
+				programCounter += 4
+
 		asmFile.write("\n")
 		del definedFunctions["main"]
 
 		#Write other functions
 		for functionName in definedFunctions:
 			instructions = definedFunctions[functionName].coord
-			asmFile.write("\n".join(instructions))
+			for inst in instructions:
+				if not (":" in inst):
+					asmFile.write("{}\t\t#PC = {}\n".format(inst, programCounter))
+				else:
+					asmFile.write("{}\n".format(inst, programCounter))
+
+				if not (("#" in inst) or (":" in inst)):
+					programCounter += 4
 			asmFile.write("\n")
 
-		asmFile.write("PROGRAM_END:\nadd zero, zero, zero\n")  #Program end label/nop
+		asmFile.write("PROGRAM_END:\nadd zero, zero, zero\t\t#PC = {}\n".format(programCounter))  #Program end label/nop
 
 		#Write data section
 		asmFile.write(".data\n")

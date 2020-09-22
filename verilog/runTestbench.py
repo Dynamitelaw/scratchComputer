@@ -26,7 +26,7 @@ help yourself
 	parser.add_argument("-prog", action="store", dest="programPath", help="Path to hex program to run, if supported by the testbench")
 	parser.add_argument("-mem", action="store", dest="memorySize", help="Size of main memory to allocate in bytes")
 	parser.add_argument("-cycles", action="store", dest="maxSimCycles", help="If specified, simulation will end if total cycles exceed this limit")
-	parser.add_argument("-dump", action="store_true", dest="dumpValues", help="If specified, will create an lxt2 dump file from simulation. Required to view waveforms in Gtkwave")
+	parser.add_argument("-dump", action="store_true", dest="dumpValues", help="If specified, will create an vcd dump file from simulation. Required to view waveforms in Gtkwave")
 
 	args = parser.parse_args()
 
@@ -83,13 +83,13 @@ help yourself
 	#Run vvp
 	dumpFlag = ""
 	if (dumpValues):
-		dumpFlag = "-lxt2"
+		dumpFlag = "-vcd"
 
 	command = "vvp simulation/{}/{}.vvp {}".format(testbenchName, testbenchName, dumpFlag)
 	print("+ {}".format(command))
 	os.system(command)
 
 	#Move dump file
-	command = "mv dump.lx2 simulation/{}/{}_dump.lx2".format(testbenchName, testbenchName)
+	command = "mv dump.vcd simulation/{}/{}_dump.vcd".format(testbenchName, testbenchName)
 	print("+ {}".format(command))
 	os.system(command)

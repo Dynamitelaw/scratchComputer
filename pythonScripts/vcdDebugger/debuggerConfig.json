@@ -1,0 +1,37 @@
+{
+	"captureList":
+	[
+		"coreTestbench.cycleCount[31:0]",
+		"coreTestbench.core.registers.ra[31:0]",
+		"coreTestbench.core.registers.sp[31:0]",
+		"coreTestbench.core.registers.gp[31:0]",
+		"coreTestbench.core.registers.tp[31:0]",
+		"coreTestbench.core.registers.a0[31:0]",
+		"coreTestbench.core.registers.a1[31:0]",
+		"coreTestbench.core.registers.a2[31:0]",
+		"coreTestbench.core.registers.a3[31:0]",
+		"coreTestbench.core.registers.a4[31:0]",
+		"coreTestbench.core.registers.a5[31:0]",
+		"coreTestbench.core.registers.a6[31:0]",
+		"coreTestbench.core.registers.a7[31:0]",
+		"coreTestbench.core.registers.s0[31:0]",
+		"coreTestbench.core.registers.s1[31:0]",
+		"coreTestbench.core.registers.s2[31:0]",
+		"coreTestbench.core.registers.s3[31:0]",
+		"coreTestbench.core.registers.s4[31:0]",
+		"coreTestbench.core.registers.s5[31:0]",
+		"coreTestbench.core.registers.s6[31:0]",
+		"coreTestbench.core.registers.s7[31:0]",
+		"coreTestbench.core.registers.s8[31:0]",
+		"coreTestbench.core.registers.s9[31:0]",
+		"coreTestbench.core.registers.s10[31:0]",
+		"coreTestbench.core.registers.s11[31:0]",
+		"coreTestbench.core.registers.t0[31:0]",
+		"coreTestbench.core.registers.t1[31:0]",
+		"coreTestbench.core.registers.t2[31:0]",
+		"coreTestbench.core.registers.t3[31:0]",
+		"coreTestbench.core.registers.t4[31:0]",
+		"coreTestbench.core.registers.t5[31:0]",
+		"coreTestbench.core.registers.t6[31:0]"
+	]
+}
