@@ -583,6 +583,7 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 	'''
 	instructions = []
 	indentString = "".join(["\t" for i in range(indentLevel)])
+	#instructions.append("{}###operandToRegister | targetReg = {}".format(indentString, targetReg))
 
 	operandReg = ""
 	if isinstance(operandItem, c_ast.ID):
@@ -624,7 +625,7 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 			dataLabelName = "data_{}_{}".format(dataType, value)
 			g_dataSegment[dataLabelName] = dataElement(dataLabelName, value=value, size=4)
 			#Load into register
-			instructionsTemp, operandReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+			instructionsTemp, operandReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel, regOverride=targetReg)
 			instructions += instructionsTemp
 			instructions.append("{}lw {}, {}".format(indentString, operandReg, dataLabelName))
 
@@ -637,6 +638,10 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 		#Operand is function result
 		instructions += convertFuncCallItem(operandItem, scope, indentLevel=indentLevel)
 		operandReg = "a0"
+		if (targetReg):
+			instructionsTemp, operandReg = scope.getFreeRegister(regOverride=targetReg, indentLevel=indentLevel)
+			intstructions += instructionsTemp
+			instructions.append("{}mv {}, a0".format(indentString, operandReg))
 	else:
 		instructions.append("{}#UNSUPPORTED OPERAND".format(indentString))
 		instructions.append("{}".format(operandItem))

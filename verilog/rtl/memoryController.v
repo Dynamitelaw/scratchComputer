@@ -102,7 +102,7 @@ module memoryController(
 		ri2_B2select = (addressLower == 0) && (length_latch == 3);
 
 		if (ri2_B0select) ramIn_byte2 = input_byte0;
-		else if (ri2_B2select) ramIn_byte2 = ramIn_byte2;
+		else if (ri2_B2select) ramIn_byte2 = input_byte2;
 		else ramIn_byte2 = 0;
 
 		//Byte 3
