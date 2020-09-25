@@ -7,14 +7,30 @@
     <x>0</x>
     <y>0</y>
     <width>1189</width>
-    <height>842</height>
+    <height>870</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(40, 41, 35);</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <spacer name="verticalSpacer_8">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
@@ -24,12 +40,28 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_7">
             <item>
-             <widget class="QLCDNumber" name="lcdNumber"/>
+             <widget class="QLCDNumber" name="programCounter_display">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>30</height>
+               </size>
+              </property>
+             </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label">
+             <widget class="QLabel" name="programCounterLabel">
               <property name="layoutDirection">
                <enum>Qt::LeftToRight</enum>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);</string>
               </property>
               <property name="text">
                <string>Program Counter</string>
@@ -44,14 +76,29 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_9">
             <item>
-             <widget class="QLCDNumber" name="lcdNumber_2">
+             <widget class="QLCDNumber" name="cycle_display">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>30</height>
+               </size>
+              </property>
               <property name="layoutDirection">
                <enum>Qt::LeftToRight</enum>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_15">
+             <widget class="QLabel" name="cycleLabel">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);</string>
+              </property>
               <property name="text">
                <string>Cycle</string>
               </property>
@@ -65,10 +112,18 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_5">
             <item>
-             <widget class="QLineEdit" name="lineEdit"/>
+             <widget class="QLineEdit" name="gotoCycle_textBox">
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(255, 255, 255);</string>
+              </property>
+             </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_2">
+             <widget class="QPushButton" name="gotoCycle_button">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(160, 160, 160);</string>
+              </property>
               <property name="text">
                <string>Go To Cycle</string>
               </property>
@@ -112,14 +167,34 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QLabel" name="label_2">
+           <spacer name="verticalSpacer_5">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="playbackSpeed_label">
+            <property name="styleSheet">
+             <string notr="true">color: rgb(255, 255, 255);</string>
+            </property>
             <property name="text">
              <string>Playback Speed</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="comboBox">
+           <widget class="QComboBox" name="playbackSpeed_select">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);</string>
+            </property>
             <item>
              <property name="text">
               <string>0.5 Hz</string>
@@ -167,31 +242,72 @@
             </item>
            </widget>
           </item>
+          <item>
+           <spacer name="verticalSpacer_6">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
          </layout>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_4">
+         <widget class="QPushButton" name="backButton">
+          <property name="toolTip">
+           <string>Rewind a single cycle</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgba(195, 0, 0,170);
+color: rgb(255, 255, 255);</string>
+          </property>
           <property name="text">
            <string>Back</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_5">
+         <widget class="QPushButton" name="pauseButton">
+          <property name="toolTip">
+           <string>Pause cycle incrementing</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgba(0, 11, 175, 170);
+color: rgb(255, 255, 255);</string>
+          </property>
           <property name="text">
            <string>Pause</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="playButton">
+          <property name="toolTip">
+           <string>Increment displayed cylce at the speficied playback frequency</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgba(0, 211, 31, 170);
+color: rgb(255, 255, 255);</string>
+          </property>
           <property name="text">
            <string>Play</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_3">
+         <widget class="QPushButton" name="fowardButton">
+          <property name="toolTip">
+           <string>Increment a single cycle</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgba(0, 213, 153, 170);
+color: rgb(255, 255, 255);</string>
+          </property>
           <property name="text">
            <string>Foward</string>
           </property>
@@ -215,12 +331,51 @@
      </layout>
     </item>
     <item>
+     <spacer name="verticalSpacer_7">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QTextBrowser" name="textBrowser"/>
+       <widget class="QTextBrowser" name="cCode_text">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>875</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(50, 51, 45);</string>
+        </property>
+       </widget>
       </item>
       <item>
-       <widget class="QTextBrowser" name="textBrowser_2"/>
+       <widget class="QTextBrowser" name="assembly_text">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>875</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(50, 51, 45);</string>
+        </property>
+       </widget>
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_8">
@@ -229,12 +384,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_35">
             <item>
-             <widget class="QLabel" name="label_8">
+             <widget class="QLabel" name="t0reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>25</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(160, 0, 170, 170);</string>
               </property>
               <property name="text">
                <string>t0</string>
@@ -242,14 +407,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_38">
+             <widget class="QLabel" name="t0Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(160, 0, 170, 170);</string>
+              </property>
               <property name="text">
                <string>t0_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_66">
+             <widget class="QLabel" name="t0_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(160, 0, 170, 170);</string>
+              </property>
               <property name="text">
                <string>t0_var</string>
               </property>
@@ -260,12 +433,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_34">
             <item>
-             <widget class="QLabel" name="label_51">
+             <widget class="QLabel" name="t1reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>25</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(160, 0, 170, 170);</string>
               </property>
               <property name="text">
                <string>t1</string>
@@ -273,14 +456,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_11">
+             <widget class="QLabel" name="t1Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(160, 0, 170, 170);</string>
+              </property>
               <property name="text">
                <string>t1_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_67">
+             <widget class="QLabel" name="t1_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(160, 0, 170, 170);</string>
+              </property>
               <property name="text">
                <string>t1_var</string>
               </property>
@@ -291,12 +482,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_33">
             <item>
-             <widget class="QLabel" name="label_52">
+             <widget class="QLabel" name="t2reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>25</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(160, 0, 170, 170);</string>
               </property>
               <property name="text">
                <string>t2</string>
@@ -304,14 +505,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_33">
+             <widget class="QLabel" name="t2Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(160, 0, 170, 170);</string>
+              </property>
               <property name="text">
                <string>t2_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_68">
+             <widget class="QLabel" name="t2_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(160, 0, 170, 170);</string>
+              </property>
               <property name="text">
                <string>t2_var</string>
               </property>
@@ -322,12 +531,23 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_32">
             <item>
-             <widget class="QLabel" name="label_53">
+             <widget class="QLabel" name="t3reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>25</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(160, 0, 170, 170);
+</string>
               </property>
               <property name="text">
                <string>t3</string>
@@ -335,14 +555,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_34">
+             <widget class="QLabel" name="t3Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(160, 0, 170, 170);</string>
+              </property>
               <property name="text">
                <string>t3_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_69">
+             <widget class="QLabel" name="t3_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(160, 0, 170, 170);</string>
+              </property>
               <property name="text">
                <string>t3_var</string>
               </property>
@@ -353,12 +581,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_36">
             <item>
-             <widget class="QLabel" name="label_54">
+             <widget class="QLabel" name="t4reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>25</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(160, 0, 170, 170);</string>
               </property>
               <property name="text">
                <string>t4</string>
@@ -366,14 +604,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_39">
+             <widget class="QLabel" name="t4Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(160, 0, 170, 170);</string>
+              </property>
               <property name="text">
                <string>t4_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_70">
+             <widget class="QLabel" name="t4_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(160, 0, 170, 170);</string>
+              </property>
               <property name="text">
                <string>t4_var</string>
               </property>
@@ -384,12 +630,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_38">
             <item>
-             <widget class="QLabel" name="label_55">
+             <widget class="QLabel" name="t5reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>25</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(160, 0, 170, 170);</string>
               </property>
               <property name="text">
                <string>t5</string>
@@ -397,14 +653,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_40">
+             <widget class="QLabel" name="t5Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(160, 0, 170, 170);</string>
+              </property>
               <property name="text">
                <string>t5_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_71">
+             <widget class="QLabel" name="t5_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(160, 0, 170, 170);</string>
+              </property>
               <property name="text">
                <string>t5_var</string>
               </property>
@@ -415,15 +679,47 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_41">
             <item>
-             <widget class="QLabel" name="label_93">
+             <widget class="QLabel" name="t6reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>25</width>
                 <height>50</height>
                </size>
               </property>
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(160, 0, 170, 170);</string>
+              </property>
               <property name="text">
                <string>t6</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="t6Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(160, 0, 170, 170);</string>
+              </property>
+              <property name="text">
+               <string>t6_value</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="t6_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(160, 0, 170, 170);</string>
+              </property>
+              <property name="text">
+               <string>t6_var</string>
               </property>
              </widget>
             </item>
@@ -449,11 +745,17 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout">
             <item>
-             <widget class="QLabel" name="label_4">
+             <widget class="QLabel" name="s0reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>30</width>
                 <height>50</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>30</width>
+                <height>16777215</height>
                </size>
               </property>
               <property name="palette">
@@ -462,18 +764,18 @@
                  <colorrole role="WindowText">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>0</red>
-                    <green>0</green>
-                    <blue>0</blue>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
                  <colorrole role="Button">
                   <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>162</red>
-                    <green>242</green>
-                    <blue>188</blue>
+                   <color alpha="170">
+                    <red>0</red>
+                    <green>131</green>
+                    <blue>171</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -516,9 +818,9 @@
                  <colorrole role="Text">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>0</red>
-                    <green>0</green>
-                    <blue>0</blue>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -534,27 +836,27 @@
                  <colorrole role="ButtonText">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>0</red>
-                    <green>0</green>
-                    <blue>0</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="Base">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
                     <red>255</red>
                     <green>255</green>
                     <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
+                 <colorrole role="Base">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="170">
+                    <red>0</red>
+                    <green>131</green>
+                    <blue>171</blue>
+                   </color>
+                  </brush>
+                 </colorrole>
                  <colorrole role="Window">
                   <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>162</red>
-                    <green>242</green>
-                    <blue>188</blue>
+                   <color alpha="170">
+                    <red>0</red>
+                    <green>131</green>
+                    <blue>171</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -599,18 +901,18 @@
                  <colorrole role="WindowText">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>0</red>
-                    <green>0</green>
-                    <blue>0</blue>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
                  <colorrole role="Button">
                   <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>162</red>
-                    <green>242</green>
-                    <blue>188</blue>
+                   <color alpha="170">
+                    <red>0</red>
+                    <green>131</green>
+                    <blue>171</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -653,9 +955,9 @@
                  <colorrole role="Text">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>0</red>
-                    <green>0</green>
-                    <blue>0</blue>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -671,27 +973,27 @@
                  <colorrole role="ButtonText">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>0</red>
-                    <green>0</green>
-                    <blue>0</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="Base">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
                     <red>255</red>
                     <green>255</green>
                     <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
+                 <colorrole role="Base">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="170">
+                    <red>0</red>
+                    <green>131</green>
+                    <blue>171</blue>
+                   </color>
+                  </brush>
+                 </colorrole>
                  <colorrole role="Window">
                   <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>162</red>
-                    <green>242</green>
-                    <blue>188</blue>
+                   <color alpha="170">
+                    <red>0</red>
+                    <green>131</green>
+                    <blue>171</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -736,18 +1038,18 @@
                  <colorrole role="WindowText">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>81</red>
-                    <green>121</green>
-                    <blue>94</blue>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
                  <colorrole role="Button">
                   <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>162</red>
-                    <green>242</green>
-                    <blue>188</blue>
+                   <color alpha="170">
+                    <red>0</red>
+                    <green>131</green>
+                    <blue>171</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -790,9 +1092,9 @@
                  <colorrole role="Text">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>81</red>
-                    <green>121</green>
-                    <blue>94</blue>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -808,27 +1110,27 @@
                  <colorrole role="ButtonText">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>81</red>
-                    <green>121</green>
-                    <blue>94</blue>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
                  <colorrole role="Base">
                   <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>162</red>
-                    <green>242</green>
-                    <blue>188</blue>
+                   <color alpha="170">
+                    <red>0</red>
+                    <green>131</green>
+                    <blue>171</blue>
                    </color>
                   </brush>
                  </colorrole>
                  <colorrole role="Window">
                   <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>162</red>
-                    <green>242</green>
-                    <blue>188</blue>
+                   <color alpha="170">
+                    <red>0</red>
+                    <green>131</green>
+                    <blue>171</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -872,10 +1174,14 @@
                </palette>
               </property>
               <property name="autoFillBackground">
-               <bool>true</bool>
+               <bool>false</bool>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
               </property>
               <property name="frameShape">
-               <enum>QFrame::StyledPanel</enum>
+               <enum>QFrame::NoFrame</enum>
               </property>
               <property name="frameShadow">
                <enum>QFrame::Plain</enum>
@@ -886,14 +1192,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_20">
+             <widget class="QLabel" name="s0Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s0_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_73">
+             <widget class="QLabel" name="s0_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s0_var</string>
               </property>
@@ -904,11 +1218,17 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_15">
             <item>
-             <widget class="QLabel" name="label_25">
+             <widget class="QLabel" name="s1reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>30</width>
                 <height>50</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>30</width>
+                <height>16777215</height>
                </size>
               </property>
               <property name="palette">
@@ -917,18 +1237,18 @@
                  <colorrole role="WindowText">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>0</red>
-                    <green>0</green>
-                    <blue>0</blue>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
                  <colorrole role="Button">
                   <brush brushstyle="SolidPattern">
-                   <color alpha="255">
+                   <color alpha="170">
                     <red>0</red>
-                    <green>242</green>
-                    <blue>60</blue>
+                    <green>131</green>
+                    <blue>171</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -971,9 +1291,9 @@
                  <colorrole role="Text">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>0</red>
-                    <green>0</green>
-                    <blue>0</blue>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -989,27 +1309,27 @@
                  <colorrole role="ButtonText">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>0</red>
-                    <green>0</green>
-                    <blue>0</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="Base">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
                     <red>255</red>
                     <green>255</green>
                     <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
+                 <colorrole role="Base">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="170">
+                    <red>0</red>
+                    <green>131</green>
+                    <blue>171</blue>
+                   </color>
+                  </brush>
+                 </colorrole>
                  <colorrole role="Window">
                   <brush brushstyle="SolidPattern">
-                   <color alpha="255">
+                   <color alpha="170">
                     <red>0</red>
-                    <green>242</green>
-                    <blue>60</blue>
+                    <green>131</green>
+                    <blue>171</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -1054,18 +1374,18 @@
                  <colorrole role="WindowText">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>0</red>
-                    <green>0</green>
-                    <blue>0</blue>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
                  <colorrole role="Button">
                   <brush brushstyle="SolidPattern">
-                   <color alpha="255">
+                   <color alpha="170">
                     <red>0</red>
-                    <green>242</green>
-                    <blue>60</blue>
+                    <green>131</green>
+                    <blue>171</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -1108,9 +1428,9 @@
                  <colorrole role="Text">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>0</red>
-                    <green>0</green>
-                    <blue>0</blue>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -1126,27 +1446,27 @@
                  <colorrole role="ButtonText">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>0</red>
-                    <green>0</green>
-                    <blue>0</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="Base">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
                     <red>255</red>
                     <green>255</green>
                     <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
+                 <colorrole role="Base">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="170">
+                    <red>0</red>
+                    <green>131</green>
+                    <blue>171</blue>
+                   </color>
+                  </brush>
+                 </colorrole>
                  <colorrole role="Window">
                   <brush brushstyle="SolidPattern">
-                   <color alpha="255">
+                   <color alpha="170">
                     <red>0</red>
-                    <green>242</green>
-                    <blue>60</blue>
+                    <green>131</green>
+                    <blue>171</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -1191,18 +1511,18 @@
                  <colorrole role="WindowText">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>0</red>
-                    <green>121</green>
-                    <blue>30</blue>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
                  <colorrole role="Button">
                   <brush brushstyle="SolidPattern">
-                   <color alpha="255">
+                   <color alpha="170">
                     <red>0</red>
-                    <green>242</green>
-                    <blue>60</blue>
+                    <green>131</green>
+                    <blue>171</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -1245,9 +1565,9 @@
                  <colorrole role="Text">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>0</red>
-                    <green>121</green>
-                    <blue>30</blue>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -1263,27 +1583,27 @@
                  <colorrole role="ButtonText">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>0</red>
-                    <green>121</green>
-                    <blue>30</blue>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
                  <colorrole role="Base">
                   <brush brushstyle="SolidPattern">
-                   <color alpha="255">
+                   <color alpha="170">
                     <red>0</red>
-                    <green>242</green>
-                    <blue>60</blue>
+                    <green>131</green>
+                    <blue>171</blue>
                    </color>
                   </brush>
                  </colorrole>
                  <colorrole role="Window">
                   <brush brushstyle="SolidPattern">
-                   <color alpha="255">
+                   <color alpha="170">
                     <red>0</red>
-                    <green>242</green>
-                    <blue>60</blue>
+                    <green>131</green>
+                    <blue>171</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -1327,10 +1647,14 @@
                </palette>
               </property>
               <property name="autoFillBackground">
-               <bool>true</bool>
+               <bool>false</bool>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
               </property>
               <property name="frameShape">
-               <enum>QFrame::StyledPanel</enum>
+               <enum>QFrame::NoFrame</enum>
               </property>
               <property name="text">
                <string>s1</string>
@@ -1338,14 +1662,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_42">
+             <widget class="QLabel" name="s1Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s1_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_74">
+             <widget class="QLabel" name="s1_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s1_var</string>
               </property>
@@ -1356,11 +1688,17 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_14">
             <item>
-             <widget class="QLabel" name="label_24">
+             <widget class="QLabel" name="s2reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>30</width>
                 <height>50</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>30</width>
+                <height>16777215</height>
                </size>
               </property>
               <property name="palette">
@@ -1369,18 +1707,18 @@
                  <colorrole role="WindowText">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>0</red>
-                    <green>0</green>
-                    <blue>0</blue>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
                  <colorrole role="Button">
                   <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>242</red>
-                    <green>100</green>
-                    <blue>100</blue>
+                   <color alpha="170">
+                    <red>0</red>
+                    <green>131</green>
+                    <blue>171</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -1423,9 +1761,9 @@
                  <colorrole role="Text">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>0</red>
-                    <green>0</green>
-                    <blue>0</blue>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -1441,27 +1779,27 @@
                  <colorrole role="ButtonText">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>0</red>
-                    <green>0</green>
-                    <blue>0</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="Base">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
                     <red>255</red>
                     <green>255</green>
                     <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
+                 <colorrole role="Base">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="170">
+                    <red>0</red>
+                    <green>131</green>
+                    <blue>171</blue>
+                   </color>
+                  </brush>
+                 </colorrole>
                  <colorrole role="Window">
                   <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>242</red>
-                    <green>100</green>
-                    <blue>100</blue>
+                   <color alpha="170">
+                    <red>0</red>
+                    <green>131</green>
+                    <blue>171</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -1506,18 +1844,18 @@
                  <colorrole role="WindowText">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>0</red>
-                    <green>0</green>
-                    <blue>0</blue>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
                  <colorrole role="Button">
                   <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>242</red>
-                    <green>100</green>
-                    <blue>100</blue>
+                   <color alpha="170">
+                    <red>0</red>
+                    <green>131</green>
+                    <blue>171</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -1560,9 +1898,9 @@
                  <colorrole role="Text">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>0</red>
-                    <green>0</green>
-                    <blue>0</blue>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -1578,27 +1916,27 @@
                  <colorrole role="ButtonText">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>0</red>
-                    <green>0</green>
-                    <blue>0</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="Base">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
                     <red>255</red>
                     <green>255</green>
                     <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
+                 <colorrole role="Base">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="170">
+                    <red>0</red>
+                    <green>131</green>
+                    <blue>171</blue>
+                   </color>
+                  </brush>
+                 </colorrole>
                  <colorrole role="Window">
                   <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>242</red>
-                    <green>100</green>
-                    <blue>100</blue>
+                   <color alpha="170">
+                    <red>0</red>
+                    <green>131</green>
+                    <blue>171</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -1643,18 +1981,18 @@
                  <colorrole role="WindowText">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>121</red>
-                    <green>50</green>
-                    <blue>50</blue>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
                  <colorrole role="Button">
                   <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>242</red>
-                    <green>100</green>
-                    <blue>100</blue>
+                   <color alpha="170">
+                    <red>0</red>
+                    <green>131</green>
+                    <blue>171</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -1697,9 +2035,9 @@
                  <colorrole role="Text">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>121</red>
-                    <green>50</green>
-                    <blue>50</blue>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -1715,27 +2053,27 @@
                  <colorrole role="ButtonText">
                   <brush brushstyle="SolidPattern">
                    <color alpha="255">
-                    <red>121</red>
-                    <green>50</green>
-                    <blue>50</blue>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
                    </color>
                   </brush>
                  </colorrole>
                  <colorrole role="Base">
                   <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>242</red>
-                    <green>100</green>
-                    <blue>100</blue>
+                   <color alpha="170">
+                    <red>0</red>
+                    <green>131</green>
+                    <blue>171</blue>
                    </color>
                   </brush>
                  </colorrole>
                  <colorrole role="Window">
                   <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>242</red>
-                    <green>100</green>
-                    <blue>100</blue>
+                   <color alpha="170">
+                    <red>0</red>
+                    <green>131</green>
+                    <blue>171</blue>
                    </color>
                   </brush>
                  </colorrole>
@@ -1779,7 +2117,11 @@
                </palette>
               </property>
               <property name="autoFillBackground">
-               <bool>true</bool>
+               <bool>false</bool>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
               </property>
               <property name="text">
                <string>s2</string>
@@ -1787,14 +2129,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_43">
+             <widget class="QLabel" name="s2Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s2_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_75">
+             <widget class="QLabel" name="s2_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s2_var</string>
               </property>
@@ -1805,12 +2155,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_13">
             <item>
-             <widget class="QLabel" name="label_23">
+             <widget class="QLabel" name="s3reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>30</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>30</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
               </property>
               <property name="text">
                <string>s3</string>
@@ -1818,14 +2178,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_44">
+             <widget class="QLabel" name="s3Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s3_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_76">
+             <widget class="QLabel" name="s3_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s3_var</string>
               </property>
@@ -1836,12 +2204,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_12">
             <item>
-             <widget class="QLabel" name="label_22">
+             <widget class="QLabel" name="s4reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>30</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>30</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
               </property>
               <property name="text">
                <string>s4</string>
@@ -1849,14 +2227,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_45">
+             <widget class="QLabel" name="s4Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s4_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_77">
+             <widget class="QLabel" name="s4_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s4_var</string>
               </property>
@@ -1867,12 +2253,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_11">
             <item>
-             <widget class="QLabel" name="label_13">
+             <widget class="QLabel" name="s5reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>30</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>30</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
               </property>
               <property name="text">
                <string>s5</string>
@@ -1880,14 +2276,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_46">
+             <widget class="QLabel" name="s5Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s5_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_78">
+             <widget class="QLabel" name="s5_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s5_var</string>
               </property>
@@ -1898,12 +2302,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_10">
             <item>
-             <widget class="QLabel" name="label_5">
+             <widget class="QLabel" name="s6reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>30</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>30</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
               </property>
               <property name="text">
                <string>s6</string>
@@ -1911,14 +2325,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_47">
+             <widget class="QLabel" name="s6Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s6_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_79">
+             <widget class="QLabel" name="s6_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s6_var</string>
               </property>
@@ -1929,12 +2351,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_21">
             <item>
-             <widget class="QLabel" name="label_28">
+             <widget class="QLabel" name="s7reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>30</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>30</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
               </property>
               <property name="text">
                <string>s7</string>
@@ -1942,14 +2374,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_48">
+             <widget class="QLabel" name="s7Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s7_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_80">
+             <widget class="QLabel" name="s7_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s7_var</string>
               </property>
@@ -1960,12 +2400,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_20">
             <item>
-             <widget class="QLabel" name="label_29">
+             <widget class="QLabel" name="s8reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>30</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>30</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
               </property>
               <property name="text">
                <string>s8</string>
@@ -1973,14 +2423,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_49">
+             <widget class="QLabel" name="s8Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s8_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_81">
+             <widget class="QLabel" name="s8_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s8_var</string>
               </property>
@@ -1991,12 +2449,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_19">
             <item>
-             <widget class="QLabel" name="label_30">
+             <widget class="QLabel" name="s9reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>30</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>30</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
               </property>
               <property name="text">
                <string>s9</string>
@@ -2004,14 +2472,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_50">
+             <widget class="QLabel" name="s9Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s9_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_82">
+             <widget class="QLabel" name="s9_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s9_var</string>
               </property>
@@ -2022,12 +2498,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_18">
             <item>
-             <widget class="QLabel" name="label_31">
+             <widget class="QLabel" name="s10reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>30</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>30</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
               </property>
               <property name="text">
                <string>s10</string>
@@ -2035,14 +2521,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_6">
+             <widget class="QLabel" name="s10Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s10_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_83">
+             <widget class="QLabel" name="s10_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s10_var</string>
               </property>
@@ -2053,15 +2547,47 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_42">
             <item>
-             <widget class="QLabel" name="label_41">
+             <widget class="QLabel" name="s11reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>30</width>
                 <height>50</height>
                </size>
               </property>
+              <property name="maximumSize">
+               <size>
+                <width>30</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
               <property name="text">
                <string>s11</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="s11Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
+              <property name="text">
+               <string>s11_value</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="s11_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(0, 131, 171, 170);</string>
+              </property>
+              <property name="text">
+               <string>s11_var</string>
               </property>
              </widget>
             </item>
@@ -2087,12 +2613,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_16">
             <item>
-             <widget class="QLabel" name="label_26">
+             <widget class="QLabel" name="a0reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>25</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
               </property>
               <property name="text">
                <string>a0</string>
@@ -2100,14 +2636,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_9">
+             <widget class="QLabel" name="a0Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
+              </property>
               <property name="text">
                <string>a0_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_85">
+             <widget class="QLabel" name="a0_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
+              </property>
               <property name="text">
                <string>a0_var</string>
               </property>
@@ -2118,12 +2662,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_27">
             <item>
-             <widget class="QLabel" name="label_16">
+             <widget class="QLabel" name="a1reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>25</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
               </property>
               <property name="text">
                <string>a1</string>
@@ -2131,14 +2685,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_14">
+             <widget class="QLabel" name="a1Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
+              </property>
               <property name="text">
                <string>a1_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_86">
+             <widget class="QLabel" name="a1_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
+              </property>
               <property name="text">
                <string>a1_var</string>
               </property>
@@ -2149,12 +2711,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_26">
             <item>
-             <widget class="QLabel" name="label_17">
+             <widget class="QLabel" name="a2reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>25</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
               </property>
               <property name="text">
                <string>a2</string>
@@ -2162,14 +2734,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_57">
+             <widget class="QLabel" name="a2Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
+              </property>
               <property name="text">
                <string>a2_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_87">
+             <widget class="QLabel" name="a2_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
+              </property>
               <property name="text">
                <string>a2_var</string>
               </property>
@@ -2180,12 +2760,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_25">
             <item>
-             <widget class="QLabel" name="label_18">
+             <widget class="QLabel" name="a3reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>25</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
               </property>
               <property name="text">
                <string>a3</string>
@@ -2193,14 +2783,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_58">
+             <widget class="QLabel" name="a3Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
+              </property>
               <property name="text">
                <string>a3_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_88">
+             <widget class="QLabel" name="a3_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
+              </property>
               <property name="text">
                <string>a3_var</string>
               </property>
@@ -2211,12 +2809,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_24">
             <item>
-             <widget class="QLabel" name="label_19">
+             <widget class="QLabel" name="a4reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>25</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
               </property>
               <property name="text">
                <string>a4</string>
@@ -2224,14 +2832,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_59">
+             <widget class="QLabel" name="a4Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
+              </property>
               <property name="text">
                <string>a4_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_89">
+             <widget class="QLabel" name="a4_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
+              </property>
               <property name="text">
                <string>a4_var</string>
               </property>
@@ -2242,12 +2858,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_23">
             <item>
-             <widget class="QLabel" name="label_21">
+             <widget class="QLabel" name="a5reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>25</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
               </property>
               <property name="text">
                <string>a5</string>
@@ -2255,14 +2881,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_60">
+             <widget class="QLabel" name="a5Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
+              </property>
               <property name="text">
                <string>a5_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_90">
+             <widget class="QLabel" name="a5_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
+              </property>
               <property name="text">
                <string>a5_var</string>
               </property>
@@ -2273,12 +2907,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_22">
             <item>
-             <widget class="QLabel" name="label_32">
+             <widget class="QLabel" name="a6reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>25</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
               </property>
               <property name="text">
                <string>a6</string>
@@ -2286,14 +2930,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_61">
+             <widget class="QLabel" name="a6Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
+              </property>
               <property name="text">
                <string>a6_value</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_91">
+             <widget class="QLabel" name="a6_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
+              </property>
               <property name="text">
                <string>a6_var</string>
               </property>
@@ -2304,15 +2956,47 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_43">
             <item>
-             <widget class="QLabel" name="label_3">
+             <widget class="QLabel" name="a7reg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>25</width>
                 <height>50</height>
                </size>
               </property>
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
+              </property>
               <property name="text">
                <string>a7</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="a7Reg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
+              </property>
+              <property name="text">
+               <string>a7_value</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="a7_varName">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(255, 180, 0, 170);</string>
+              </property>
+              <property name="text">
+               <string>a7_var</string>
               </property>
              </widget>
             </item>
@@ -2338,12 +3022,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_28">
             <item>
-             <widget class="QLabel" name="label_10">
+             <widget class="QLabel" name="rareg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>25</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(20, 210, 189, 190);</string>
               </property>
               <property name="text">
                <string>ra</string>
@@ -2351,7 +3045,11 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_12">
+             <widget class="QLabel" name="raReg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(20, 210, 189, 190);</string>
+              </property>
               <property name="text">
                <string>ra_value</string>
               </property>
@@ -2362,12 +3060,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_31">
             <item>
-             <widget class="QLabel" name="label_35">
+             <widget class="QLabel" name="spreg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>25</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(20, 210, 189, 190);</string>
               </property>
               <property name="text">
                <string>sp</string>
@@ -2375,7 +3083,11 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_63">
+             <widget class="QLabel" name="spReg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(20, 210, 189, 190);</string>
+              </property>
               <property name="text">
                <string>sp_value</string>
               </property>
@@ -2386,12 +3098,22 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_30">
             <item>
-             <widget class="QLabel" name="label_36">
+             <widget class="QLabel" name="gpreg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>25</width>
                 <height>50</height>
                </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(20, 210, 189, 190);</string>
               </property>
               <property name="text">
                <string>gp</string>
@@ -2399,7 +3121,11 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_64">
+             <widget class="QLabel" name="gpReg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(20, 210, 189, 190);</string>
+              </property>
               <property name="text">
                <string>gp_value</string>
               </property>
@@ -2410,15 +3136,36 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_44">
             <item>
-             <widget class="QLabel" name="label_7">
+             <widget class="QLabel" name="fpreg_label">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>25</width>
                 <height>50</height>
                </size>
               </property>
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(20, 210, 189, 190);</string>
+              </property>
               <property name="text">
                <string>fp</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="fpReg_value">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(255, 255, 255);
+background-color: rgba(20, 210, 189, 190);</string>
+              </property>
+              <property name="text">
+               <string>fp_value</string>
               </property>
              </widget>
             </item>
@@ -2442,11 +3189,11 @@
        </layout>
       </item>
       <item>
-       <widget class="QListView" name="StackView">
+       <widget class="QListView" name="stackView">
         <property name="minimumSize">
          <size>
           <width>150</width>
-          <height>0</height>
+          <height>875</height>
          </size>
         </property>
         <property name="maximumSize">
