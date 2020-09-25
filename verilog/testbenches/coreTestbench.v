@@ -184,6 +184,7 @@ module coreTestbench;
 		#1
 		//negedge clk
 		reset <= 0;
+		#1
 
 		/*
 		 run program
@@ -193,9 +194,9 @@ module coreTestbench;
 		`ifdef MAX_CYLCLES
 			while ((programCounter <= (`programLength)*4) && (cycleCount < `MAX_CYLCLES)) begin
 				//$display("PC=%d", programCounter);
+				cycleCount <= cycleCount + 1;
 				#2
 				reset <= 0;  //dummy write to appease iverilog
-				cycleCount <= cycleCount + 1;
 			end
 
 			if (cycleCount >= `MAX_CYLCLES) begin

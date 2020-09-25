@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>1189</width>
-    <height>870</height>
+    <height>1071</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>SC Debugger</string>
   </property>
   <property name="styleSheet">
    <string notr="true">background-color: rgb(40, 41, 35);</string>
@@ -263,8 +263,8 @@ color: rgb(0, 0, 0);</string>
            <string>Rewind a single cycle</string>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: rgba(195, 0, 0,170);
-color: rgb(255, 255, 255);</string>
+           <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(0, 160, 61);</string>
           </property>
           <property name="text">
            <string>Back</string>
@@ -277,8 +277,8 @@ color: rgb(255, 255, 255);</string>
            <string>Pause cycle incrementing</string>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: rgba(0, 11, 175, 170);
-color: rgb(255, 255, 255);</string>
+           <string notr="true">background-color: rgb(0, 160, 61);
+color: rgb(0,0, 0);</string>
           </property>
           <property name="text">
            <string>Pause</string>
@@ -291,8 +291,8 @@ color: rgb(255, 255, 255);</string>
            <string>Increment displayed cylce at the speficied playback frequency</string>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: rgba(0, 211, 31, 170);
-color: rgb(255, 255, 255);</string>
+           <string notr="true">background-color: rgb(0, 160, 61);
+color: rgb(0,0, 0);</string>
           </property>
           <property name="text">
            <string>Play</string>
@@ -305,8 +305,8 @@ color: rgb(255, 255, 255);</string>
            <string>Increment a single cycle</string>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: rgba(0, 213, 153, 170);
-color: rgb(255, 255, 255);</string>
+           <string notr="true">background-color: rgb(0, 160, 61);
+color: rgb(0,0, 0);</string>
           </property>
           <property name="text">
            <string>Foward</string>
@@ -3037,7 +3037,7 @@ background-color: rgba(255, 180, 0, 170);</string>
               </property>
               <property name="styleSheet">
                <string notr="true">color: rgb(255, 255, 255);
-background-color: rgba(20, 210, 189, 190);</string>
+background-color: rgba(210, 210, 189, 190);</string>
               </property>
               <property name="text">
                <string>ra</string>
@@ -3048,7 +3048,7 @@ background-color: rgba(20, 210, 189, 190);</string>
              <widget class="QLabel" name="raReg_value">
               <property name="styleSheet">
                <string notr="true">color: rgb(255, 255, 255);
-background-color: rgba(20, 210, 189, 190);</string>
+background-color: rgba(210, 210, 189, 190);</string>
               </property>
               <property name="text">
                <string>ra_value</string>
@@ -3075,7 +3075,7 @@ background-color: rgba(20, 210, 189, 190);</string>
               </property>
               <property name="styleSheet">
                <string notr="true">color: rgb(255, 255, 255);
-background-color: rgba(20, 210, 189, 190);</string>
+background-color: rgba(210, 210, 189, 190);</string>
               </property>
               <property name="text">
                <string>sp</string>
@@ -3086,7 +3086,7 @@ background-color: rgba(20, 210, 189, 190);</string>
              <widget class="QLabel" name="spReg_value">
               <property name="styleSheet">
                <string notr="true">color: rgb(255, 255, 255);
-background-color: rgba(20, 210, 189, 190);</string>
+background-color: rgba(210, 210, 189, 190);</string>
               </property>
               <property name="text">
                <string>sp_value</string>
@@ -3113,7 +3113,7 @@ background-color: rgba(20, 210, 189, 190);</string>
               </property>
               <property name="styleSheet">
                <string notr="true">color: rgb(255, 255, 255);
-background-color: rgba(20, 210, 189, 190);</string>
+background-color: rgba(210, 210, 189, 190);</string>
               </property>
               <property name="text">
                <string>gp</string>
@@ -3124,7 +3124,7 @@ background-color: rgba(20, 210, 189, 190);</string>
              <widget class="QLabel" name="gpReg_value">
               <property name="styleSheet">
                <string notr="true">color: rgb(255, 255, 255);
-background-color: rgba(20, 210, 189, 190);</string>
+background-color: rgba(210, 210, 189, 190);</string>
               </property>
               <property name="text">
                <string>gp_value</string>
@@ -3151,7 +3151,7 @@ background-color: rgba(20, 210, 189, 190);</string>
               </property>
               <property name="styleSheet">
                <string notr="true">color: rgb(255, 255, 255);
-background-color: rgba(20, 210, 189, 190);</string>
+background-color: rgba(210, 210, 189, 190);</string>
               </property>
               <property name="text">
                <string>fp</string>
@@ -3162,7 +3162,7 @@ background-color: rgba(20, 210, 189, 190);</string>
              <widget class="QLabel" name="fpReg_value">
               <property name="styleSheet">
                <string notr="true">color: rgb(255, 255, 255);
-background-color: rgba(20, 210, 189, 190);</string>
+background-color: rgba(210, 210, 189, 190);</string>
               </property>
               <property name="text">
                <string>fp_value</string>
@@ -3201,6 +3201,9 @@ background-color: rgba(20, 210, 189, 190);</string>
           <width>150</width>
           <height>16777215</height>
          </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(50, 51, 45);</string>
         </property>
        </widget>
       </item>

@@ -20,3 +20,7 @@ def dictToJson(dictionary):
 
 	jsonString = json.dumps(dictionary, sort_keys=True, indent=2, separators=(',', ': '))
 	return jsonString
+
+
+def binStringToInt(binaryString, signed=False):
+	return int(binaryString, 2)

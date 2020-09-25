@@ -2,6 +2,7 @@
 	"captureList":
 	[
 		"coreTestbench.cycleCount[31:0]",
+		"coreTestbench.programCounter[31:0]",
 		"coreTestbench.core.registers.ra[31:0]",
 		"coreTestbench.core.registers.sp[31:0]",
 		"coreTestbench.core.registers.gp[31:0]",
@@ -33,5 +34,40 @@
 		"coreTestbench.core.registers.t4[31:0]",
 		"coreTestbench.core.registers.t5[31:0]",
 		"coreTestbench.core.registers.t6[31:0]"
-	]
+	],
+	"valueMapping":
+	{
+		"programCounter" : "coreTestbench.programCounter[31:0]",
+		"t0_value" : "coreTestbench.core.registers.t0[31:0]",
+		"t1_value" : "coreTestbench.core.registers.t1[31:0]",
+		"t2_value" : "coreTestbench.core.registers.t2[31:0]",
+		"t3_value" : "coreTestbench.core.registers.t3[31:0]",
+		"t4_value" : "coreTestbench.core.registers.t4[31:0]",
+		"t5_value" : "coreTestbench.core.registers.t5[31:0]",
+		"t6_value" : "coreTestbench.core.registers.t6[31:0]",
+		"s0_value" : "coreTestbench.core.registers.s0[31:0]",
+		"s1_value" : "coreTestbench.core.registers.s1[31:0]",
+		"s2_value" : "coreTestbench.core.registers.s2[31:0]",
+		"s3_value" : "coreTestbench.core.registers.s3[31:0]",
+		"s4_value" : "coreTestbench.core.registers.s4[31:0]",
+		"s5_value" : "coreTestbench.core.registers.s5[31:0]",
+		"s6_value" : "coreTestbench.core.registers.s6[31:0]",
+		"s7_value" : "coreTestbench.core.registers.s7[31:0]",
+		"s8_value" : "coreTestbench.core.registers.s8[31:0]",
+		"s9_value" : "coreTestbench.core.registers.s9[31:0]",
+		"s10_value" : "coreTestbench.core.registers.s10[31:0]",
+		"s11_value" : "coreTestbench.core.registers.s11[31:0]",
+		"a0_value" : "coreTestbench.core.registers.a0[31:0]",
+		"a1_value" : "coreTestbench.core.registers.a1[31:0]",
+		"a2_value" : "coreTestbench.core.registers.a2[31:0]",
+		"a3_value" : "coreTestbench.core.registers.a3[31:0]",
+		"a4_value" : "coreTestbench.core.registers.a4[31:0]",
+		"a5_value" : "coreTestbench.core.registers.a5[31:0]",
+		"a6_value" : "coreTestbench.core.registers.a6[31:0]",
+		"a7_value" : "coreTestbench.core.registers.a7[31:0]",
+		"ra_value" : "coreTestbench.core.registers.ra[31:0]",
+		"sp_value" : "coreTestbench.core.registers.sp[31:0]",
+		"gp_value" : "coreTestbench.core.registers.gp[31:0]",
+		"fp_value" : "coreTestbench.core.registers.s0[31:0]"
+	}
 }
