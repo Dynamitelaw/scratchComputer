@@ -1,11 +1,11 @@
 int addThreeInts(int x, int y, int z)
 {
-	return x + y + z;
+	return x + y + z;  //comment here
 }
 
 int main()
 {
-	int x = 6;
+	int x = 6;	//tabbed comment
 	int y = 77;
 	int z = 1;
 

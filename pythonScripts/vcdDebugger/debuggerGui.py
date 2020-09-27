@@ -20,6 +20,7 @@ global g_maxCycles
 
 global g_cFileMap
 global g_htmlDict
+global g_registerStateMap
 g_htmlDict = {}
 
 
@@ -32,6 +33,16 @@ p, li { white-space: pre-wrap; }
 </html>
 '''
 
+def highlightLine(htmlList, lineNumber):
+	tempList = htmlList.copy()
+
+	lineToHighlight = tempList[lineNumber]
+	lineToHighlight = lineToHighlight.replace('style="', 'style=" font-weight:900;').replace('</p>', '<span style=" font-size:18pt;font-weight:1000;color:#ffdd00;">  &#8592;</span></p>')
+	tempList[lineNumber] = lineToHighlight
+
+	return "\n".join(tempList)
+
+
 def fileToHtmlList(filepath):
 	file = open(filepath, "r")
 
@@ -43,7 +54,94 @@ p, li { white-space: pre-wrap; }
 	htmlList = [htmlHeader]
 	line = file.readline()
 	while(line):
-		htmlLine = '<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#ffffff;">{}</span></p>'.format(line.rstrip())
+		#<span style=" font-weight:600; text-decoration: underline;">
+		#Syntax highlighting
+		lineList = line.replace("(", " ( ").replace(")", " ) ").replace(";", " ; ").replace(",", " , ").replace("\t", "").split(" ")
+		lineList =  list(filter(lambda i: i != "", lineList))
+
+		white = "ffffff"
+		blue = "67d8ef"
+		red = "f92472"
+		green = "a6e22b"
+		purple = "ac80ff"
+		grey = "848066"
+
+		blueKeywords = ["int", "float", "char", "double", "long", "unisgned", "byte", "bool"]
+		redKeywords = ["return", "if", "else"]
+		constantKeywords = ["true", "false"]
+
+		formattedLineList = []
+		inComment = False
+
+		for index in range(0, len(lineList)):
+			lineElement = lineList[index]
+			#Syntax highlighting
+			color = white
+			#Typedefs = blue
+			if (lineElement in blueKeywords):
+				color = blue
+			#Function calls = blue
+			if (index < len(lineList)-1):
+				nextElement = lineList[index+1]
+				if (nextElement == "("):
+					color = blue
+			#Control keywords = red
+			if (lineElement in redKeywords):
+				color = red
+			#Function defs = green
+			if ((index < len(lineList)-1) and (index != 0)):
+				previousElement = lineList[index-1]
+				nextElement = lineList[index+1]
+
+				if ((previousElement in blueKeywords) and (nextElement == "(")):
+					color = green
+			#Constants = purple
+			if (lineElement in constantKeywords):
+				color = purple
+			try:
+				k = int(lineElement)
+				color = purple
+			except Exception as e:
+				pass
+			try:
+				k = float(lineElement)
+				color = purple
+			except Exception as e:
+				pass		
+			#Comments = grey
+			if (inComment):
+				color = grey
+			elif ("//" in lineElement):
+				inComment = True
+				color = grey	
+
+			#Construction html line element
+			prespace = " "
+			if (lineElement == "("):
+				prespace = ""
+				if (index != 0):
+					previousElement = lineList[index-1]
+					if (previousElement in redKeywords):
+						prespace = " "
+			elif (lineElement == ")"):
+				prespace = ""
+			elif (lineElement == ","):
+				prespace = ""
+			elif (lineElement == ";"):
+				prespace = ""
+			elif (index != 0):
+				if (lineList[index-1] == "("):
+					prespace = ""
+			elif (index == 0):
+				prespace = ""
+
+			htmlElement = '<span style=" color:#{};">{}{}</span>'.format(color, prespace, lineElement)
+			formattedLineList.append(htmlElement)
+
+		#Contruct fintal htmlline
+		tabSearchEnd = line.find(';')
+		htmlLineStart = '<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:{}; text-indent:0px;">'.format(line.count("\t", 0, tabSearchEnd))
+		htmlLine = '{}{}</p>'.format(htmlLineStart, "".join(formattedLineList))
 		htmlList.append(htmlLine)
 
 		line = file.readline()
@@ -1486,7 +1584,6 @@ class Ui_MainWindow(object):
 		self.updateGui()
 
 	def gotoCycle_button_pushed(self):
-		self.cCode_text.setPlainText("goto")
 		self.cycle = int(self.gotoCycle_textBox.text())
 		self.updateGui()
 
@@ -1503,6 +1600,18 @@ class Ui_MainWindow(object):
 			regDisplay = self.registerDisplays[regName]
 			regDisplay.setValueText(currentValues["{}_value".format(regName)])
 
+		#Update register variables
+		try:
+			usedRegisters = g_registerStateMap[str(currentValues["programCounter"])]
+			for regName in self.registerDisplays:
+				regDisplay = self.registerDisplays[regName]
+				if (regName in usedRegisters):
+					regDisplay.setVariableText(usedRegisters[regName])
+				else:
+					regDisplay.setVariableText("<None>")
+		except Exception as e:
+			pass
+
 		#Highlight changed values
 		if (self.cycle > 0):
 			previousValues = g_cycleMap[self.cycle-1]
@@ -1515,13 +1624,15 @@ class Ui_MainWindow(object):
 				else:
 					regDisplay.setStyleDefault()
 
-		#Update C code
-		coord = g_cFileMap[str(currentValues["programCounter"])]
-		filepath = coord["file"]
-		lineNumber = coord["lineNum"]
+		#Update C code display
+		try:
+			coord = g_cFileMap[str(currentValues["programCounter"])]
+			filepath = coord["file"]
+			lineNumber = coord["lineNum"]
 
-
-		self.cCode_text.setHtml("\n".join(g_htmlDict[filepath]))
+			self.cCode_text.setHtml(highlightLine(g_htmlDict[filepath], lineNumber))
+		except Exception as e:
+			pass
 
 
 
@@ -1693,8 +1804,26 @@ Help yourself
 		else:
 			g_cFileMap = None
 
+		global g_registerStateMap
+		if ("scopeStateMap" in annotationDict):
+			g_registerStateMap = {}
+			for programCounterStr in annotationDict["scopeStateMap"]:
+				scopeState = annotationDict["scopeStateMap"][programCounterStr]
 
-		print(utils.dictToJson(g_htmlDict))
+				usedRegisters = {}
+				if isinstance(scopeState, int):
+					referenceIndex = int(programCounterStr)+(scopeState*4)
+					usedRegisters = annotationDict["scopeStateMap"][str(referenceIndex)]["usedRegisters"]
+				else:
+					usedRegisters = scopeState["usedRegisters"]
+
+				g_registerStateMap[programCounterStr] = usedRegisters
+		else:
+			g_registerStateMap = None
+
+
+
+		print(utils.dictToJson(g_registerStateMap))
 		#sys.exit()
 
 	
