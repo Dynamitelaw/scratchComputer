@@ -8,8 +8,7 @@
 
 import argparse
 import sys
-from PyQt5 import QtCore, QtGui, QtWidgets
-from time import sleep
+from PyQt5 import QtCore, QtGui, QtWidgets, QtTest
 
 import vcdReader as vcd
 import utils
@@ -19,6 +18,38 @@ import utils
 global g_cycleMap
 global g_maxCycles
 
+global g_cFileMap
+global g_htmlDict
+g_htmlDict = {}
+
+
+htmlText = r'''<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#ffffff;">Hello world</span></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;"><span style=" font-weight:600; text-decoration: underline; color:#ffffff;">I'm bold/underlined</span></p></body>
+</html>
+'''
+
+def fileToHtmlList(filepath):
+	file = open(filepath, "r")
+
+	htmlHeader = r'''<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;">
+'''
+	htmlList = [htmlHeader]
+	line = file.readline()
+	while(line):
+		htmlLine = '<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#ffffff;">{}</span></p>'.format(line.rstrip())
+		htmlList.append(htmlLine)
+
+		line = file.readline()
+
+	htmlList.append("</html>")
+	return htmlList
 
 def getCycleMap(vcdFilePath, configPath):
 	#Parse vcd file
@@ -103,7 +134,7 @@ class registerDisplay:
 	def setVariableText(self, text):
 		self.variable.setText(QtCore.QCoreApplication.translate("MainWindow", text))
 
-	def setTextWhite(self):
+	def setStyleDefault(self):
 		oldStyleList = self.label.styleSheet().split(";")
 		newStyleList = []
 
@@ -111,6 +142,8 @@ class registerDisplay:
 			if (("color:" in styleLine) and (styleLine.find("color:") == 0)):
 				newline = "color: rgb(255, 255, 255)"
 				newStyleList.append(newline)
+			elif ("border" in styleLine):
+				pass
 			else:
 				newStyleList.append(styleLine)
 
@@ -122,7 +155,7 @@ class registerDisplay:
 		if (self.variable):
 			self.variable.setStyleSheet(newStyleSheet)
 
-	def setTextGreen(self):
+	def setStyleHighlight(self):
 		oldStyleList = self.label.styleSheet().split(";")
 		newStyleList = []
 
@@ -132,6 +165,8 @@ class registerDisplay:
 				newStyleList.append(newline)
 			else:
 				newStyleList.append(styleLine)
+
+		newStyleList.append("border: 3px solid white")
 
 		newStyleSheet = ";".join(newStyleList)
 		oldStyleSheet = ";".join(oldStyleList)
@@ -265,12 +300,12 @@ class Ui_MainWindow(object):
 		sizePolicy.setHeightForWidth(self.cCode_text.sizePolicy().hasHeightForWidth())
 		self.cCode_text.setSizePolicy(sizePolicy)
 		self.cCode_text.setMinimumSize(QtCore.QSize(0, 875))
-		self.cCode_text.setStyleSheet("background-color: rgb(50, 51, 45);")
+		self.cCode_text.setStyleSheet("background-color: rgb(50, 51, 45);\ncolor: rbg(255,255,255);")
 		self.cCode_text.setObjectName("cCode_text")
 		self.horizontalLayout_2.addWidget(self.cCode_text)
 		self.assembly_text = QtWidgets.QTextBrowser(self.centralwidget)
 		self.assembly_text.setMinimumSize(QtCore.QSize(0, 875))
-		self.assembly_text.setStyleSheet("background-color: rgb(50, 51, 45);")
+		self.assembly_text.setStyleSheet("background-color: rgb(50, 51, 45);\ncolor: rbg(255,255,255);")
 		self.assembly_text.setObjectName("assembly_text")
 		self.horizontalLayout_2.addWidget(self.assembly_text)
 		self.horizontalLayout_8 = QtWidgets.QHBoxLayout()
@@ -1314,10 +1349,11 @@ class Ui_MainWindow(object):
 		self.verticalLayout_11.addItem(spacerItem9)
 		self.horizontalLayout_8.addLayout(self.verticalLayout_11)
 		self.horizontalLayout_2.addLayout(self.horizontalLayout_8)
-		self.stackView = QtWidgets.QListView(self.centralwidget)
+		#self.stackView = QtWidgets.QListView(self.centralwidget)
+		self.stackView = QtWidgets.QListWidget(self.centralwidget)
 		self.stackView.setMinimumSize(QtCore.QSize(150, 875))
 		self.stackView.setMaximumSize(QtCore.QSize(150, 16777215))
-		self.stackView.setStyleSheet("background-color: rgb(50, 51, 45);")
+		self.stackView.setStyleSheet("background-color: rgb(50, 51, 45);\ncolor: rgb(255, 255, 255);")
 		self.stackView.setObjectName("stackView")
 		self.horizontalLayout_2.addWidget(self.stackView)
 		self.verticalLayout_14 = QtWidgets.QVBoxLayout()
@@ -1385,6 +1421,16 @@ class Ui_MainWindow(object):
 		self.registerDisplays["gp"] = registerDisplay(self.gpreg_label, self.gpReg_value, None)
 		self.registerDisplays["fp"] = registerDisplay(self.fpreg_label, self.fpReg_value, None)
 
+		#Add some test elements to the stackView
+		for i in range(7):
+			# listElement = QtWidgets.QListWidgetItem(str(i), parent=self.stackView)
+			self.stackView.addItem(str(i))
+
+		self.stackView.addItems([str(i) for i in range(9)])
+
+		#Add some test cCode to text browser
+
+
 
 	def backButton_pushed(self):
 		if (self.cycle > 0):
@@ -1396,36 +1442,42 @@ class Ui_MainWindow(object):
 		self.pauseNotPushed = False
 
 	def playButton_pushed(self):
+		#Determine cycle step delay
 		selectedFrequency = self.playbackSpeed_select.currentText()
 
-		selectedDelay = 10
+		selectedDelay = 10  #in ms
 		if (selectedFrequency == "0.5 Hz"):
-			selectedDelay = 2
+			selectedDelay = 2000
 		elif (selectedFrequency == "1 Hz"):
-			selectedDelay = 1
+			selectedDelay = 1000
 		elif (selectedFrequency == "2 Hz"):
-			selectedDelay = 0.5
+			selectedDelay = 500
 		elif (selectedFrequency == "4 Hz"):
-			selectedDelay = 0.25
+			selectedDelay = 250
 		elif (selectedFrequency == "8 Hz"):
-			selectedDelay = 0.125
+			selectedDelay = 125
 		elif (selectedFrequency == "16 Hz"):
-			selectedDelay = 0.0625
+			selectedDelay = 62.5
 		elif (selectedFrequency == "32 Hz"):
-			selectedDelay = 0.03125
+			selectedDelay = 31.25
 		elif (selectedFrequency == "64 Hz"):
-			selectedDelay = 0.015625
+			selectedDelay = 15.625
 		elif (selectedFrequency == "128 Hz"):
-			selectedDelay = 0.0078125
+			selectedDelay = 7.8125
 
 		self.pauseNotPushed = True
+
+		#Increment cycle until paused or max cycles is reached
 		while(self.pauseNotPushed):
 			self.updateGui()
 
+			QtTest.QTest.qWait(selectedDelay)
+
 			if (self.cycle < g_maxCycles):
 				self.cycle += 1
-			
-			sleep(selectedDelay)
+			else:
+				self.pauseNotPushed = False
+
 
 	def fowardButton_pushed(self):
 		if (self.cycle < g_maxCycles):
@@ -1434,6 +1486,7 @@ class Ui_MainWindow(object):
 		self.updateGui()
 
 	def gotoCycle_button_pushed(self):
+		self.cCode_text.setPlainText("goto")
 		self.cycle = int(self.gotoCycle_textBox.text())
 		self.updateGui()
 
@@ -1458,9 +1511,17 @@ class Ui_MainWindow(object):
 				regDisplay = self.registerDisplays[regName]
 
 				if (currentValues[valueKey] != previousValues[valueKey]):
-					regDisplay.setTextGreen()
+					regDisplay.setStyleHighlight()
 				else:
-					regDisplay.setTextWhite()
+					regDisplay.setStyleDefault()
+
+		#Update C code
+		coord = g_cFileMap[str(currentValues["programCounter"])]
+		filepath = coord["file"]
+		lineNumber = coord["lineNum"]
+
+
+		self.cCode_text.setHtml("\n".join(g_htmlDict[filepath]))
 
 
 
@@ -1590,11 +1651,13 @@ Help yourself
 	parser = argparse.ArgumentParser(description = helpdesc)
 
 	parser.add_argument("vcd", action="store", help="Filepath to vcd dump file")
+	parser.add_argument("-a", action="store", dest="annotationPath", help="Path to debugger annotation file produced by compiler or assembler. Used to view step-by-step C Code and assembly in debugger gui")
 	parser.add_argument("-cfg", action="store", dest="configPath", default="/home/jose/Documents/gitRepos/scratchComputer/pythonScripts/vcdDebugger/debuggerConfig.json", help="Path to debugger config file")
 	
 	arguments = parser.parse_args()
 
 	vcdFilePath = arguments.vcd
+	annotationPath = arguments.annotationPath
 	configPath = arguments.configPath
 	
 	#########
@@ -1608,6 +1671,33 @@ Help yourself
 	#print(utils.dictToJson(g_cycleMap))
 	#sys.exit()
 
+
+	#########
+	# Parse annotation file
+	#########
+	if (annotationPath):
+		annotationDict = utils.jsonToDict(annotationPath)
+
+		global g_cFileMap
+		if ("cFileMap" in annotationDict):
+			g_cFileMap = annotationDict["cFileMap"]
+
+			for pcKey in g_cFileMap:
+				coord = g_cFileMap[pcKey]
+				filepath = coord["file"]
+
+				if (filepath in g_htmlDict):
+					pass
+				else:
+					g_htmlDict[filepath] = fileToHtmlList(filepath)
+		else:
+			g_cFileMap = None
+
+
+		print(utils.dictToJson(g_htmlDict))
+		#sys.exit()
+
+	
 
 	app = QtWidgets.QApplication(sys.argv)
 	MainWindow = QtWidgets.QMainWindow()

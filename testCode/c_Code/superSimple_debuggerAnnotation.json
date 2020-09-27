@@ -1,0 +1,519 @@
+{
+  "cFileMap": {
+    "4": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 8
+    },
+    "8": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 8
+    },
+    "12": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 8
+    },
+    "16": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 9
+    },
+    "20": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 9
+    },
+    "24": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 9
+    },
+    "28": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 10
+    },
+    "32": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 10
+    },
+    "36": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 10
+    },
+    "40": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 12
+    },
+    "44": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 12
+    },
+    "48": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 12
+    },
+    "52": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 12
+    },
+    "56": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 12
+    },
+    "60": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 12
+    },
+    "64": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 12
+    },
+    "68": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 12
+    },
+    "72": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 12
+    },
+    "76": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 12
+    },
+    "80": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 12
+    },
+    "84": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 14
+    },
+    "88": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 14
+    },
+    "92": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 14
+    },
+    "96": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "100": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "104": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "108": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "112": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "116": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "120": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "124": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "128": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "132": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "136": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "140": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "144": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "148": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "152": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "156": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "160": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "164": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "168": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "172": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "176": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "180": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "184": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "188": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "192": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 16
+    },
+    "196": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 19
+    },
+    "200": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 19
+    },
+    "204": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 19
+    },
+    "208": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 19
+    },
+    "212": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 19
+    },
+    "216": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 19
+    },
+    "220": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 19
+    },
+    "224": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 19
+    },
+    "228": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 19
+    },
+    "232": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 19
+    },
+    "236": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 19
+    },
+    "240": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 19
+    },
+    "244": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 19
+    },
+    "248": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 19
+    },
+    "252": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 19
+    },
+    "256": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 19
+    },
+    "260": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 19
+    },
+    "264": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 19
+    },
+    "268": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 19
+    },
+    "272": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 3
+    },
+    "276": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 3
+    },
+    "280": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 3
+    },
+    "284": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 3
+    },
+    "288": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 3
+    },
+    "292": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 3
+    },
+    "296": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 3
+    },
+    "300": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 3
+    },
+    "304": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 3
+    },
+    "308": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 3
+    },
+    "312": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 3
+    },
+    "316": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/superSimple.c",
+      "lineNum": 3
+    }
+  },
+  "scopeStateMap": {
+    "4": {
+      "localStack": {
+        "<SAVE>_ra": 4,
+        "<SAVE>_s0": 4,
+        "<SAVE>_s1": 4,
+        "<SAVE>_s10": 4,
+        "<SAVE>_s2": 4,
+        "k": 4,
+        "x": 4,
+        "y": 4,
+        "z": 4
+      },
+      "usedRegisters": {
+        "ra": "<SAVE>_ra",
+        "s0": "<SAVE>_s0",
+        "s1": "<SAVE>_s1",
+        "s10": "<SAVE>_s10",
+        "s2": "<SAVE>_s2"
+      }
+    },
+    "8": -1,
+    "12": -2,
+    "16": -3,
+    "20": -4,
+    "24": -5,
+    "28": -6,
+    "32": -7,
+    "36": -8,
+    "40": -9,
+    "44": -10,
+    "48": -11,
+    "52": -12,
+    "56": -13,
+    "60": -14,
+    "64": -15,
+    "68": -16,
+    "72": -17,
+    "76": -18,
+    "80": -19,
+    "84": -20,
+    "88": -21,
+    "92": -22,
+    "96": {
+      "localStack": {
+        "<SAVE>_ra": 4,
+        "<SAVE>_s0": 4,
+        "<SAVE>_s1": 4,
+        "<SAVE>_s10": 4,
+        "<SAVE>_s2": 4,
+        "x": 4,
+        "y": 4,
+        "z": 4
+      },
+      "usedRegisters": {
+        "a0": "k",
+        "s0": "x",
+        "s1": "y",
+        "s10": "z"
+      }
+    },
+    "100": -1,
+    "104": -2,
+    "108": -3,
+    "112": -4,
+    "116": -5,
+    "120": -6,
+    "124": -7,
+    "128": -8,
+    "132": -9,
+    "136": -10,
+    "140": -11,
+    "144": -12,
+    "148": {
+      "localStack": {
+        "<SAVE>_ra": 4,
+        "<SAVE>_s0": 4,
+        "<SAVE>_s1": 4,
+        "<SAVE>_s10": 4,
+        "<SAVE>_s2": 4
+      },
+      "usedRegisters": {
+        "a0": "k",
+        "s0": "x",
+        "s1": "y",
+        "s10": "z"
+      }
+    },
+    "152": -1,
+    "156": -2,
+    "160": -3,
+    "164": -4,
+    "168": -5,
+    "172": -6,
+    "176": -7,
+    "180": -8,
+    "184": -9,
+    "188": -10,
+    "192": {
+      "localStack": {
+        "<SAVE>_ra": 4,
+        "<SAVE>_s0": 4,
+        "<SAVE>_s1": 4,
+        "<SAVE>_s10": 4,
+        "<SAVE>_s2": 4,
+        "k": 4,
+        "x": 4,
+        "y": 4,
+        "z": 4
+      },
+      "usedRegisters": {
+        "ra": "<SAVE>_ra",
+        "s0": "<SAVE>_s0",
+        "s1": "<SAVE>_s1",
+        "s10": "<SAVE>_s10",
+        "s2": "<SAVE>_s2"
+      }
+    },
+    "196": {
+      "localStack": {
+        "<SAVE>_ra": 4,
+        "<SAVE>_s0": 4,
+        "<SAVE>_s1": 4,
+        "<SAVE>_s10": 4,
+        "<SAVE>_s2": 4,
+        "k": 4,
+        "x": 4,
+        "y": 4,
+        "z": 4
+      },
+      "usedRegisters": {
+        "ra": "<SAVE>_ra",
+        "s0": "<SAVE>_s0",
+        "s1": "<SAVE>_s1",
+        "s10": "<SAVE>_s10",
+        "s2": "<SAVE>_s2"
+      }
+    },
+    "200": -1,
+    "204": -2,
+    "208": -3,
+    "212": -4,
+    "216": -5,
+    "220": -6,
+    "224": -7,
+    "228": -8,
+    "232": -9,
+    "236": -10,
+    "240": -11,
+    "244": -12,
+    "248": -13,
+    "252": -14,
+    "256": -15,
+    "260": -16,
+    "264": {
+      "localStack": {},
+      "usedRegisters": {
+        "ra": "<SAVE>_ra",
+        "s0": "<SAVE>_s0",
+        "s1": "<SAVE>_s1",
+        "s10": "<SAVE>_s10",
+        "s2": "<SAVE>_s2"
+      }
+    },
+    "268": -1,
+    "272": {
+      "localStack": {
+        "<SAVE>_s0": 4,
+        "x": 4
+      },
+      "usedRegisters": {
+        "a0": "<EXPR_RESULT>_0",
+        "a1": "y",
+        "a2": "z",
+        "s0": "<SAVE>_s0",
+        "t0": "<EXPR_RESULT>_1"
+      }
+    },
+    "276": -1,
+    "280": -2,
+    "284": -3,
+    "288": -4,
+    "292": -5,
+    "296": -6,
+    "300": -7,
+    "304": -8,
+    "308": -9,
+    "312": {
+      "localStack": {},
+      "usedRegisters": {
+        "a0": "<EXPR_RESULT>_0",
+        "a1": "y",
+        "a2": "z",
+        "s0": "<SAVE>_s0",
+        "t0": "<EXPR_RESULT>_1"
+      }
+    },
+    "316": -1
+  }
+}

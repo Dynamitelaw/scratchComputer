@@ -7,6 +7,7 @@ from collections import OrderedDict
 
 from pycparser import c_parser, c_ast, parse_file, c_generator
 import assembler
+import utils
 
 
 #Colored printed for errors
@@ -34,6 +35,7 @@ def printColor(text, color=COLORS.DEFAULT, resetColor=True):
 
 
 #Global vars
+g_cFileCoord = None
 g_whileCounter = 0
 g_forCounter = 0
 g_ifCounter = 0
@@ -86,6 +88,83 @@ class variable:
 		return str(tempDict)
 
 
+class instructionList:
+	def __init__(self, scope):
+		self.instructions = []
+		self.scopeStates = []
+		self.coords = []
+		self.scope = scope
+
+	def append(self, instructionString):
+		self.instructions.append(instructionString)
+		self.scopeStates.append(self.scope.getState())
+		if (g_cFileCoord):
+			self.coords.append({"file": os.path.abspath(g_cFileCoord.file.replace(".temp","")), "lineNum": g_cFileCoord.line})
+		else:
+			self.coords.append({"file": None, "lineNum": None})
+
+	def __add__(self, otherList):
+		returnList = instructionList(self.scope)
+		returnList.instructions = self.instructions + otherList.instructions
+		returnList.scopeStates = self.scopeStates + otherList.scopeStates
+		returnList.coords = self.coords + otherList.coords
+
+		return returnList
+
+	def length(self):
+		return len(self.instructions)
+
+
+	def compressScopeStates(self):
+		compressedStateList = []
+
+		previousState = self.scopeStates[0]
+		previousStateIndex = 0
+		compressedStateList.append(previousState)
+
+		for index in range(1, len(self.scopeStates)):
+			currentState = self.scopeStates[index]
+
+			#Determine if we should update scope state
+			scopeDifferent = False
+			if (":" in self.instructions[index-1]):
+				scopeDifferent = True
+
+			if isinstance(currentState, dict):
+				for majorKey in currentState:
+					currentMinorKeys = currentState[majorKey].keys()
+					prevMinorKeys = previousState[majorKey].keys()
+
+					if (len(prevMinorKeys) != len(currentMinorKeys)):
+						scopeDifferent = True
+						break
+
+					for minorKey in currentState[majorKey]:
+						if (minorKey in previousState[majorKey]):
+							currentVal = currentState[majorKey][minorKey]
+							previousVal = previousState[majorKey][minorKey]
+
+							if (previousVal != currentVal):
+								scopeDifferent = True
+								break
+						else:
+							scopeDifferent = True
+							break
+
+					if (scopeDifferent):
+						break
+
+			if (scopeDifferent):
+				compressedStateList.append(currentState)
+				previousState = currentState
+				previousStateIndex = index
+			else:
+				compressedStateList.append(previousStateIndex - len(compressedStateList))
+
+
+		self.scopeStates = compressedStateList
+
+
 class scopeController:
 	'''
 	This class manages and controls the local scope of any given function.
@@ -119,7 +198,7 @@ class scopeController:
 		returnType:
 			[<str> instructions]
 		'''
-		instructions = []
+		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
 		branchVariableDict = scopeBranch.variableDict
@@ -202,9 +281,9 @@ class scopeController:
 		Returns a list of instruction strings.
 
 		returnType:
-			[<str> instructions]
+			[<tuple> (<str> instruction, <int> g_cFileCoord) ]
 		'''
-		instructions = []
+		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
 		variableObj = None
@@ -260,7 +339,7 @@ class scopeController:
 		returnType:
 			[<str> instructions]
 		'''
-		instructions = []
+		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
 		#Get variable object
@@ -344,7 +423,7 @@ class scopeController:
 			( [<str> instructions], <str> registerName )
 		'''
 		#<TODO> implement forceFree
-		instructions = []
+		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
 		registerName = None
@@ -417,7 +496,7 @@ class scopeController:
 		returnType:
 			[<str> instructions]
 		'''
-		instructions = []
+		instructions = instructionList(self)
 
 		if (registerName in self.virginSaveRegisters):
 			#Requesting a save register that doesn't belong to us yet. Save onto stack
@@ -448,7 +527,7 @@ class scopeController:
 		returnType:
 			[<str> instructions]
 		'''
-		instructions = []
+		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
 		variableObj = None
@@ -491,7 +570,7 @@ class scopeController:
 		returnType:
 			[<str> instructions]
 		'''
-		instructions = []
+		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
 		for registerName in list(self.usedRegisters.keys()):
@@ -520,7 +599,7 @@ class scopeController:
 		returnType:
 			[<str> instructions]
 		'''
-		instructions = []
+		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
 		variableName = "<SAVE>_ra"
@@ -538,7 +617,7 @@ class scopeController:
 		returnType:
 			[<str> instructions]
 		'''
-		instructions = []
+		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
 		for variableName in self.variableDict:
@@ -557,7 +636,7 @@ class scopeController:
 		returnType:
 			[<str> instructions]
 		'''
-		instructions = []
+		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
 		deallocateLength = 0
@@ -572,6 +651,13 @@ class scopeController:
 
 		return instructions
 
+	def getState(self):
+		stateDict = {}
+		stateDict["usedRegisters"] = self.usedRegisters
+		stateDict["localStack"] = self.localStack
+
+		return stateDict
+
 
 def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 	'''
@@ -582,9 +668,11 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 	returnType:
 		( [<str> instructions], <str> registerName )
 	'''
-	instructions = []
+	instructions = instructionList(scope)
 	indentString = "".join(["\t" for i in range(indentLevel)])
-	#instructions.append("{}###operandToRegister | targetReg = {}".format(indentString, targetReg))
+	global g_cFileCoord
+	g_cFileCoord = operandItem.coord
+
 
 	operandReg = ""
 	if isinstance(operandItem, c_ast.ID):
@@ -665,8 +753,10 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 		( [<str> instructions], <str> variableName )
 	'''
 
-	instructions = []
+	instructions = instructionList(scope)
 	indentString = "".join(["\t" for i in range(indentLevel)])
+	global g_cFileCoord
+	g_cFileCoord = item.coord
 
 	#Get operand into register
 	instructionsTemp, operandReg = operandToRegister(item.expr, scope, indentLevel=indentLevel)
@@ -750,8 +840,10 @@ def convertBinaryOpItem(item, scope, branch=None, targetVariableName=None, targe
 	returnType:
 		( [<str> instructions], <str> variableName )
 	'''
-	instructions = []
+	instructions = instructionList(scope)
 	indentString = "".join(["\t" for i in range(indentLevel)])
+	global g_cFileCoord
+	g_cFileCoord = item.coord
 
 	#Get variable and register for result
 	resultVariableName = ""
@@ -882,8 +974,10 @@ def convertIfItem(item, scope, indentLevel=0):
 	'''
 	global g_ifCounter
 
-	instructions = []
+	instructions = instructionList(scope)
 	indentString = "".join(["\t" for i in range(indentLevel)])
+	global g_cFileCoord
+	g_cFileCoord = item.coord
 
 	#Handle condition branching
 	onTrueLabel = "true_{}".format(g_ifCounter)
@@ -929,8 +1023,10 @@ def convertFuncCallItem(item, scope, indentLevel=0):
 	returnType:
 		[<str> instructions]
 	'''
-	instructions = []
+	instructions = instructionList(scope)
 	indentString = "".join(["\t" for i in range(indentLevel)])
+	global g_cFileCoord
+	g_cFileCoord = item.coord
 
 	functionName = item.name.name
 
@@ -1005,8 +1101,10 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 	returnType:
 		[<str> instructions]
 	'''
-	instructions = []
+	instructions = instructionList(scope)
 	indentString = "".join(["\t" for i in range(indentLevel)])
+	global g_cFileCoord
+	g_cFileCoord = item.coord
 
 	#Get left value into register  #<TODO> handle values small enought for immediates
 	leftOperand = item.lvalue
@@ -1043,8 +1141,10 @@ def convertReturnItem(item, scope, indentLevel=0):
 		[<str> instructions]
 	'''
 	#<TODO> Prevent uneeded saving of variables onto stack when we are returning
-	instructions = []
+	instructions = instructionList(scope)
 	indentString = "".join(["\t" for i in range(indentLevel)])
+	global g_cFileCoord
+	g_cFileCoord = item.coord
 
 	if isinstance(item.expr, c_ast.ID):
 		#Return variable
@@ -1125,8 +1225,10 @@ def convertDeclItem(item, scope, indentLevel=0):
 	returnType:
 		( [<str> instructions], <str> variableName )
 	'''
-	instructions = []
+	instructions = instructionList(scope)
 	indentString = "".join(["\t" for i in range(indentLevel)])
+	global g_cFileCoord
+	g_cFileCoord = item.coord
 
 	variableName = item.name
 
@@ -1182,8 +1284,10 @@ def convertForItem(item, scope, indentLevel=0):
 	'''
 	global g_forCounter
 
-	instructions = []
+	instructions = instructionList(scope)
 	indentString = "".join(["\t" for i in range(indentLevel)])
+	global g_cFileCoord
+	g_cFileCoord = item.coord
 
 	#Initialize for loop counting variable
 	if isinstance(item.init, c_ast.DeclList):
@@ -1247,7 +1351,7 @@ def convertAstItem(item, scope, indentLevel=0):
 	returnType:
 		[<str> instructions]
 	'''
-	instructions = []
+	instructions = instructionList(scope)
 	indentString = "".join(["\t" for i in range(indentLevel)])
 
 	if isinstance(item, c_ast.Compound):
@@ -1277,9 +1381,9 @@ def covertFuncToAssembly(funcDef):
 	Converts the c_ast.funcDef object into an assembly snippet.
 	Writes list of instructions to object variable funcDef.coord
 	'''
-	instructions = []
 	scope = scopeController(funcDef.decl.name)
-
+	instructions = instructionList(scope)
+	
 	#Function label
 	instructions.append("{}:".format(funcDef.decl.name))
 
@@ -1420,6 +1524,12 @@ Currently only supports a subset of the C language
 			printColor("ERROR: main function is not defined", color=COLORS.ERROR)
 			sys.exit()
 		
+
+		#Keep track of cLine/programCounter mappings for debugger annotations
+		debuggerAnnotations = {}
+		debuggerAnnotations["cFileMap"] = {}
+		debuggerAnnotations["scopeStateMap"] = {}
+
 		#Create final assembly file
 		outputDirectory, hexFilename = os.path.split(hexPath)
 		assemblyFilePath = os.path.join(outputDirectory, "{}.asm".format(hexFilename.split(".")[0]))
@@ -1442,12 +1552,20 @@ Currently only supports a subset of the C language
 		programCounter += 4
 
 		#Write main first
-		instructions = definedFunctions["main"].coord
-		for inst in instructions:
+		instList = definedFunctions["main"].coord
+		instList.compressScopeStates()
+		for i in range(0, instList.length()):
+			inst = instList.instructions[i]
+			coord = instList.coords[i]
+			scopeState = instList.scopeStates[i]
+
+			debuggerAnnotations["cFileMap"][programCounter] = coord
+			debuggerAnnotations["scopeStateMap"][programCounter] = scopeState
+
 			if not (":" in inst):
 				asmFile.write("{}\t\t#PC = {}\n".format(inst, programCounter))
 			else:
-				asmFile.write("{}\n".format(inst, programCounter))
+				asmFile.write("{}\n".format(inst))
 
 			if not (("#" in inst) or (":" in inst)):
 				programCounter += 4
@@ -1457,12 +1575,20 @@ Currently only supports a subset of the C language
 
 		#Write other functions
 		for functionName in definedFunctions:
-			instructions = definedFunctions[functionName].coord
-			for inst in instructions:
+			instList = definedFunctions[functionName].coord
+			instList.compressScopeStates()
+			for i in range(0, instList.length()):
+				inst = instList.instructions[i]
+				coord = instList.coords[i]
+				scopeState = instList.scopeStates[i]
+
+				debuggerAnnotations["cFileMap"][programCounter] = coord
+				debuggerAnnotations["scopeStateMap"][programCounter] = scopeState
+
 				if not (":" in inst):
 					asmFile.write("{}\t\t#PC = {}\n".format(inst, programCounter))
 				else:
-					asmFile.write("{}\n".format(inst, programCounter))
+					asmFile.write("{}\n".format(inst))
 
 				if not (("#" in inst) or (":" in inst)):
 					programCounter += 4
@@ -1496,6 +1622,12 @@ Currently only supports a subset of the C language
 			asmFile.write(dataDef)
 
 		asmFile.close()
+
+
+		#Write debugger annotations to json file
+		annotationFile = open("{}_debuggerAnnotation.json".format(cFilename), "w")
+		annotationFile.write(utils.dictToJson(debuggerAnnotations))
+		annotationFile.close()
 
 
 		#Convert assembly file to hex
