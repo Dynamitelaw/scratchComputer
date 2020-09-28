@@ -10,6 +10,7 @@
 *testCode/c_Code/*.hex
 *testCode/c_Code/*.asm
 *testCode/c_Code/*.csv
+*testCode/c_Code/*_annotation.json
 
 #Ignore all synthesized files
 *verilog/qflowSynthesis/*

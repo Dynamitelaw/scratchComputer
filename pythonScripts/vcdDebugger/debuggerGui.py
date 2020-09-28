@@ -139,7 +139,6 @@ p, li { white-space: pre-wrap; }
 
 				#assembly file syntax highlighting
 				if (fileType == "asm"):
-					print("{} | {}".format(lineElement, lineElement[-1]))
 					#Instructions = blue
 					if (lineElement in asm_blueKeywords):
 						color = blue
@@ -266,6 +265,7 @@ def getCycleMap(vcdFilePath, configPath):
 				cycleMap[currentCycle][displayKey] = str(utils.binStringToInt(binaryString))
 
 				previousTimeStep = timeStep
+				previousCycle = timeCycleMap[previousTimeStep]
 				previousBinaryString = binaryString
 
 		for cycle in range(previousCycle, len(cycleMap), 1):
@@ -1892,7 +1892,7 @@ Help yourself
 					g_htmlDict[filepath] = {}
 					g_htmlDict[filepath]["htmlList"] = fileToHtmlList(filepath, fileType="asm")
 					g_htmlDict[filepath]["fileLength"] = len(g_htmlDict[filepath]["htmlList"])-2
-					print(utils.dictToJson(g_htmlDict[filepath]))
+					#print(utils.dictToJson(g_htmlDict[filepath]))
 		else:
 			g_asmFileMap = None
 

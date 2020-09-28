@@ -96,8 +96,8 @@ class instructionList:
 		self.scope = scope
 
 	def append(self, instructionString):
-		self.instructions.append(instructionString)
-		self.scopeStates.append(self.scope.getState())
+		self.instructions.append(copy.deepcopy(instructionString))
+		self.scopeStates.append(copy.deepcopy(self.scope.getState()))
 		if (g_cFileCoord):
 			self.coords.append({"file": os.path.abspath(g_cFileCoord.file.replace(".temp","")), "lineNum": g_cFileCoord.line})
 		else:
@@ -105,14 +105,18 @@ class instructionList:
 
 	def __add__(self, otherList):
 		returnList = instructionList(self.scope)
-		returnList.instructions = self.instructions + otherList.instructions
-		returnList.scopeStates = self.scopeStates + otherList.scopeStates
-		returnList.coords = self.coords + otherList.coords
+		returnList.instructions = copy.deepcopy(self.instructions) + copy.deepcopy(otherList.instructions)
+		returnList.scopeStates = copy.deepcopy(self.scopeStates) + otherList.scopeStates
+		returnList.coords = copy.deepcopy(self.coords) + copy.deepcopy(otherList.coords)
 
 		return returnList
 
 	def length(self):
 		return len(self.instructions)
+
+	def updateScopeState(self):
+		if (len(self.scopeStates) > 0):
+			self.scopeStates[-1] = self.scope.getState()
 
 
 	def compressScopeStates(self):
@@ -230,6 +234,7 @@ class scopeController:
 				
 			instructions.append("{}addi sp, sp, {}".format(indentString, deallocateLength))
 
+
 		return instructions
 	
 
@@ -265,14 +270,15 @@ class scopeController:
 		'''
 		Remove an existing variable from this scope.
 		'''
-		try:
-			variableObj = self.variableDict[variableName]
-			self.usedRegisters.remove(variableObj.register)
-			self.availableRegisters.append(variableObj.register)
-			self.availableRegisters.sort()
-			del variableDict[variableName]
-		except Exception as e:
-			raise Exception("ERROR: Could not remove variable \"{}\"{}".format(variableName, e))
+		if (variableName):
+			try:
+				variableObj = self.variableDict[variableName]
+				del self.usedRegisters[variableObj.register]
+				self.availableRegisters.append(variableObj.register)
+				self.availableRegisters.sort()
+				del self.variableDict[variableName]
+			except Exception as e:
+				raise Exception("ERROR: Could not remove variable \"{}\"{}".format(variableName, e))
 
 
 	def storeStack(self, variableName, indentLevel=0):
@@ -394,6 +400,7 @@ class scopeController:
 			self.usedRegisters[regDest] = variableName
 			self.loadHistory.append(variableName)
 
+
 			return instructions
 		
 		else:
@@ -408,6 +415,19 @@ class scopeController:
 			<str> registerName
 		'''
 		return self.variableDict[variableName].register
+
+
+	def getVariableName(self, registerName):
+		'''
+		Returns None if a variable is not currently in the specified register
+
+		returnType:
+			<str> variableName
+		'''
+		if (registerName in self.usedRegisters):
+			return self.usedRegisters[registerName]
+		else:
+			return None
 
 
 	def getFreeRegister(self, preferTemp=False, tempsAllowed=True, forceFree=True, regOverride=None, indentLevel=0):
@@ -432,6 +452,7 @@ class scopeController:
 			registerName = regOverride
 			instructions += self.releaseRegister(registerName, indentLevel=indentLevel)
 			self.availableRegisters.remove(registerName)
+
 			return instructions, registerName
 
 		if (preferTemp):
@@ -440,6 +461,7 @@ class scopeController:
 			if (len(t_Registers) > 0):
 				registerName = t_Registers[0]
 				self.availableRegisters.remove(registerName)
+
 				return instructions, registerName
 
 			#Check for free argument register
@@ -447,6 +469,7 @@ class scopeController:
 			if (len(a_Registers) > 0):
 				registerName = a_Registers[0]
 				self.availableRegisters.remove(registerName)
+
 				return instructions, registerName
 
 			#Check for free save register
@@ -468,6 +491,7 @@ class scopeController:
 				if (len(t_Registers) > 0):
 					registerName = t_Registers[0]
 					self.availableRegisters.remove(registerName)
+
 					return instructions, registerName
 
 				#Check for free argument register
@@ -475,6 +499,7 @@ class scopeController:
 				if (len(a_Registers) > 0):
 					registerName = a_Registers[0]
 					self.availableRegisters.remove(registerName)
+
 					return instructions, registerName
 
 
@@ -485,6 +510,7 @@ class scopeController:
 			instructions += self.storeStack(variableName, indentLevel=indentLevel)
 			self.virginSaveRegisters.remove(registerName)
 			self.availableRegisters.remove(registerName)
+
 
 		return instructions, registerName
 
@@ -516,6 +542,7 @@ class scopeController:
 		elif (registerName != "zero"):
 			self.availableRegisters.append(registerName)
 			self.availableRegisters.sort()
+
 
 		return instructions
 
@@ -559,6 +586,7 @@ class scopeController:
 					self.usedRegisters[regDest] = variableName
 				self.availableRegisters.remove(regDest)
 
+
 		return instructions
 
 
@@ -589,6 +617,7 @@ class scopeController:
 					#No free register. Save to stack
 					instructions += self.storeStack(variableName, indentLevel=indentLevel)
 
+
 		return instructions
 
 
@@ -607,6 +636,7 @@ class scopeController:
 			self.addVariable(variableName, register="ra")
 			instructions += self.storeStack(variableName, indentLevel=indentLevel)
 
+
 		return instructions
 
 
@@ -624,6 +654,7 @@ class scopeController:
 			if ("<SAVE>" in variableName):
 				regDest = variableName.replace("<SAVE>_", "")
 				instructions += self.moveVariable(variableName, regDest, indentLevel=indentLevel)
+
 
 		return instructions
 
@@ -648,6 +679,7 @@ class scopeController:
 			instructions.append("{}addi sp, sp, {}".format(indentString, deallocateLength))
 
 		self.localStack = OrderedDict()
+
 
 		return instructions
 
@@ -777,6 +809,7 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 		#Get or create variable name for result of negation
 		if (targetVariableName):
 			scope.addVariable(targetVariableName, size=resultSize, varType=resultType)
+
 			resultVariableName = targetVariableName
 		else:
 			resultVariableName = scope.createExpressionResult()
@@ -806,6 +839,7 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 			#Get or create variable name for result
 			if (targetVariableName):
 				scope.addVariable(targetVariableName, size=resultSize, varType=resultType)
+
 				resultVariableName = targetVariableName
 			else:
 				resultVariableName = scope.createExpressionResult()
@@ -850,6 +884,7 @@ def convertBinaryOpItem(item, scope, branch=None, targetVariableName=None, targe
 	if (not branch):
 		if (targetVariableName):
 			scope.addVariable(targetVariableName, size=resultSize, varType=resultType)
+
 			resultVariableName = targetVariableName
 		else:
 			resultVariableName = scope.createExpressionResult()
@@ -1177,6 +1212,7 @@ def convertReturnItem(item, scope, indentLevel=0):
 		value = int(item.expr.value) #<TODO> Handle floats and doubles
 		if (value < 2048) and (value >= -2048):
 			#Value is small enough for addi
+			scope.removeVariable(scope.getVariableName("a0"))
 			instructions.append("{}addi {}, zero, {}".format(indentString, "a0", value))
 		else:
 			#Must load value from memory
@@ -1240,6 +1276,7 @@ def convertDeclItem(item, scope, indentLevel=0):
 			instructions += instructionsTemp
 			scope.addVariable(variableName, register=destinationRegister, varType=item.type.type.names, size=4, signed=True)
 
+
 			value = int(item.init.value) #<TODO> Handle floats and doubles
 			if (value < 2048) and (value >= -2048):
 				#Value is small enough for addi
@@ -1263,12 +1300,14 @@ def convertDeclItem(item, scope, indentLevel=0):
 			instructions += convertFuncCallItem(item.init, scope, indentLevel=indentLevel)
 			scope.addVariable(variableName, register="a0", varType=item.type.type.names, size=4, signed=True)
 
+
 		else:
 			print("{}###UNSUPPORTED DECLARATION | convertDeclItem".format(indentString))
 			print("{}".format(item))
 	else:
 		#Declared without initial value
 		scope.addVariable(variableName, varType=item.type.type.names, size=4, signed=True)
+
 
 
 	return instructions, variableName
@@ -1395,6 +1434,7 @@ def covertFuncToAssembly(funcDef):
 		for arg in inputParameters:
 			registerName = "a{}".format(argIndex)
 			scope.addVariable(arg.name, register=registerName,varType=arg.type.type.names, size=4, signed=True)
+
 
 			argIndex += 1
 
