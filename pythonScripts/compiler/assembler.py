@@ -1,9 +1,12 @@
 import argparse
 import sys
+import os
 import math
 import pandas as pd
 import traceback
 from enum import Enum, unique
+
+import utils
 
 
 class COLORS:
@@ -445,7 +448,7 @@ def parseAssemblyFile(filepath):
 
 		finalInstructions.append(instruction)
 
-	return finalInstructions, initializedData
+	return finalInstructions, linedInstructions, initializedData
 
 
 def instructionsToInts(instructionList):
@@ -923,9 +926,10 @@ def generateCsvIndex(instructions, instructionIntValues, filepath):
 	return df
 
 
-def main(asmPath, hexPathArg, indexPath, logisim):
+def main(asmPath, hexPathArg, indexPath, logisim, debuggerAnnotations):
 	try:
-		instructions, initializedData = parseAssemblyFile(asmPath)
+		#Convert asm file to machine code
+		instructions, linedInstructions, initializedData = parseAssemblyFile(asmPath)
 		programIntValues = instructionsToInts(instructions)
 		programIntValues.append(0)
 		programIntValues += [dataDef.value for dataDef in initializedData]
@@ -943,6 +947,19 @@ def main(asmPath, hexPathArg, indexPath, logisim):
 		if (indexPath):
 			generateCsvIndex(instructions, programIntValues, indexPath)
 
+		#Add assembly annotations to debuugerAnnotations dict
+		debuggerAnnotations["asmFileMap"] = {} 
+		programCounter = 0
+		for address in range(0, len(linedInstructions)):
+			debuggerAnnotations["asmFileMap"][address*4] = {}
+			debuggerAnnotations["asmFileMap"][address*4]["lineNum"] = linedInstructions[address][0]
+			debuggerAnnotations["asmFileMap"][address*4]["file"] = os.path.abspath(asmPath)
+			
+		annotationFile = open("{}_annotation.json".format(asmPath.replace(".asm", "")), "w")
+		annotationFile.write(utils.dictToJson(debuggerAnnotations))
+		annotationFile.close()
+
+		#Print finished message
 		printColor("\nDone!", color=COLORS.OKGREEN)
 		print("{} total instructions".format(len(instructions)))
 		addressBits = math.log(len(programIntValues),2)
@@ -977,7 +994,7 @@ SC Assembler v1.0 | Converts RISC-V assembly files into machine code.
 	#Generate machine code
 	print(" ")
 	if (asmPath):
-		main(asmPath, hexPathArg, indexPath, logisim)
+		main(asmPath, hexPathArg, indexPath, logisim, {})
 	else:
 		print("ERROR: Missing required argument \"-asm\"")
 		sys.exit()

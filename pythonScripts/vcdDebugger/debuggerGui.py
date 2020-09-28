@@ -19,6 +19,7 @@ global g_cycleMap
 global g_maxCycles
 
 global g_cFileMap
+global g_asmFileMap
 global g_htmlDict
 global g_registerStateMap
 g_htmlDict = {}
@@ -43,7 +44,7 @@ def highlightLine(htmlList, lineNumber):
 	return "\n".join(tempList)
 
 
-def fileToHtmlList(filepath):
+def fileToHtmlList(filepath, fileType=None):
 	file = open(filepath, "r")
 
 	htmlHeader = r'''<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
@@ -54,21 +55,39 @@ p, li { white-space: pre-wrap; }
 	htmlList = [htmlHeader]
 	line = file.readline()
 	while(line):
-		#<span style=" font-weight:600; text-decoration: underline;">
-		#Syntax highlighting
-		lineList = line.replace("(", " ( ").replace(")", " ) ").replace(";", " ; ").replace(",", " , ").replace("\t", "").split(" ")
+		########
+		# Syntax highlighting
+		########
+		lineList = line.rstrip().replace("(", " ( ").replace(")", " ) ").replace(";", " ; ").replace(",", " , ").replace("\t", "").split(" ")
 		lineList =  list(filter(lambda i: i != "", lineList))
 
+		#Color defs
 		white = "ffffff"
 		blue = "67d8ef"
 		red = "f92472"
 		green = "a6e22b"
 		purple = "ac80ff"
 		grey = "848066"
+		orange = "fd9622"
 
-		blueKeywords = ["int", "float", "char", "double", "long", "unisgned", "byte", "bool"]
-		redKeywords = ["return", "if", "else"]
-		constantKeywords = ["true", "false"]
+		#C keywords
+		c_blueKeywords = ["int", "float", "char", "double", "long", "unisgned", "byte", "bool"]
+		c_redKeywords = ["return", "if", "else"]
+		c_constantKeywords = ["true", "false"]
+
+		#assembly keywords
+		asm_blueKeywords = [
+			"addi", "add", "mv", "move", "sub", "mul", "div", "divu", "rem", "remu", "slti", "sltiu", "slt", "sltu",
+			"jal", "j", "jr", "jalr", "bne", "bltu", "blt", "bge", "bgeu", "beq",
+			"lh", "lhu", "lb", "lbu", "lw", "sw", "sh", "sb"
+			]
+		asm_orangeKeywords = [
+			"s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11",
+			"a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7",
+			"t0", "t1", "t2", "t3", "t4", "t5", "t6",
+			"sp", "gp", "fp", "ra",
+			"zero", "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12", "x13", "x14", "x15", "x16", "x17", "x18", "x19", "x20", "x22", "x22", "x23", "x24", "x25", "x26", "x27", "x28", "x29", "x30", "x31"
+			]
 
 		formattedLineList = []
 		inComment = False
@@ -77,43 +96,78 @@ p, li { white-space: pre-wrap; }
 			lineElement = lineList[index]
 			#Syntax highlighting
 			color = white
-			#Typedefs = blue
-			if (lineElement in blueKeywords):
-				color = blue
-			#Function calls = blue
-			if (index < len(lineList)-1):
-				nextElement = lineList[index+1]
-				if (nextElement == "("):
-					color = blue
-			#Control keywords = red
-			if (lineElement in redKeywords):
-				color = red
-			#Function defs = green
-			if ((index < len(lineList)-1) and (index != 0)):
-				previousElement = lineList[index-1]
-				nextElement = lineList[index+1]
+			if (fileType):
+				#C file syntax highlighting
+				if (fileType == "C"):
+					#Typedefs = blue
+					if (lineElement in c_blueKeywords):
+						color = blue
+					#Function calls = blue
+					if (index < len(lineList)-1):
+						nextElement = lineList[index+1]
+						if (nextElement == "("):
+							color = blue
+					#Control keywords = red
+					if (lineElement in c_redKeywords):
+						color = red
+					#Function defs = green
+					if ((index < len(lineList)-1) and (index != 0)):
+						previousElement = lineList[index-1]
+						nextElement = lineList[index+1]
 
-				if ((previousElement in blueKeywords) and (nextElement == "(")):
-					color = green
-			#Constants = purple
-			if (lineElement in constantKeywords):
-				color = purple
-			try:
-				k = int(lineElement)
-				color = purple
-			except Exception as e:
-				pass
-			try:
-				k = float(lineElement)
-				color = purple
-			except Exception as e:
-				pass		
-			#Comments = grey
-			if (inComment):
-				color = grey
-			elif ("//" in lineElement):
-				inComment = True
-				color = grey	
+						if ((previousElement in c_blueKeywords) and (nextElement == "(")):
+							color = green
+					#Constants = purple
+					if (lineElement in c_constantKeywords):
+						color = purple
+					try:
+						k = int(lineElement)
+						color = purple
+					except Exception as e:
+						pass
+					try:
+						k = float(lineElement)
+						color = purple
+					except Exception as e:
+						pass		
+					#Comments = grey
+					if (inComment):
+						color = grey
+					elif ("//" in lineElement):
+						inComment = True
+						color = grey
+
+				#assembly file syntax highlighting
+				if (fileType == "asm"):
+					print("{} | {}".format(lineElement, lineElement[-1]))
+					#Instructions = blue
+					if (lineElement in asm_blueKeywords):
+						color = blue
+					#Registers = orange
+					if (lineElement in asm_orangeKeywords):
+						color = orange
+					#Labels = red
+					if (lineElement[-1] == ":"):
+						color = red
+					#Constants = purple
+					if (lineElement in c_constantKeywords):
+						color = purple
+					try:
+						k = int(lineElement)
+						color = purple
+					except Exception as e:
+						pass
+					try:
+						k = float(lineElement)
+						color = purple
+					except Exception as e:
+						pass		
+					#Comments = grey
+					if (inComment):
+						color = grey
+					elif ("#" in lineElement):
+						inComment = True
+						color = grey	
 
 			#Construction html line element
 			prespace = " "
@@ -121,7 +175,7 @@ p, li { white-space: pre-wrap; }
 				prespace = ""
 				if (index != 0):
 					previousElement = lineList[index-1]
-					if (previousElement in redKeywords):
+					if (previousElement in c_redKeywords):
 						prespace = " "
 			elif (lineElement == ")"):
 				prespace = ""
@@ -1630,7 +1684,25 @@ class Ui_MainWindow(object):
 			filepath = coord["file"]
 			lineNumber = coord["lineNum"]
 
-			self.cCode_text.setHtml(highlightLine(g_htmlDict[filepath], lineNumber))
+			self.cCode_text.setHtml(highlightLine(g_htmlDict[filepath]["htmlList"], lineNumber))
+
+			scrollBar = self.cCode_text.verticalScrollBar()
+			scrollLocation = int(scrollBar.maximum() * (float(lineNumber) /float(g_htmlDict[filepath]["fileLength"])))
+			scrollBar.setValue(scrollLocation)
+		except Exception as e:
+			pass
+
+		#Update assembly code display
+		try:
+			coord = g_asmFileMap[str(currentValues["programCounter"])]
+			filepath = coord["file"]
+			lineNumber = coord["lineNum"]
+
+			self.assembly_text.setHtml(highlightLine(g_htmlDict[filepath]["htmlList"], lineNumber))
+
+			scrollBar = self.assembly_text.verticalScrollBar()
+			scrollLocation = int(scrollBar.maximum() * (float(lineNumber) /float(g_htmlDict[filepath]["fileLength"])))
+			scrollBar.setValue(scrollLocation)
 		except Exception as e:
 			pass
 
@@ -1800,9 +1872,29 @@ Help yourself
 				if (filepath in g_htmlDict):
 					pass
 				else:
-					g_htmlDict[filepath] = fileToHtmlList(filepath)
+					g_htmlDict[filepath] = {}
+					g_htmlDict[filepath]["htmlList"] = fileToHtmlList(filepath, fileType="C")
+					g_htmlDict[filepath]["fileLength"] = len(g_htmlDict[filepath]["htmlList"])-2
 		else:
 			g_cFileMap = None
+
+		global g_asmFileMap
+		if ("asmFileMap" in annotationDict):
+			g_asmFileMap = annotationDict["asmFileMap"]
+
+			for pcKey in g_asmFileMap:
+				coord = g_asmFileMap[pcKey]
+				filepath = coord["file"]
+
+				if (filepath in g_htmlDict):
+					pass
+				else:
+					g_htmlDict[filepath] = {}
+					g_htmlDict[filepath]["htmlList"] = fileToHtmlList(filepath, fileType="asm")
+					g_htmlDict[filepath]["fileLength"] = len(g_htmlDict[filepath]["htmlList"])-2
+					print(utils.dictToJson(g_htmlDict[filepath]))
+		else:
+			g_asmFileMap = None
 
 		global g_registerStateMap
 		if ("scopeStateMap" in annotationDict):
@@ -1823,7 +1915,7 @@ Help yourself
 
 
 
-		print(utils.dictToJson(g_registerStateMap))
+		#print(utils.dictToJson(g_registerStateMap))
 		#sys.exit()
 
 	

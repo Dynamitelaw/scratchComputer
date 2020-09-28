@@ -1542,13 +1542,13 @@ Currently only supports a subset of the C language
 			#Initialize sp
 			stackPointerStart = int(4 * int(int(memorySize) / 4))
 			if (stackPointerStart < 2048):
-				asmFile.write("addi sp, zero, {}\t\t#PC = {}\n".format(int(stackPointerStart, programCounter)))
+				asmFile.write("addi sp, zero, {}\n".format(int(stackPointerStart)))
 			else:
 				g_dataSegment["stackPointerStart"] = dataElement("stackPointerStart", value=stackPointerStart, size=4)
-				asmFile.write("lw sp, stackPointerStart\t\t#PC = {}\n".format(programCounter))
+				asmFile.write("lw sp, stackPointerStart\n")
 			programCounter += 4
 
-		asmFile.write("addi ra, zero, PROGRAM_END\t\t#PC = {}\n".format(programCounter))  #initialize return address for main
+		asmFile.write("addi ra, zero, PROGRAM_END\n")  #initialize return address for main
 		programCounter += 4
 
 		#Write main first
@@ -1563,7 +1563,7 @@ Currently only supports a subset of the C language
 			debuggerAnnotations["scopeStateMap"][programCounter] = scopeState
 
 			if not (":" in inst):
-				asmFile.write("{}\t\t#PC = {}\n".format(inst, programCounter))
+				asmFile.write("{}\n".format(inst))
 			else:
 				asmFile.write("{}\n".format(inst))
 
@@ -1586,7 +1586,7 @@ Currently only supports a subset of the C language
 				debuggerAnnotations["scopeStateMap"][programCounter] = scopeState
 
 				if not (":" in inst):
-					asmFile.write("{}\t\t#PC = {}\n".format(inst, programCounter))
+					asmFile.write("{}\n".format(inst))
 				else:
 					asmFile.write("{}\n".format(inst))
 
@@ -1594,7 +1594,7 @@ Currently only supports a subset of the C language
 					programCounter += 4
 			asmFile.write("\n")
 
-		asmFile.write("PROGRAM_END:\nadd zero, zero, zero\t\t#PC = {}\n".format(programCounter))  #Program end label/nop
+		asmFile.write("PROGRAM_END:\nadd zero, zero, zero\n")  #Program end label/nop
 
 		#Write data section
 		asmFile.write(".data\n")
@@ -1624,14 +1624,8 @@ Currently only supports a subset of the C language
 		asmFile.close()
 
 
-		#Write debugger annotations to json file
-		annotationFile = open("{}_debuggerAnnotation.json".format(cFilename), "w")
-		annotationFile.write(utils.dictToJson(debuggerAnnotations))
-		annotationFile.close()
-
-
 		#Convert assembly file to hex
-		assembler.main(assemblyFilePath, hexPath, indexPath, logisim)
+		assembler.main(assemblyFilePath, hexPath, indexPath, logisim, debuggerAnnotations)
 
 		#Cleanup
 		os.remove(cleanFilePath)

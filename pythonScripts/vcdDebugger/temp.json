@@ -1,0 +1,581 @@
+.text | t
+addi | i
+ra | a
+, | ,
+zero | o
+, | ,
+PROGRAM_END | D
+main: | :
+addi | i
+sp | p
+, | ,
+sp | p
+, | ,
+-4 | 4
+#comment | t
+sw | w
+s0 | 0
+, | ,
+0 | 0
+( | (
+sp | p
+) | )
+addi | i
+s0 | 0
+, | ,
+zero | o
+, | ,
+6 | 6
+addi | i
+sp | p
+, | ,
+sp | p
+, | ,
+-4 | 4
+sw | w
+s1 | 1
+, | ,
+0 | 0
+( | (
+sp | p
+) | )
+addi | i
+s1 | 1
+, | ,
+zero | o
+, | ,
+77 | 7
+addi | i
+sp | p
+, | ,
+sp | p
+, | ,
+-4 | 4
+sw | w
+s2 | 2
+, | ,
+0 | 0
+( | (
+sp | p
+) | )
+addi | i
+s2 | 2
+, | ,
+zero | o
+, | ,
+1 | 1
+mv | v
+a0 | 0
+, | ,
+s0 | 0
+mv | v
+a1 | 1
+, | ,
+s1 | 1
+mv | v
+a2 | 2
+, | ,
+s2 | 2
+addi | i
+sp | p
+, | ,
+sp | p
+, | ,
+-4 | 4
+sw | w
+ra | a
+, | ,
+0 | 0
+( | (
+sp | p
+) | )
+mv | v
+s0 | 0
+, | ,
+a0 | 0
+mv | v
+s1 | 1
+, | ,
+a1 | 1
+addi | i
+sp | p
+, | ,
+sp | p
+, | ,
+-4 | 4
+sw | w
+s10 | 0
+, | ,
+0 | 0
+( | (
+sp | p
+) | )
+mv | v
+s10 | 0
+, | ,
+a2 | 2
+jal | l
+addThreeInts | s
+addi | i
+t0 | 0
+, | ,
+zero | o
+, | ,
+84 | 4
+beq | q
+a0 | 0
+, | ,
+t0 | 0
+, | ,
+true_0 | 0
+j | j
+false_0 | 0
+true_0: | :
+addi | i
+a0 | 0
+, | ,
+zero | o
+, | ,
+42 | 2
+addi | i
+sp | p
+, | ,
+sp | p
+, | ,
+-4 | 4
+sw | w
+s0 | 0
+, | ,
+0 | 0
+( | (
+sp | p
+) | )
+lw | w
+s0 | 0
+, | ,
+20 | 0
+( | (
+sp | p
+) | )
+addi | i
+sp | p
+, | ,
+sp | p
+, | ,
+-4 | 4
+sw | w
+s1 | 1
+, | ,
+0 | 0
+( | (
+sp | p
+) | )
+lw | w
+s1 | 1
+, | ,
+20 | 0
+( | (
+sp | p
+) | )
+lw | w
+s2 | 2
+, | ,
+16 | 6
+( | (
+sp | p
+) | )
+lw | w
+ra | a
+, | ,
+12 | 2
+( | (
+sp | p
+) | )
+addi | i
+sp | p
+, | ,
+sp | p
+, | ,
+-4 | 4
+sw | w
+s10 | 0
+, | ,
+0 | 0
+( | (
+sp | p
+) | )
+lw | w
+s10 | 0
+, | ,
+12 | 2
+( | (
+sp | p
+) | )
+addi | i
+sp | p
+, | ,
+sp | p
+, | ,
+32 | 2
+jr | r
+ra | a
+addi | i
+sp | p
+, | ,
+sp | p
+, | ,
+-4 | 4
+sw | w
+s0 | 0
+, | ,
+0 | 0
+( | (
+sp | p
+) | )
+addi | i
+sp | p
+, | ,
+sp | p
+, | ,
+-4 | 4
+sw | w
+s1 | 1
+, | ,
+0 | 0
+( | (
+sp | p
+) | )
+addi | i
+sp | p
+, | ,
+sp | p
+, | ,
+-4 | 4
+sw | w
+s2 | 2
+, | ,
+0 | 0
+( | (
+sp | p
+) | )
+addi | i
+sp | p
+, | ,
+sp | p
+, | ,
+-4 | 4
+sw | w
+s10 | 0
+, | ,
+0 | 0
+( | (
+sp | p
+) | )
+addi | i
+sp | p
+, | ,
+sp | p
+, | ,
+-4 | 4
+sw | w
+ra | a
+, | ,
+0 | 0
+( | (
+sp | p
+) | )
+j | j
+ifElseExit_0 | 0
+false_0: | :
+ifElseExit_0: | :
+addi | i
+t0 | 0
+, | ,
+zero | o
+, | ,
+1 | 1
+addi | i
+sp | p
+, | ,
+sp | p
+, | ,
+-4 | 4
+sw | w
+a0 | 0
+, | ,
+0 | 0
+( | (
+sp | p
+) | )
+addi | i
+t1 | 1
+, | ,
+zero | o
+, | ,
+-1 | 1
+mul | l
+a0 | 0
+, | ,
+t0 | 0
+, | ,
+t1 | 1
+addi | i
+sp | p
+, | ,
+sp | p
+, | ,
+-4 | 4
+sw | w
+s0 | 0
+, | ,
+0 | 0
+( | (
+sp | p
+) | )
+lw | w
+s0 | 0
+, | ,
+24 | 4
+( | (
+sp | p
+) | )
+addi | i
+sp | p
+, | ,
+sp | p
+, | ,
+-4 | 4
+sw | w
+s1 | 1
+, | ,
+0 | 0
+( | (
+sp | p
+) | )
+lw | w
+s1 | 1
+, | ,
+24 | 4
+( | (
+sp | p
+) | )
+lw | w
+s2 | 2
+, | ,
+20 | 0
+( | (
+sp | p
+) | )
+lw | w
+ra | a
+, | ,
+16 | 6
+( | (
+sp | p
+) | )
+addi | i
+sp | p
+, | ,
+sp | p
+, | ,
+-4 | 4
+sw | w
+s10 | 0
+, | ,
+0 | 0
+( | (
+sp | p
+) | )
+lw | w
+s10 | 0
+, | ,
+16 | 6
+( | (
+sp | p
+) | )
+addi | i
+sp | p
+, | ,
+sp | p
+, | ,
+36 | 6
+jr | r
+ra | a
+jr | r
+ra | a
+addThreeInts: | :
+addi | i
+sp | p
+, | ,
+sp | p
+, | ,
+-4 | 4
+sw | w
+a0 | 0
+, | ,
+0 | 0
+( | (
+sp | p
+) | )
+addi | i
+sp | p
+, | ,
+sp | p
+, | ,
+-4 | 4
+sw | w
+s0 | 0
+, | ,
+0 | 0
+( | (
+sp | p
+) | )
+lw | w
+s0 | 0
+, | ,
+4 | 4
+( | (
+sp | p
+) | )
+add | d
+t0 | 0
+, | ,
+s0 | 0
+, | ,
+a1 | 1
+add | d
+a0 | 0
+, | ,
+t0 | 0
+, | ,
+a2 | 2
+sw | w
+s0 | 0
+, | ,
+4 | 4
+( | (
+sp | p
+) | )
+lw | w
+s0 | 0
+, | ,
+0 | 0
+( | (
+sp | p
+) | )
+addi | i
+sp | p
+, | ,
+sp | p
+, | ,
+8 | 8
+jr | r
+ra | a
+jr | r
+ra | a
+PROGRAM_END: | :
+add | d
+zero | o
+, | ,
+zero | o
+, | ,
+zero | o
+.data | a
+{
+  "fileLength": 91,
+  "htmlList": [
+    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;\">\n",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#ffffff;\">.text</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> ra</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> zero</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ffffff;\"> PROGRAM_END</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#f92472;\">main:</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> -4</span><span style=\" color:#848066;\"> #comment</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">sw</span><span style=\" color:#fd9622;\"> s0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 0</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> s0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> zero</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 6</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> -4</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">sw</span><span style=\" color:#fd9622;\"> s1</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 0</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> s1</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> zero</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 77</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> -4</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">sw</span><span style=\" color:#fd9622;\"> s2</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 0</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> s2</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> zero</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 1</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">mv</span><span style=\" color:#fd9622;\"> a0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> s0</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">mv</span><span style=\" color:#fd9622;\"> a1</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> s1</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">mv</span><span style=\" color:#fd9622;\"> a2</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> s2</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> -4</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">sw</span><span style=\" color:#fd9622;\"> ra</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 0</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">mv</span><span style=\" color:#fd9622;\"> s0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> a0</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">mv</span><span style=\" color:#fd9622;\"> s1</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> a1</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> -4</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">sw</span><span style=\" color:#fd9622;\"> s10</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 0</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">mv</span><span style=\" color:#fd9622;\"> s10</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> a2</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">jal</span><span style=\" color:#ffffff;\"> addThreeInts</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> t0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> zero</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 84</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">beq</span><span style=\" color:#fd9622;\"> a0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> t0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ffffff;\"> true_0</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">j</span><span style=\" color:#ffffff;\"> false_0</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#f92472;\">true_0:</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> a0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> zero</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 42</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> -4</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">sw</span><span style=\" color:#fd9622;\"> s0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 0</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">lw</span><span style=\" color:#fd9622;\"> s0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 20</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> -4</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">sw</span><span style=\" color:#fd9622;\"> s1</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 0</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">lw</span><span style=\" color:#fd9622;\"> s1</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 20</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">lw</span><span style=\" color:#fd9622;\"> s2</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 16</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">lw</span><span style=\" color:#fd9622;\"> ra</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 12</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> -4</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">sw</span><span style=\" color:#fd9622;\"> s10</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 0</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">lw</span><span style=\" color:#fd9622;\"> s10</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 12</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 32</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">jr</span><span style=\" color:#fd9622;\"> ra</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> -4</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">sw</span><span style=\" color:#fd9622;\"> s0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 0</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> -4</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">sw</span><span style=\" color:#fd9622;\"> s1</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 0</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> -4</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">sw</span><span style=\" color:#fd9622;\"> s2</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 0</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> -4</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">sw</span><span style=\" color:#fd9622;\"> s10</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 0</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> -4</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:2; text-indent:0px;\"><span style=\" color:#67d8ef;\">sw</span><span style=\" color:#fd9622;\"> ra</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 0</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">j</span><span style=\" color:#ffffff;\"> ifElseExit_0</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#f92472;\">false_0:</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#f92472;\">ifElseExit_0:</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> t0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> zero</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 1</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> -4</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">sw</span><span style=\" color:#fd9622;\"> a0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 0</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> t1</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> zero</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> -1</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">mul</span><span style=\" color:#fd9622;\"> a0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> t0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> t1</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> -4</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">sw</span><span style=\" color:#fd9622;\"> s0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 0</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">lw</span><span style=\" color:#fd9622;\"> s0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 24</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> -4</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">sw</span><span style=\" color:#fd9622;\"> s1</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 0</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">lw</span><span style=\" color:#fd9622;\"> s1</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 24</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">lw</span><span style=\" color:#fd9622;\"> s2</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 20</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">lw</span><span style=\" color:#fd9622;\"> ra</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 16</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> -4</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">sw</span><span style=\" color:#fd9622;\"> s10</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 0</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">lw</span><span style=\" color:#fd9622;\"> s10</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 16</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 36</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">jr</span><span style=\" color:#fd9622;\"> ra</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">jr</span><span style=\" color:#fd9622;\"> ra</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#f92472;\">addThreeInts:</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> -4</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">sw</span><span style=\" color:#fd9622;\"> a0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 0</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> -4</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">sw</span><span style=\" color:#fd9622;\"> s0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 0</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">lw</span><span style=\" color:#fd9622;\"> s0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 4</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">add</span><span style=\" color:#fd9622;\"> t0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> s0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> a1</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">add</span><span style=\" color:#fd9622;\"> a0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> t0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> a2</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">sw</span><span style=\" color:#fd9622;\"> s0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 4</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">lw</span><span style=\" color:#fd9622;\"> s0</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 0</span><span style=\" color:#ffffff;\">(</span><span style=\" color:#fd9622;\">sp</span><span style=\" color:#ffffff;\">)</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">addi</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> sp</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#ac80ff;\"> 8</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">jr</span><span style=\" color:#fd9622;\"> ra</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;\"><span style=\" color:#67d8ef;\">jr</span><span style=\" color:#fd9622;\"> ra</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#f92472;\">PROGRAM_END:</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#67d8ef;\">add</span><span style=\" color:#fd9622;\"> zero</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> zero</span><span style=\" color:#ffffff;\">,</span><span style=\" color:#fd9622;\"> zero</span></p>",
+    "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#ffffff;\">.data</span></p>",
+    "</html>"
+  ]
+}
