@@ -22,6 +22,7 @@ global g_cFileMap
 global g_asmFileMap
 global g_htmlDict
 global g_registerStateMap
+global g_stackStateMap
 g_htmlDict = {}
 
 
@@ -54,6 +55,8 @@ p, li { white-space: pre-wrap; }
 '''
 	htmlList = [htmlHeader]
 	line = file.readline()
+	inLongComment = False
+
 	while(line):
 		########
 		# Syntax highlighting
@@ -72,7 +75,7 @@ p, li { white-space: pre-wrap; }
 
 		#C keywords
 		c_blueKeywords = ["int", "float", "char", "double", "long", "unisgned", "byte", "bool"]
-		c_redKeywords = ["return", "if", "else"]
+		c_redKeywords = ["return", "if", "else", "&&", "||", "!"]
 		c_constantKeywords = ["true", "false"]
 
 		#assembly keywords
@@ -106,7 +109,8 @@ p, li { white-space: pre-wrap; }
 					if (index < len(lineList)-1):
 						nextElement = lineList[index+1]
 						if (nextElement == "("):
-							color = blue
+							if ((lineElement != "(") and (lineElement != "&&") and (lineElement != "||") and (lineElement != "!")):
+								color = blue
 					#Control keywords = red
 					if (lineElement in c_redKeywords):
 						color = red
@@ -133,7 +137,18 @@ p, li { white-space: pre-wrap; }
 					#Comments = grey
 					if (inComment):
 						color = grey
+					elif (("*/" in lineElement) and (inLongComment)):
+						inLongComment = False
+						inComment = False
+						color = grey
+					elif (inLongComment):
+						inComment = True
+						color = grey
 					elif ("//" in lineElement):
+						inComment = True
+						color = grey
+					elif ("/*" in lineElement):
+						inLongComment = True
 						inComment = True
 						color = grey
 
@@ -1573,12 +1588,19 @@ class Ui_MainWindow(object):
 		self.registerDisplays["gp"] = registerDisplay(self.gpreg_label, self.gpReg_value, None)
 		self.registerDisplays["fp"] = registerDisplay(self.fpreg_label, self.fpReg_value, None)
 
+
+		#Initialize scope name for stack state
+		self.currentScopeName = None
+		self.currentStackList = None
+
 		#Add some test elements to the stackView
+		'''
 		for i in range(7):
 			# listElement = QtWidgets.QListWidgetItem(str(i), parent=self.stackView)
 			self.stackView.addItem(str(i))
 
 		self.stackView.addItems([str(i) for i in range(9)])
+		'''
 
 		#Add some test cCode to text browser
 
@@ -1703,6 +1725,19 @@ class Ui_MainWindow(object):
 			scrollBar = self.assembly_text.verticalScrollBar()
 			scrollLocation = int(scrollBar.maximum() * (float(lineNumber) /float(g_htmlDict[filepath]["fileLength"])))
 			scrollBar.setValue(scrollLocation)
+		except Exception as e:
+			pass
+
+		#Update stack display
+		try:
+			newScopeName = next(iter(g_stackStateMap[str(currentValues["programCounter"])]))
+			stackItems = [str(i) for i in g_stackStateMap[str(currentValues["programCounter"])][newScopeName]]
+			self.stackItems = [newScopeName] + stackItems
+
+			for i in range(self.stackView.count()):
+				self.stackView.takeItem(0)	
+			self.stackView.addItems(self.stackItems)
+			self.stackView.scrollToBottom()
 		except Exception as e:
 			pass
 
@@ -1913,9 +1948,26 @@ Help yourself
 		else:
 			g_registerStateMap = None
 
+		global g_stackStateMap
+		if ("scopeStateMap" in annotationDict):
+			g_stackStateMap = {}
+			for programCounterStr in annotationDict["scopeStateMap"]:
+				scopeState = annotationDict["scopeStateMap"][programCounterStr]
+
+				stackState = {}
+				if isinstance(scopeState, int):
+					referenceIndex = int(programCounterStr)+(scopeState*4)
+					stackState = {annotationDict["scopeStateMap"][str(referenceIndex)]["scope"]["name"]: annotationDict["scopeStateMap"][str(referenceIndex)]["localStack"]}
+				else:
+					stackState = {scopeState["scope"]["name"]: scopeState["localStack"]}
+
+				g_stackStateMap[programCounterStr] = stackState
+		else:
+			g_stackStateMap = None
 
 
-		#print(utils.dictToJson(g_registerStateMap))
+
+		#print(utils.dictToJson(g_stackStateMap))
 		#sys.exit()
 
 	

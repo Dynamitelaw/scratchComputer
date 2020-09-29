@@ -136,24 +136,35 @@ class instructionList:
 
 			if isinstance(currentState, dict):
 				for majorKey in currentState:
-					currentMinorKeys = currentState[majorKey].keys()
-					prevMinorKeys = previousState[majorKey].keys()
+					currentMinorKeys = None
+					if isinstance(currentState[majorKey], dict):
+						currentMinorKeys = currentState[majorKey].keys()
+					elif isinstance(currentState[majorKey], list):
+						currentMinorKeys = [i for i in range(0,len(currentState[majorKey]))]
+
+					prevMinorKeys = None
+					if isinstance(currentState[majorKey], dict):
+						prevMinorKeys = previousState[majorKey].keys()
+					elif isinstance(currentState[majorKey], list):
+						prevMinorKeys = [i for i in range(0,len(previousState[majorKey]))]
+
 
 					if (len(prevMinorKeys) != len(currentMinorKeys)):
 						scopeDifferent = True
 						break
 
-					for minorKey in currentState[majorKey]:
-						if (minorKey in previousState[majorKey]):
-							currentVal = currentState[majorKey][minorKey]
-							previousVal = previousState[majorKey][minorKey]
+					if isinstance(currentState[majorKey], dict):
+						for minorKey in currentState[majorKey]:
+							if (minorKey in previousState[majorKey]):
+								currentVal = currentState[majorKey][minorKey]
+								previousVal = previousState[majorKey][minorKey]
 
-							if (previousVal != currentVal):
+								if (previousVal != currentVal):
+									scopeDifferent = True
+									break
+							else:
 								scopeDifferent = True
 								break
-						else:
-							scopeDifferent = True
-							break
 
 					if (scopeDifferent):
 						break
@@ -226,7 +237,14 @@ class scopeController:
 
 		#Reset stack to parent state
 		if (len(self.localStack) != len(branchLocalStack)):
-			#branch added things to the stack. Deallocate them
+			#branch added things to the stack. Check if any are register saves
+			for variableName in branchLocalStack:
+				if not (variableName in self.localStack):
+					if ("<SAVE>" in variableName):
+						#Restore save variable
+						instructions += scopeBranch.moveVariable(variableName, variableName.replace("<SAVE>_", ""), indentLevel=indentLevel)
+			
+			#Deallocate branch stack
 			deallocateLength = 0
 			branchStackList = list(branchLocalStack.items())
 			for index in range(len(self.localStack), len(branchLocalStack)):
@@ -238,7 +256,7 @@ class scopeController:
 		return instructions
 	
 
-	def createExpressionResult(self, varType=None, size=4, signed=True):
+	def createExpressionResult(self, varType=None, size=4, signed=True, indentLevel=0):
 		'''
 		Will create an variable to represent the implicit variable of an expression result.
 		Returns the variable name to caller
@@ -246,24 +264,41 @@ class scopeController:
 		returnType:
 			<str> variableName
 		'''
+		instructions = instructionList(self)
+		indentString = "".join(["\t" for i in range(indentLevel)])
+
 		variableName = "<EXPR_RESULT>_{}".format(self.expressionCounter)
 		self.expressionCounter += 1
-		self.addVariable(variableName, varType=varType, size=size, signed=signed)
+		instructions += self.addVariable(variableName, varType=varType, size=size, signed=signed, indentLevel=indentLevel)
 
-		return variableName
+		return instructions, variableName
 
 
-	def addVariable(self, variableName, register=None, varType=None, size=4, signed=True):
+	def addVariable(self, variableName, register=None, varType=None, size=4, signed=True, indentLevel=0):
 		'''
 		Declare a new variable in this scope.
 		If register keyword is included, the variable will be initialized the the value currently stored in specified register. 
 		Specified register will be removed from available registers.
 		'''
-		self.variableDict[variableName] = variable(variableName, register=register, varType=varType, size=size, signed=signed)
+		instructions = instructionList(self)
+		indentString = "".join(["\t" for i in range(indentLevel)])
+
 		if (register):
+			#Current register location specified
 			self.usedRegisters[register] = variableName
 			if (register in self.availableRegisters):
 				self.availableRegisters.remove(register)
+
+			self.variableDict[variableName] = variable(variableName, register=register, varType=varType, size=size, signed=signed)
+		else:
+			#No register location specified. Assign one
+			instructionsTemp, registerDest = self.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+			instructions += instructionsTemp
+
+			self.usedRegisters[registerDest] = variableName
+			self.variableDict[variableName] = variable(variableName, register=registerDest, varType=varType, size=size, signed=signed)
+
+		return instructions
 
 
 	def removeVariable(self, variableName):
@@ -355,11 +390,17 @@ class scopeController:
 		else:
 			raise Exception("ERROR: variable \"{}\" not declared in scope".format(variableName))
 
+		#Check if variable already in register
+		if (self.getRegisterLocation(variableName)):
+			if (regDestOverride):
+				instructions += self.moveVariable(variableName, regDestOverride)
+			return instructions
+
 		#Get free register to store
 		regDest = None
 		if (regDestOverride):
 			regDest = regDestOverride
-			instructions += self.releaseRegister(regDest)
+			instructions += self.releaseRegister(regDest, indentLevel=indentLevel)
 		elif (len(self.availableRegisters) > 0):
 			instructionsTemp, regDest = self.getFreeRegister(indentLevel=indentLevel)
 			instructions += instructionsTemp
@@ -394,6 +435,7 @@ class scopeController:
 						instructions.append("{}lhu {}, {}(sp)".format(indentString, regDest, stackOffset))
 				elif (variableObj.size == 4):
 					instructions.append("{}lw {}, {}(sp)".format(indentString, regDest, stackOffset))
+
 				
 			#Assign regDest to variable object
 			variableObj.register = regDest
@@ -506,7 +548,7 @@ class scopeController:
 		if (registerName in self.virginSaveRegisters):
 			#Returning a save register that doesn't belong to us yet. Save onto stack
 			variableName = "<SAVE>_{}".format(registerName)
-			self.addVariable(variableName, register=registerName)
+			instructions += self.addVariable(variableName, register=registerName, indentLevel=indentLevel)
 			instructions += self.storeStack(variableName, indentLevel=indentLevel)
 			self.virginSaveRegisters.remove(registerName)
 			self.availableRegisters.remove(registerName)
@@ -527,8 +569,8 @@ class scopeController:
 		if (registerName in self.virginSaveRegisters):
 			#Requesting a save register that doesn't belong to us yet. Save onto stack
 			variableName = "<SAVE>_{}".format(registerName)
-			self.addVariable(variableName, register=registerName)
-			instructions += self.storeStack(variableName)
+			instructions += self.addVariable(variableName, register=registerName, indentLevel=indentLevel)
+			instructions += self.storeStack(variableName, indentLevel=indentLevel)
 			self.virginSaveRegisters.remove(registerName)
 
 		if (registerName in self.availableRegisters):
@@ -633,7 +675,7 @@ class scopeController:
 
 		variableName = "<SAVE>_ra"
 		if not (variableName in self.variableDict):
-			self.addVariable(variableName, register="ra")
+			instructions += self.addVariable(variableName, register="ra", indentLevel=indentLevel)
 			instructions += self.storeStack(variableName, indentLevel=indentLevel)
 
 
@@ -685,8 +727,9 @@ class scopeController:
 
 	def getState(self):
 		stateDict = {}
+		stateDict["scope"] = {"name": self.name}
 		stateDict["usedRegisters"] = self.usedRegisters
-		stateDict["localStack"] = self.localStack
+		stateDict["localStack"] = [{v: self.localStack[v]} for v in self.localStack]
 
 		return stateDict
 
@@ -808,11 +851,12 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 	elif (operator == "-"):
 		#Get or create variable name for result of negation
 		if (targetVariableName):
-			scope.addVariable(targetVariableName, size=resultSize, varType=resultType)
+			instructions += scope.addVariable(targetVariableName, size=resultSize, varType=resultType, indentLevel=indentLevel)
 
 			resultVariableName = targetVariableName
 		else:
-			resultVariableName = scope.createExpressionResult()
+			instructionsTemp, resultVariableName = scope.createExpressionResult(indentLevel=indentLevel)
+			instructions += instructionsTemp
 
 		#Get a register to store result
 		regDest = ""
@@ -838,11 +882,12 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 		else:
 			#Get or create variable name for result
 			if (targetVariableName):
-				scope.addVariable(targetVariableName, size=resultSize, varType=resultType)
+				instructions += scope.addVariable(targetVariableName, size=resultSize, varType=resultType, indentLevel=indentLevel)
 
 				resultVariableName = targetVariableName
 			else:
-				resultVariableName = scope.createExpressionResult()
+				instructionsTemp, resultVariableName = scope.createExpressionResult(indentLevel=indentLevel)
+				instructions += instructionsTemp
 
 			#Get a register to store result
 			regDest = ""
@@ -883,11 +928,12 @@ def convertBinaryOpItem(item, scope, branch=None, targetVariableName=None, targe
 	resultVariableName = ""
 	if (not branch):
 		if (targetVariableName):
-			scope.addVariable(targetVariableName, size=resultSize, varType=resultType)
+			instructions += scope.addVariable(targetVariableName, size=resultSize, varType=resultType, indentLevel=indentLevel)
 
 			resultVariableName = targetVariableName
 		else:
-			resultVariableName = scope.createExpressionResult()
+			instructionsTemp, resultVariableName = scope.createExpressionResult(indentLevel=indentLevel)
+			instructions += instructionsTemp
 
 	#Get a register to store result
 	regDest = ""
@@ -901,7 +947,7 @@ def convertBinaryOpItem(item, scope, branch=None, targetVariableName=None, targe
 
 	if (not branch):
 		#Instantiate variable into destinamtion register
-		instructions += scope.moveVariable(resultVariableName, regDest)
+		instructions += scope.moveVariable(resultVariableName, regDest, indentLevel=indentLevel)
 
 	#Get left operand into register  #<TODO> handle values small enought for immediates
 	leftOperand = item.left
@@ -1141,14 +1187,14 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 	global g_cFileCoord
 	g_cFileCoord = item.coord
 
-	#Get left value into register  #<TODO> handle values small enought for immediates
-	leftOperand = item.lvalue
-	instructionsTemp, leftValReg = operandToRegister(leftOperand, scope, indentLevel=indentLevel)
-	instructions += instructionsTemp
-
 	#Get right value into register  #<TODO> handle values small enought for immediates
 	rightOperand = item.rvalue
 	instructionsTemp, rightValReg = operandToRegister(rightOperand, scope, indentLevel=indentLevel)
+	instructions += instructionsTemp
+
+	#Get left value into register  #<TODO> handle values small enought for immediates
+	leftOperand = item.lvalue
+	instructionsTemp, leftValReg = operandToRegister(leftOperand, scope, indentLevel=indentLevel)
 	instructions += instructionsTemp
 
 	#Handler operators
@@ -1274,7 +1320,7 @@ def convertDeclItem(item, scope, indentLevel=0):
 			#Initialized variable to a constant value
 			instructionsTemp, destinationRegister = scope.getFreeRegister(indentLevel=indentLevel)
 			instructions += instructionsTemp
-			scope.addVariable(variableName, register=destinationRegister, varType=item.type.type.names, size=4, signed=True)
+			instructions += scope.addVariable(variableName, register=destinationRegister, varType=item.type.type.names, size=4, signed=True, indentLevel=indentLevel)
 
 
 			value = int(item.init.value) #<TODO> Handle floats and doubles
@@ -1298,7 +1344,7 @@ def convertDeclItem(item, scope, indentLevel=0):
 		elif isinstance(item.init, c_ast.FuncCall):
 			#Initialized variable is result of function call
 			instructions += convertFuncCallItem(item.init, scope, indentLevel=indentLevel)
-			scope.addVariable(variableName, register="a0", varType=item.type.type.names, size=4, signed=True)
+			instructions += scope.addVariable(variableName, register="a0", varType=item.type.type.names, size=4, signed=True, indentLevel=indentLevel)
 
 
 		else:
@@ -1306,7 +1352,7 @@ def convertDeclItem(item, scope, indentLevel=0):
 			print("{}".format(item))
 	else:
 		#Declared without initial value
-		scope.addVariable(variableName, varType=item.type.type.names, size=4, signed=True)
+		instructions += scope.addVariable(variableName, varType=item.type.type.names, size=4, signed=True, indentLevel=indentLevel)
 
 
 
@@ -1406,7 +1452,7 @@ def convertAstItem(item, scope, indentLevel=0):
 		instructionsTemp, variableName = convertDeclItem(item, scope, indentLevel=indentLevel)
 		instructions += instructionsTemp
 	elif isinstance(item, c_ast.Assignment):
-		instructions += convertAssignmentItem(item, scope, indentLevel)
+		instructions += convertAssignmentItem(item, scope, indentLevel=indentLevel)
 	else:
 		print("{}###UNSUPPORTED ITEM | convertAstItem".format(indentString))
 		print("{}".format(item))
@@ -1433,7 +1479,7 @@ def covertFuncToAssembly(funcDef):
 		argIndex = 0
 		for arg in inputParameters:
 			registerName = "a{}".format(argIndex)
-			scope.addVariable(arg.name, register=registerName,varType=arg.type.type.names, size=4, signed=True)
+			instructions += scope.addVariable(arg.name, register=registerName,varType=arg.type.type.names, size=4, signed=True, indentLevel=1)
 
 
 			argIndex += 1
