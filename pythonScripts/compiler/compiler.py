@@ -10,6 +10,16 @@ import assembler
 import utils
 
 
+#Global vars
+g_cFileCoord = None
+g_whileCounter = 0
+g_forCounter = 0
+g_ifCounter = 0
+g_variableNameCoutners = {}
+
+g_dataSegment = {}
+
+
 #Colored printed for errors
 class COLORS:
 	DEFAULT = '\033[0m'
@@ -32,16 +42,6 @@ def printColor(text, color=COLORS.DEFAULT, resetColor=True):
 	else:
 		formattedText = "{}{}".format(color, text)
 		print(formattedText)
-
-
-#Global vars
-g_cFileCoord = None
-g_whileCounter = 0
-g_forCounter = 0
-g_ifCounter = 0
-g_variableNameCoutners = {}
-
-g_dataSegment = {}
 
 
 class dataElement:
@@ -209,9 +209,9 @@ class scopeController:
 		Will undro any differences between this scope and the current branch scope.
 		All variable locations and the state of the stack will be reverted from the branched state to this scope.
 		
-		Returns a list of instructions.
+		Returns an instructionList item.
 		returnType:
-			[<str> instructions]
+			<instructionList> instructions
 		'''
 		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
@@ -378,7 +378,7 @@ class scopeController:
 			regDestOverride - if defined, the variable will be loaded into the specified register. Else, it can be loaded into any regsiter. 
 		
 		returnType:
-			[<str> instructions]
+			<instructionList> instructions
 		'''
 		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
@@ -482,7 +482,7 @@ class scopeController:
 			regOverride - if specified, function will allocate the specified register
 
 		returnType:
-			( [<str> instructions], <str> registerName )
+			( <instructionList> instructions, <str> registerName )
 		'''
 		#<TODO> implement forceFree
 		instructions = instructionList(self)
@@ -562,7 +562,7 @@ class scopeController:
 		Deallocates the specified register. If in use, variable will be stored on the stack.
 
 		returnType:
-			[<str> instructions]
+			<instructionList> instructions
 		'''
 		instructions = instructionList(self)
 
@@ -594,7 +594,7 @@ class scopeController:
 		Moves the specified variable into the specified destination register.
 
 		returnType:
-			[<str> instructions]
+			<instructionList> instructions
 		'''
 		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
@@ -638,7 +638,7 @@ class scopeController:
 		Will prioritize saving data into save registers, then the stack.
 
 		returnType:
-			[<str> instructions]
+			<instructionList> instructions
 		'''
 		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
@@ -668,7 +668,7 @@ class scopeController:
 		Saves the current value of the ra register onto the stack
 
 		returnType:
-			[<str> instructions]
+			<instructionList> instructions
 		'''
 		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
@@ -687,7 +687,7 @@ class scopeController:
 		Restores the value of all save registers touched within this scope.
 
 		returnType:
-			[<str> instructions]
+			<instructionList> instructions
 		'''
 		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
@@ -707,7 +707,7 @@ class scopeController:
 		This instance of scopeController cannot be used after this method is called.
 
 		returnType:
-			[<str> instructions]
+			<instructionList> instructions
 		'''
 		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
@@ -741,7 +741,7 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 	params:
 		targetReg - if degined, operand will be stored in specified register 
 	returnType:
-		( [<str> instructions], <str> registerName )
+		( <instructionList> instructions, <str> registerName )
 	'''
 	instructions = instructionList(scope)
 	indentString = "".join(["\t" for i in range(indentLevel)])
@@ -807,8 +807,8 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 			instructions += instructionsTemp
 			instructions.append("{}mv {}, a0".format(indentString, operandReg))
 	else:
-		instructions.append("{}#UNSUPPORTED OPERAND".format(indentString))
-		instructions.append("{}".format(operandItem))
+		errorStr = "UNSUPPORTED OPERAND\n{}".format(operandItem)
+		raise Exception(errorStr)
 
 
 	return instructions, operandReg
@@ -817,7 +817,7 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, targetReg=None, resultSize=4, resultType=None, indentLevel=0):
 	'''
 	Converts a c_ast.UnaryOp object into an assembly snippet.
-	Returns a list of instructions, as well as the variable name of the operation result
+	Returns an instructionList item, as well as the variable name of the operation result
 
 	params:
 		branch - if defined and unary op is logical, will branch to specified label if result=True
@@ -825,7 +825,7 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 		targetReg - if degined, result will be stored in specified register 
 	
 	returnType:
-		( [<str> instructions], <str> variableName )
+		( <instructionList> instructions, <str> variableName )
 	'''
 
 	instructions = instructionList(scope)
@@ -901,7 +901,7 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 			#Logically invert operand
 			instructions.append("{}sltu {}, {}, zero".format(indentString, regDest, operandReg))
 	else:
-		instructions.append("{}###UNSUPPORTED OPERATOR \"{}\"| convertUnaryOpItem".format(indentString, operator))
+		raise Exception("UNSUPPORTED OPERATOR \"{}\"| convertUnaryOpItem".format(operator))
 
 	return instructions, resultVariableName
 
@@ -909,7 +909,7 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 def convertBinaryOpItem(item, scope, branch=None, targetVariableName=None, targetReg=None, resultSize=4, resultType=None, indentLevel=0):
 	'''
 	Converts a c_ast.BinaryOp object into an assembly snippet.
-	Returns a list of instructions, as well as the variable name of the operation result
+	Returns an instructionList item, as well as the variable name of the operation result
 	
 	params:
 		branch - if defined and binary op is logical, will branch to specified label if result=True
@@ -917,7 +917,7 @@ def convertBinaryOpItem(item, scope, branch=None, targetVariableName=None, targe
 		targetReg - if degined, result will be stored in specified register
 
 	returnType:
-		( [<str> instructions], <str> variableName )
+		( <instructionList> instructions, <str> variableName )
 	'''
 	instructions = instructionList(scope)
 	indentString = "".join(["\t" for i in range(indentLevel)])
@@ -1032,7 +1032,7 @@ def convertBinaryOpItem(item, scope, branch=None, targetVariableName=None, targe
 		else:
 			instructions.append("{}mul {}, {}, {}".format(indentString, regDest, leftOperandReg, rightOperandReg))
 	else:
-		instructions.append("{}###UNSUPPORTED OPERATOR \"{}\"| convertBinaryOpItem".format(indentString, operator))
+		raise Exception("UNSUPPORTED OPERATOR \"{}\"| convertBinaryOpItem".format(operator))
 
 
 	#Free temp constant registers
@@ -1048,10 +1048,10 @@ def convertBinaryOpItem(item, scope, branch=None, targetVariableName=None, targe
 def convertIfItem(item, scope, indentLevel=0):
 	'''
 	Converts a c_ast.If object into an assembly snippet.
-	Returns a list of instructions
+	Returns an instructionList item
 	
 	returnType:
-		[<str> instructions]
+		<instructionList> instructions
 	'''
 	global g_ifCounter
 
@@ -1074,8 +1074,7 @@ def convertIfItem(item, scope, indentLevel=0):
 		instructionsTemp, conditionVariableName = convertUnaryOpItem(conditionItem, scope, branch=onTrueLabel, indentLevel=indentLevel)
 		instructions += instructionsTemp
 	else:
-		instructions.append("{}###UNSUPPORTED CONDITION | convertIfItem".format(indentString))
-		instructions.append("".format(conditionItem))
+		raise Exception("UNSUPPORTED CONDITION | convertIfItem\n{}".format(conditionItem))
 
 	instructions.append("{}j {}".format(indentString, onFalseLabel))
 
@@ -1099,10 +1098,10 @@ def convertIfItem(item, scope, indentLevel=0):
 def convertFuncCallItem(item, scope, indentLevel=0):
 	'''
 	Converts a c_ast.FuncCall object into an assembly snippet.
-	Returns a list of instructions
+	Returns an instructionList item
 	
 	returnType:
-		[<str> instructions]
+		<instructionList> instructions
 	'''
 	instructions = instructionList(scope)
 	indentString = "".join(["\t" for i in range(indentLevel)])
@@ -1157,8 +1156,7 @@ def convertFuncCallItem(item, scope, indentLevel=0):
 					scope.releaseRegister(tempSaveReg)
 
 		else:
-			instructions.append("{}#UNSUPPORTED ITEM | convertFuncCallItem".format(indentString))
-			instructions.append("{}".format(item))
+			raise Exception("UNSUPPORTED ITEM | convertFuncCallItem\n{}".format(item))
 
 		argIndex += 1
 
@@ -1177,10 +1175,10 @@ def convertFuncCallItem(item, scope, indentLevel=0):
 def convertAssignmentItem(item, scope, indentLevel=0):
 	'''
 	Converts a c_ast.Assignment object into an assembly snippet.
-	Returns a list of instructions
+	Returns an instructionList item
 	
 	returnType:
-		[<str> instructions]
+		<instructionList> instructions
 	'''
 	instructions = instructionList(scope)
 	indentString = "".join(["\t" for i in range(indentLevel)])
@@ -1208,7 +1206,7 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 	elif (operator == "-="):
 		instructions.append("{}sub {}, {}, {}".format(indentString, leftValReg, leftValReg, rightValReg))
 	else:
-		instructions.append("{}###UNSUPPORTED OPERATOR \"{}\" | convertAssignmentItem".format(indentString, operator))
+		raise Exception("UNSUPPORTED OPERATOR \"{}\" | convertAssignmentItem".format(operator))
 
 	return instructions
 
@@ -1216,10 +1214,10 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 def convertReturnItem(item, scope, indentLevel=0):
 	'''
 	Converts a c_ast.Return object into an assembly snippet.
-	Returns a list of instructions
+	Returns an instructionList item
 	
 	returnType:
-		[<str> instructions]
+		<instructionList> instructions
 	'''
 	#<TODO> Prevent uneeded saving of variables onto stack when we are returning
 	instructions = instructionList(scope)
@@ -1292,8 +1290,7 @@ def convertReturnItem(item, scope, indentLevel=0):
 		instructions += scope.deallocateScope(indentLevel=indentLevel)
 		instructions.append("{}jr ra".format(indentString))
 	else:
-		instructions.append("{}#UNSUPPORTED ITEM | convertReturnItem".format(indentString))
-		instructions.append("{}".format(item))
+		raise Exception("UNSUPPORTED ITEM | convertReturnItem\n{}".format(item))
 
 
 	return instructions
@@ -1302,10 +1299,10 @@ def convertReturnItem(item, scope, indentLevel=0):
 def convertDeclItem(item, scope, indentLevel=0):
 	'''
 	Converts a c_ast.Decl(Declaration) object into an assembly snippet.
-	Returns a list of instructions, along with the variableName of the declared variable
+	Returns an instructionList item, along with the variableName of the declared variable
 	
 	returnType:
-		( [<str> instructions], <str> variableName )
+		( <instructionList> instructions, <str> variableName )
 	'''
 	instructions = instructionList(scope)
 	indentString = "".join(["\t" for i in range(indentLevel)])
@@ -1348,8 +1345,7 @@ def convertDeclItem(item, scope, indentLevel=0):
 
 
 		else:
-			print("{}###UNSUPPORTED DECLARATION | convertDeclItem".format(indentString))
-			print("{}".format(item))
+			raise Exception("UNSUPPORTED DECLARATION | convertDeclItem\n{}".format(item))
 	else:
 		#Declared without initial value
 		instructions += scope.addVariable(variableName, varType=item.type.type.names, size=4, signed=True, indentLevel=indentLevel)
@@ -1362,10 +1358,10 @@ def convertDeclItem(item, scope, indentLevel=0):
 def convertForItem(item, scope, indentLevel=0):
 	'''
 	Converts a c_ast.For(For Loop) object into an assembly snippet.
-	Returns a list of instructions
+	Returns an instructionList item
 	
 	returnType:
-		[<str> instructions]
+		<instructionList> instructions
 	'''
 	global g_forCounter
 
@@ -1380,8 +1376,7 @@ def convertForItem(item, scope, indentLevel=0):
 			instructionsTemp, variableName = convertDeclItem(declareItem, scope, indentLevel=indentLevel)
 			instructions += instructionsTemp
 	else:
-		instructions.append("{}#UNSUPPORTED ITEM | convertForItem".format(indentString))
-		instructions.append("{}".format(item.init))
+		raise Exception("UNSUPPORTED ITEM | convertForItem\n{}".format(item.init))
 
 	#For loop start/end labels
 	startLabel = "forLoopStart_{}".format(g_forCounter)
@@ -1400,8 +1395,7 @@ def convertForItem(item, scope, indentLevel=0):
 		instructions.append("{}\tj {}".format(indentString, endLabel))
 
 	else:
-		instructions.append("{}\t#UNSUPPORTED CONDITION | convertForItem".format(indentString))
-		instructions.append("".format(conditionItem))
+		raise Exception("UNSUPPORTED CONDITION | convertForItem\n{}".format(conditionItem))
 
 
 	#For loop body
@@ -1415,13 +1409,58 @@ def convertForItem(item, scope, indentLevel=0):
 		instructionsTemp, resultVariableName = convertUnaryOpItem(nextItem, scope, indentLevel=indentLevel+1)
 		instructions += instructionsTemp
 	elif isinstance(nextItem, c_ast.Assignment):
-		instructions.append("{}###UNSUPPORTED NEXT ITEM | convertForItem".format(indentString))
-		instructions.append("".format(nextItem))
+		raise Exception("UNSUPPORTED NEXT ITEM | convertForItem\n{}".format(nextItem))
 	else:
-		instructions.append("{}###UNSUPPORTED NEXT ITEM | convertForItem".format(indentString))
-		instructions.append("".format(nextItem))
+		raise Exception("UNSUPPORTED NEXT ITEM | convertForItem".format(nextItem))
 
 	#For loop exit
+	instructions.append("{}\tj {}".format(indentString, startLabel))
+	instructions.append("{}{}:".format(indentString, endLabel))
+
+	return instructions
+
+
+def convertWhileItem(item, scope, indentLevel=0):
+	'''
+	Converts a c_ast.For(For Loop) object into an assembly snippet.
+	Returns an instructionList item
+	
+	returnType:
+		<instructionList> instructions
+	'''
+	global g_whileCounter
+
+	instructions = instructionList(scope)
+	indentString = "".join(["\t" for i in range(indentLevel)])
+	global g_cFileCoord
+	g_cFileCoord = item.coord
+
+	#While loop start/end labels
+	startLabel = "whileLoopStart_{}".format(g_whileCounter)
+	endLabel = "whileLoopEnd_{}".format(g_whileCounter)
+	bodyLabel = "whileLoopBody_{}".format(g_whileCounter)
+	g_whileCounter += 1
+
+	instructions.append("{}{}:".format(indentString, startLabel))
+
+	#While loop condition check
+	conditionItem = item.cond
+	conditionVariableName = None
+	if isinstance(conditionItem, c_ast.BinaryOp):
+		instructionsTemp, conditionVariableName = convertBinaryOpItem(conditionItem, scope, branch=bodyLabel, indentLevel=indentLevel+1)
+		instructions += instructionsTemp
+		instructions.append("{}\tj {}".format(indentString, endLabel))
+
+	else:
+		raise Exception("UNSUPPORTED CONDITION | convertForItem\n{}".format(conditionItem))
+
+
+	#While loop body
+	loopBodyItem = item.stmt
+	instructions.append("{}\t{}:".format(indentString, bodyLabel))
+	instructions += convertAstItem(loopBodyItem, scope, indentLevel=indentLevel+2)
+
+	#While loop exit
 	instructions.append("{}\tj {}".format(indentString, startLabel))
 	instructions.append("{}{}:".format(indentString, endLabel))
 
@@ -1431,10 +1470,10 @@ def convertForItem(item, scope, indentLevel=0):
 def convertAstItem(item, scope, indentLevel=0):
 	'''
 	Converts a c_ast object into an assembly snippet.
-	Returns a list of instructions
+	Returns an instructionList item
 	
 	returnType:
-		[<str> instructions]
+		<instructionList> instructions
 	'''
 	instructions = instructionList(scope)
 	indentString = "".join(["\t" for i in range(indentLevel)])
@@ -1453,9 +1492,16 @@ def convertAstItem(item, scope, indentLevel=0):
 		instructions += instructionsTemp
 	elif isinstance(item, c_ast.Assignment):
 		instructions += convertAssignmentItem(item, scope, indentLevel=indentLevel)
+	elif isinstance(item, c_ast.While):
+		instructions += convertWhileItem(item, scope, indentLevel=indentLevel)
+	elif isinstance(item, c_ast.UnaryOp):
+		instructionsTemp, variableName  = convertUnaryOpItem(item, scope, indentLevel=indentLevel)
+		instructions += instructionsTemp
+	elif isinstance(item, c_ast.BinaryOp):
+		instructionsTemp, variableName  = convertBinaryOpItem(item, scope, indentLevel=indentLevel)
+		instructions += instructionsTemp
 	else:
-		print("{}###UNSUPPORTED ITEM | convertAstItem".format(indentString))
-		print("{}".format(item))
+		raise Exception("UNSUPPORTED ITEM | convertAstItem\n{}".format(item))
 		
 
 	return instructions

@@ -1589,21 +1589,8 @@ class Ui_MainWindow(object):
 		self.registerDisplays["fp"] = registerDisplay(self.fpreg_label, self.fpReg_value, None)
 
 
-		#Initialize scope name for stack state
-		self.currentScopeName = None
+		#Instantiate self.currentStackList
 		self.currentStackList = None
-
-		#Add some test elements to the stackView
-		'''
-		for i in range(7):
-			# listElement = QtWidgets.QListWidgetItem(str(i), parent=self.stackView)
-			self.stackView.addItem(str(i))
-
-		self.stackView.addItems([str(i) for i in range(9)])
-		'''
-
-		#Add some test cCode to text browser
-
 
 
 	def backButton_pushed(self):
@@ -1966,12 +1953,12 @@ Help yourself
 			g_stackStateMap = None
 
 
-
 		#print(utils.dictToJson(g_stackStateMap))
 		#sys.exit()
 
-	
-
+	#########
+	# :aunch gui
+	#########
 	app = QtWidgets.QApplication(sys.argv)
 	MainWindow = QtWidgets.QMainWindow()
 	ui = Ui_MainWindow()
