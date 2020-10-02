@@ -193,7 +193,7 @@ class scopeController:
 		self.name = name
 		self.variableDict = {}
 		self.localStack = OrderedDict()
-		self.usedRegisters = {}
+		self.usedRegisters = OrderedDict()
 		self.availableRegisters = [
 			"s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11",
 			"a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7",
@@ -233,7 +233,7 @@ class scopeController:
 						instructions += scopeBranch.moveVariable(variableName, variableObj.register, indentLevel=indentLevel)
 					else:
 						#Variable should be on stack
-						instructions += scopeBranch.storeStack(variableName, indentLevel=indentLevel)
+						instructions += scopeBranch.storeStack(variableName, freeRegister=True, indentLevel=indentLevel)
 
 		#Reset stack to parent state
 		if (len(self.localStack) != len(branchLocalStack)):
@@ -256,7 +256,7 @@ class scopeController:
 		return instructions
 	
 
-	def createExpressionResult(self, varType=None, size=4, signed=True, indentLevel=0):
+	def createExpressionResult(self, register=None,varType=None, size=4, signed=True, indentLevel=0):
 		'''
 		Will create an variable to represent the implicit variable of an expression result.
 		Returns the variable name to caller
@@ -269,7 +269,7 @@ class scopeController:
 
 		variableName = "<EXPR_RESULT>_{}".format(self.expressionCounter)
 		self.expressionCounter += 1
-		instructions += self.addVariable(variableName, varType=varType, size=size, signed=signed, indentLevel=indentLevel)
+		instructions += self.addVariable(variableName, register=register, varType=varType, size=size, signed=signed, indentLevel=indentLevel)
 
 		return instructions, variableName
 
@@ -316,13 +316,15 @@ class scopeController:
 				raise Exception("ERROR: Could not remove variable \"{}\"{}".format(variableName, e))
 
 
-	def storeStack(self, variableName, indentLevel=0):
+	def storeStack(self, variableName, freeRegister=False, indentLevel=0):
 		'''
 		Store the specified variable onto the stack.
+		If freeRegister is True, will also deallocate current register.
+
 		Returns a list of instruction strings.
 
 		returnType:
-			[<tuple> (<str> instruction, <int> g_cFileCoord) ]
+			<instructionList> instructions
 		'''
 		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
@@ -362,11 +364,56 @@ class scopeController:
 			instructions.append("{}sw {}, 0(sp)".format(indentString, variableObj.register))
 
 
-		del self.usedRegisters[variableObj.register]
-		self.availableRegisters.append(variableObj.register)
-		variableObj.register = None
+		if (freeRegister):
+			del self.usedRegisters[variableObj.register]
+			self.availableRegisters.append(variableObj.register)
+			variableObj.register = None
 
 		return instructions
+
+
+	def getPointer(self, variableName, regDestOverride=None, indentLevel=0):
+		'''
+		Get the memory location of specified variable on the stack.
+		Will allocate stack space to variable if no already allocated.
+		Returns an instructionList object, and the register name the pointer was written to.
+
+		returnType:
+			<tuple> ( <instructionList> instructions , <str> destinationRegister )
+		'''
+		instructions = instructionList(self)
+		indentString = "".join(["\t" for i in range(indentLevel)])
+
+		#Get variable object
+		variableObj = None
+		if (variableName in self.variableDict):
+			variableObj = self.variableDict[variableName]
+		else:
+			raise Exception("ERROR: variable \"{}\" not declared in scope".format(variableName))
+
+		if not (variableName in self.localStack):
+			#Allocate space on stack for variable
+			instructions += self.storeStack(variableName, indentLevel=indentLevel)
+
+		#Get location of variable relative to current stack pointer
+		varLocation = 0
+		currentLocation = 0
+		for var in self.localStack:
+			currentLocation += self.localStack[var]
+			if (var == variableName):
+				varLocation = currentLocation
+		currentStackSize = currentLocation
+
+		stackOffset = currentStackSize - varLocation
+
+		#Write address of variable to register
+		instructionsTemp, regDest = self.getFreeRegister(preferTemp=True, regOverride=regDestOverride, indentLevel=indentLevel)
+		instructions += instructionsTemp
+
+		instructions.append("{}addi {}, sp, {}".format(indentString, regDest, stackOffset))  #<TODO> handle if offset is too big for immediate
+
+
+		return instructions, regDest
 
 
 	def loadStack(self, variableName, regDestOverride=None, indentLevel=0):
@@ -397,17 +444,8 @@ class scopeController:
 			return instructions
 
 		#Get free register to store
-		regDest = None
-		if (regDestOverride):
-			regDest = regDestOverride
-			instructions += self.releaseRegister(regDest, indentLevel=indentLevel)
-		elif (len(self.availableRegisters) > 0):
-			instructionsTemp, regDest = self.getFreeRegister(indentLevel=indentLevel)
-			instructions += instructionsTemp
-		else:
-			ejectVariableName = self.loadHistory.pop(0)
-			self.storeStack(ejectVariableName, indentLevel=indentLevel)
-			regDest = self.variableDict[ejectVariableName].register
+		instructionsTemp, regDest = self.getFreeRegister(indentLevel=indentLevel, regOverride=regDestOverride)
+		instructions += instructionsTemp
 
 		if (variableName in self.variableDict):
 			if (variableName in self.localStack):
@@ -456,7 +494,10 @@ class scopeController:
 		returnType:
 			<str> registerName
 		'''
-		return self.variableDict[variableName].register
+		if (variableName in self.variableDict):
+			return self.variableDict[variableName].register
+		else:
+			raise Exception("ERROR: variable \"{}\" not currently defined in variableDict".format(variableName))
 
 
 	def getVariableName(self, registerName):
@@ -484,7 +525,6 @@ class scopeController:
 		returnType:
 			( <instructionList> instructions, <str> registerName )
 		'''
-		#<TODO> implement forceFree
 		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
@@ -551,7 +591,12 @@ class scopeController:
 			instructions += self.addVariable(variableName, register=registerName, indentLevel=indentLevel)
 			instructions += self.storeStack(variableName, indentLevel=indentLevel)
 			self.virginSaveRegisters.remove(registerName)
-			self.availableRegisters.remove(registerName)
+
+
+		if ((not registerName) and (forceFree)):
+			#No free register. Eject a variable to get a free one
+			ejectVariableName, registerName = self.usedRegisters.items()[0]
+			instructions += self.storeStack(ejectVariableName, freeRegister=True, indentLevel=indentLevel)
 
 
 		return instructions, registerName
@@ -578,13 +623,12 @@ class scopeController:
 		elif (registerName in self.usedRegisters):
 			#Register in use. Eject current variable
 			ejectVariableName = self.usedRegisters[registerName]
-			instructions += self.storeStack(ejectVariableName, indentLevel=indentLevel)
+			instructions += self.storeStack(ejectVariableName, freeRegister=True, indentLevel=indentLevel)
 
 			self.availableRegisters.sort()
 		elif (registerName != "zero"):
 			self.availableRegisters.append(registerName)
 			self.availableRegisters.sort()
-
 
 		return instructions
 
@@ -626,7 +670,7 @@ class scopeController:
 					#Variable is not on stack nor in register. Instantiate into regDest
 					variableObj.register = regDest
 					self.usedRegisters[regDest] = variableName
-				self.availableRegisters.remove(regDest)
+					self.availableRegisters.remove(regDest)
 
 
 		return instructions
@@ -657,7 +701,7 @@ class scopeController:
 					instructions += self.moveVariable(variableName, freeReg, indentLevel=indentLevel)
 				else:
 					#No free register. Save to stack
-					instructions += self.storeStack(variableName, indentLevel=indentLevel)
+					instructions += self.storeStack(variableName, freeRegister=True, indentLevel=indentLevel)
 
 
 		return instructions
@@ -798,6 +842,11 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 		instructionsTemp, resultVariableName = convertBinaryOpItem(operandItem, scope, targetReg=targetReg, indentLevel=indentLevel)
 		instructions += instructionsTemp
 		operandReg = scope.getRegisterLocation(resultVariableName)
+	elif isinstance(operandItem, c_ast.UnaryOp):
+		#Operand is unary op
+		instructionsTemp, resultVariableName = convertUnaryOpItem(operandItem, scope, targetReg=targetReg, indentLevel=indentLevel)
+		instructions += instructionsTemp
+		operandReg = scope.getRegisterLocation(resultVariableName)
 	elif isinstance(operandItem, c_ast.FuncCall):
 		#Operand is function result
 		instructions += convertFuncCallItem(operandItem, scope, indentLevel=indentLevel)
@@ -833,22 +882,34 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 	global g_cFileCoord
 	g_cFileCoord = item.coord
 
-	#Get operand into register
-	instructionsTemp, operandReg = operandToRegister(item.expr, scope, indentLevel=indentLevel)
-	instructions += instructionsTemp
-
 	resultVariableName = None
-	if isinstance(item.expr, c_ast.ID):
-		variableName = item.expr.name
 
 	#Determine operation to perform
 	operator = item.op
 
 	if (operator == "p++"):
+		#Get operand into register
+		instructionsTemp, operandReg = operandToRegister(item.expr, scope, indentLevel=indentLevel)
+		instructions += instructionsTemp
+
+		#Increment  #<TODO> handle pointer incrementation based on size
 		instructions.append("{}addi {}, {}, 1".format(indentString, operandReg, operandReg))
+		if isinstance(item.expr, c_ast.ID):
+			resultVariableName = item.expr.name
 	elif (operator == "p--"):
+		#Get operand into register
+		instructionsTemp, operandReg = operandToRegister(item.expr, scope, indentLevel=indentLevel)
+		instructions += instructionsTemp
+
+		#Decrement  #<TODO> handle pointer decrementation based on size
 		instructions.append("{}addi {}, {}, -1".format(indentString, operandReg, operandReg))
+		if isinstance(item.expr, c_ast.ID):
+			resultVariableName = item.expr.name
 	elif (operator == "-"):
+		#Get operand into register
+		instructionsTemp, operandReg = operandToRegister(item.expr, scope, indentLevel=indentLevel)
+		instructions += instructionsTemp
+
 		#Get or create variable name for result of negation
 		if (targetVariableName):
 			instructions += scope.addVariable(targetVariableName, size=resultSize, varType=resultType, indentLevel=indentLevel)
@@ -876,6 +937,10 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 
 		instructions += scope.releaseRegister(tempRegister)
 	elif (operator == "!"):
+		#Get operand into register
+		instructionsTemp, operandReg = operandToRegister(item.expr, scope, indentLevel=indentLevel)
+		instructions += instructionsTemp
+
 		#Logical invert
 		if (branch):
 			instructions.append("{}beq {}, zero, {}".format(indentString, operandReg, branch))
@@ -900,8 +965,53 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 
 			#Logically invert operand
 			instructions.append("{}sltu {}, {}, zero".format(indentString, regDest, operandReg))
+	elif (operator == "&"):
+		#Get memory location of variable
+		instructionsTemp, regDest = scope.getPointer(item.expr.name, regDestOverride=targetReg, indentLevel=indentLevel)
+		instructions += instructionsTemp
+
+		#Get or create variable name for reference result
+		if (targetVariableName):
+			instructions += scope.addVariable(targetVariableName, register=regDest, size=resultSize, varType=resultType, indentLevel=indentLevel)
+
+			resultVariableName = targetVariableName
+		else:
+			instructionsTemp, resultVariableName = scope.createExpressionResult(register=regDest, indentLevel=indentLevel)
+			instructions += instructionsTemp
+	elif (operator == "*"):
+		if isinstance(item.expr, c_ast.ID):
+			#Get memory location of variable
+			instructions += scope.loadStack(item.expr.name, indentLevel=indentLevel)
+			regPointer = scope.getRegisterLocation(item.expr.name)
+
+			#Load value from memory
+			#<TODO> handle values smaller than 4 bytes
+			instructionsTemp, regDest = scope.getFreeRegister(regOverride=targetReg, preferTemp=True, indentLevel=indentLevel)
+			instructions += instructionsTemp
+
+			instructions.append("{}lw {}, 0({})".format(indentString, regDest, regPointer))
+
+			#Get or create variable name for reference result
+			if (targetVariableName):
+				instructions += scope.addVariable(targetVariableName, register=regDest, size=resultSize, varType=resultType, indentLevel=indentLevel)
+
+				resultVariableName = targetVariableName
+			else:
+				instructionsTemp, resultVariableName = scope.createExpressionResult(register=regDest, indentLevel=indentLevel)
+				instructions += instructionsTemp
+		else:
+			raise Exception("ATTEMPT TO DEREFERENCE CONSTANT | convertUnaryOpItem\n{}".format(item.coord))
 	else:
+		print(item)
 		raise Exception("UNSUPPORTED OPERATOR \"{}\"| convertUnaryOpItem".format(operator))
+
+
+	#Update value in memory if variable and modified
+	if isinstance(item.expr, c_ast.ID):
+		#Operand is a variable. Did we change it?
+		if ((operator == "p++") or (operator == "p--")):
+			#Modified variable. Update in memory
+			instructions += scope.storeStack(item.expr.name, indentLevel=indentLevel)
 
 	return instructions, resultVariableName
 
@@ -1014,7 +1124,7 @@ def convertBinaryOpItem(item, scope, branch=None, targetVariableName=None, targe
 			instructions.append("{}slt {}, {}, {}".format(indentString, regDest, leftOperandReg, rightOperandReg))
 	elif (operator == "!="):
 		if (branch):
-			instructions.append("{}beq {}, {}, {}".format(indentString, leftOperandReg, rightOperandReg, branch))
+			instructions.append("{}bne {}, {}, {}".format(indentString, leftOperandReg, rightOperandReg, branch))
 		else:
 			instructionsTemp, tempRegister = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
 			instructions += instructionsTemp
@@ -1186,14 +1296,48 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 	g_cFileCoord = item.coord
 
 	#Get right value into register  #<TODO> handle values small enought for immediates
+	#<TODO> remove uneeded expressionResult variables. Perhaps add volatile arg to createExpressionResult
 	rightOperand = item.rvalue
-	instructionsTemp, rightValReg = operandToRegister(rightOperand, scope, indentLevel=indentLevel)
+	instructionsTemp, rightValReg = operandToRegister(rightOperand, scope, indentLevel=indentLevel)  
 	instructions += instructionsTemp
 
 	#Get left value into register  #<TODO> handle values small enought for immediates
+	isPointerDereference = False
+	pointerRegister = None
 	leftOperand = item.lvalue
-	instructionsTemp, leftValReg = operandToRegister(leftOperand, scope, indentLevel=indentLevel)
-	instructions += instructionsTemp
+	leftValReg = None
+	if isinstance(leftOperand, c_ast.UnaryOp):
+		if (leftOperand.op == "*"):
+			isPointerDereference = True
+			#Get pointer into register
+			if isinstance(leftOperand.expr, c_ast.ID):
+				#Pointer is a variable
+				instructions += scope.loadStack(leftOperand.expr.name, indentLevel=indentLevel)
+				pointerRegister = scope.getRegisterLocation(leftOperand.expr.name)
+			elif isinstance(leftOperand.expr, c_ast.Constant):
+				#Pointer is a constant
+				instructionsTemp, pointerRegister = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+				instructions += instructionsTemp
+
+				pointerValue = int(leftOperand.expr.value)
+				if (pointerValue < 2048):
+					#Pointer small enough for immediate
+					instructions.append("{}addi {}, zero, {}".format(indentString, pointerRegister, pointerValue))
+				else:
+					#Pointer value too large. Add to data segment
+					dataType = "pointer"
+					dataLabelName = "data_{}_{}".format(dataType, pointerValue)
+					g_dataSegment[dataLabelName] = dataElement(dataLabelName, value=pointerValue, size=4)
+					instructions.append("{}lw {}, {}".format(indentString, pointerRegister, dataLabelName))
+			else:
+				raise Exception("UNSUPPORTED DEREFERENCE TYPE | {}".format(g_cFileCoord))
+
+		instructionsTemp, leftValReg = operandToRegister(leftOperand, scope, indentLevel=indentLevel)
+		instructions += instructionsTemp
+	else:
+		#Not pointer dereference
+		instructionsTemp, leftValReg = operandToRegister(leftOperand, scope, indentLevel=indentLevel)
+		instructions += instructionsTemp
 
 	#Handler operators
 	#<TODO>, handle unsigned operands
@@ -1207,6 +1351,15 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 		instructions.append("{}sub {}, {}, {}".format(indentString, leftValReg, leftValReg, rightValReg))
 	else:
 		raise Exception("UNSUPPORTED OPERATOR \"{}\" | convertAssignmentItem".format(operator))
+
+	if (isPointerDereference):
+		#Update memory with value
+		instructions.append("{}sw {}, 0({})".format(indentString, leftValReg, pointerRegister))
+		instructions += scope.releaseRegister(leftValReg, indentLevel=indentLevel)
+	elif isinstance(leftOperand, c_ast.ID):
+		#Left operand is a variable. Update in memory
+		instructions += scope.storeStack(leftOperand.name, indentLevel=indentLevel)
+
 
 	return instructions
 
@@ -1317,7 +1470,7 @@ def convertDeclItem(item, scope, indentLevel=0):
 			#Initialized variable to a constant value
 			instructionsTemp, destinationRegister = scope.getFreeRegister(indentLevel=indentLevel)
 			instructions += instructionsTemp
-			instructions += scope.addVariable(variableName, register=destinationRegister, varType=item.type.type.names, size=4, signed=True, indentLevel=indentLevel)
+			instructions += scope.addVariable(variableName, register=destinationRegister, varType=item.type, size=4, signed=True, indentLevel=indentLevel)
 
 
 			value = int(item.init.value) #<TODO> Handle floats and doubles
@@ -1341,14 +1494,14 @@ def convertDeclItem(item, scope, indentLevel=0):
 		elif isinstance(item.init, c_ast.FuncCall):
 			#Initialized variable is result of function call
 			instructions += convertFuncCallItem(item.init, scope, indentLevel=indentLevel)
-			instructions += scope.addVariable(variableName, register="a0", varType=item.type.type.names, size=4, signed=True, indentLevel=indentLevel)
+			instructions += scope.addVariable(variableName, register="a0", varType=item.type, size=4, signed=True, indentLevel=indentLevel)
 
 
 		else:
 			raise Exception("UNSUPPORTED DECLARATION | convertDeclItem\n{}".format(item))
 	else:
 		#Declared without initial value
-		instructions += scope.addVariable(variableName, varType=item.type.type.names, size=4, signed=True, indentLevel=indentLevel)
+		instructions += scope.addVariable(variableName, varType=item.type, size=4, signed=True, indentLevel=indentLevel)
 
 
 

@@ -13,15 +13,24 @@ int main()
 
 	int k = addThreeInts(x, y, z);
 
-	int i = 0;
-	while (i < 3)
-	{
-		i ++;
-	}
+	int i = 7;
+	int * j;
+	j = &i;
+	if (*j != 7) return -1;
+
+	*j = 1;
+	if (*j != 1) return -1;
+
+	*j += 7;
+	if (*j != 8) return -1;
+
+	//int k = *j;  //<TODO> fix this
+	//if (k != 8) return -1;
+
 
 	if (k == 84)
 	{
-		if (i == 3)	return 42;
+		return 42;
 	}
 
 	return -1;
