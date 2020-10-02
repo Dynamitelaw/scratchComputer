@@ -1504,6 +1504,7 @@ def convertDeclItem(item, scope, indentLevel=0):
 		instructions += scope.addVariable(variableName, varType=item.type, size=4, signed=True, indentLevel=indentLevel)
 
 
+	instructions += scope.storeStack(variableName, indentLevel=indentLevel)
 
 	return instructions, variableName
 
