@@ -1,3 +1,3 @@
-`define programLength 159
-`define programFilename "../testCode/c_Code/superSimple.hex"
+`define programLength 286
+`define programFilename "../testCode/c_Code/main.hex"
 `define memorySize 2048

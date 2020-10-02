@@ -1528,6 +1528,7 @@ def convertForItem(item, scope, indentLevel=0):
 		for declareItem in item.init.decls:
 			instructionsTemp, variableName = convertDeclItem(declareItem, scope, indentLevel=indentLevel)
 			instructions += instructionsTemp
+			instructions += scope.storeStack(variableName, indentLevel=indentLevel)
 	else:
 		raise Exception("UNSUPPORTED ITEM | convertForItem\n{}".format(item.init))
 
