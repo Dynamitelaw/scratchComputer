@@ -89,6 +89,13 @@ class variable:
 
 
 class instructionList:
+	'''
+	This class is used to store all assembly instructions for a given scope.
+	This acts as a place to store:
+		list of instruction strings
+		scope states over time
+		C filename and line numbers over time
+	'''
 	def __init__(self, scope):
 		self.instructions = []
 		self.scopeStates = []
@@ -96,6 +103,9 @@ class instructionList:
 		self.scope = scope
 
 	def append(self, instructionString):
+		'''
+		Add an instruction string to this instructionList
+		'''
 		self.instructions.append(copy.deepcopy(instructionString))
 		self.scopeStates.append(copy.deepcopy(self.scope.getState()))
 		if (g_cFileCoord):
@@ -120,6 +130,10 @@ class instructionList:
 
 
 	def compressScopeStates(self):
+		'''
+		Compress scopeStates list to decrease annotation size. 
+		If a scope state has not changed from a previous value, it is replaced with the index of the most recent state change
+		'''
 		compressedStateList = []
 
 		previousState = self.scopeStates[0]
@@ -375,7 +389,7 @@ class scopeController:
 	def getPointer(self, variableName, regDestOverride=None, indentLevel=0):
 		'''
 		Get the memory location of specified variable on the stack.
-		Will allocate stack space to variable if no already allocated.
+		Will allocate stack space to variable if not already allocated.
 		Returns an instructionList object, and the register name the pointer was written to.
 
 		returnType:
@@ -1332,12 +1346,8 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 			else:
 				raise Exception("UNSUPPORTED DEREFERENCE TYPE | {}".format(g_cFileCoord))
 
-		instructionsTemp, leftValReg = operandToRegister(leftOperand, scope, indentLevel=indentLevel)
-		instructions += instructionsTemp
-	else:
-		#Not pointer dereference
-		instructionsTemp, leftValReg = operandToRegister(leftOperand, scope, indentLevel=indentLevel)
-		instructions += instructionsTemp
+	instructionsTemp, leftValReg = operandToRegister(leftOperand, scope, indentLevel=indentLevel)
+	instructions += instructionsTemp
 
 	#Handler operators
 	#<TODO>, handle unsigned operands
@@ -1503,7 +1513,7 @@ def convertDeclItem(item, scope, indentLevel=0):
 		#Declared without initial value
 		instructions += scope.addVariable(variableName, varType=item.type, size=4, signed=True, indentLevel=indentLevel)
 
-
+	#Allocate space on stack for variable
 	instructions += scope.storeStack(variableName, indentLevel=indentLevel)
 
 	return instructions, variableName
