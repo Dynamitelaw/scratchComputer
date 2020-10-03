@@ -1,0 +1,320 @@
+TypeDecl(declname='x',
+         quals=[
+               ],
+         type=IdentifierType(names=['int'
+                                   ]
+                             )
+         )
+TypeDecl!!!!!!!!!!!!!!!!!!
+TypeDecl(declname='x',
+         quals=[
+               ],
+         type=IdentifierType(names=['int'
+                                   ]
+                             )
+         )
+TypeDecl(declname='y',
+         quals=[
+               ],
+         type=IdentifierType(names=['int'
+                                   ]
+                             )
+         )
+TypeDecl!!!!!!!!!!!!!!!!!!
+TypeDecl(declname='y',
+         quals=[
+               ],
+         type=IdentifierType(names=['int'
+                                   ]
+                             )
+         )
+TypeDecl(declname='z',
+         quals=[
+               ],
+         type=IdentifierType(names=['int'
+                                   ]
+                             )
+         )
+TypeDecl!!!!!!!!!!!!!!!!!!
+TypeDecl(declname='z',
+         quals=[
+               ],
+         type=IdentifierType(names=['int'
+                                   ]
+                             )
+         )
+None
+None
+None
+Decl(name='twoD_array',
+     quals=[
+           ],
+     storage=[
+             ],
+     funcspec=[
+              ],
+     type=ArrayDecl(type=ArrayDecl(type=TypeDecl(declname='twoD_array',
+                                                 quals=[
+                                                       ],
+                                                 type=IdentifierType(names=['int'
+                                                                           ]
+                                                                     )
+                                                 ),
+                                   dim=Constant(type='int',
+                                                value='3'
+                                                ),
+                                   dim_quals=[
+                                             ]
+                                   ),
+                    dim=Constant(type='int',
+                                 value='5'
+                                 ),
+                    dim_quals=[
+                              ]
+                    ),
+     init=None,
+     bitsize=None
+     )
+ArrayDecl(type=ArrayDecl(type=TypeDecl(declname='twoD_array',
+                                       quals=[
+                                             ],
+                                       type=IdentifierType(names=['int'
+                                                                 ]
+                                                           )
+                                       ),
+                         dim=Constant(type='int',
+                                      value='3'
+                                      ),
+                         dim_quals=[
+                                   ]
+                         ),
+          dim=Constant(type='int',
+                       value='5'
+                       ),
+          dim_quals=[
+                    ]
+          )
+ArrayDecl(type=ArrayDecl(type=TypeDecl(declname='twoD_array',
+                                       quals=[
+                                             ],
+                                       type=IdentifierType(names=['int'
+                                                                 ]
+                                                           )
+                                       ),
+                         dim=Constant(type='int',
+                                      value='3'
+                                      ),
+                         dim_quals=[
+                                   ]
+                         ),
+          dim=Constant(type='int',
+                       value='5'
+                       ),
+          dim_quals=[
+                    ]
+          )
+Decl(name='arrayLength',
+     quals=[
+           ],
+     storage=[
+             ],
+     funcspec=[
+              ],
+     type=TypeDecl(declname='arrayLength',
+                   quals=[
+                         ],
+                   type=IdentifierType(names=['int'
+                                             ]
+                                       )
+                   ),
+     init=Constant(type='int',
+                   value='10'
+                   ),
+     bitsize=None
+     )
+None
+TypeDecl(declname='arrayLength',
+         quals=[
+               ],
+         type=IdentifierType(names=['int'
+                                   ]
+                             )
+         )
+TypeDecl!!!!!!!!!!!!!!!!!!
+TypeDecl(declname='arrayLength',
+         quals=[
+               ],
+         type=IdentifierType(names=['int'
+                                   ]
+                             )
+         )
+Decl(name='x_array',
+     quals=[
+           ],
+     storage=[
+             ],
+     funcspec=[
+              ],
+     type=ArrayDecl(type=TypeDecl(declname='x_array',
+                                  quals=[
+                                        ],
+                                  type=IdentifierType(names=['int'
+                                                            ]
+                                                      )
+                                  ),
+                    dim=Constant(type='int',
+                                 value='10'
+                                 ),
+                    dim_quals=[
+                              ]
+                    ),
+     init=None,
+     bitsize=None
+     )
+ArrayDecl(type=TypeDecl(declname='x_array',
+                        quals=[
+                              ],
+                        type=IdentifierType(names=['int'
+                                                  ]
+                                            )
+                        ),
+          dim=Constant(type='int',
+                       value='10'
+                       ),
+          dim_quals=[
+                    ]
+          )
+ArrayDecl(type=TypeDecl(declname='x_array',
+                        quals=[
+                              ],
+                        type=IdentifierType(names=['int'
+                                                  ]
+                                            )
+                        ),
+          dim=Constant(type='int',
+                       value='10'
+                       ),
+          dim_quals=[
+                    ]
+          )
+Decl(name='y_array',
+     quals=[
+           ],
+     storage=[
+             ],
+     funcspec=[
+              ],
+     type=ArrayDecl(type=TypeDecl(declname='y_array',
+                                  quals=[
+                                        ],
+                                  type=IdentifierType(names=['int'
+                                                            ]
+                                                      )
+                                  ),
+                    dim=Constant(type='int',
+                                 value='10'
+                                 ),
+                    dim_quals=[
+                              ]
+                    ),
+     init=InitList(exprs=[Constant(type='int',
+                                   value='0'
+                                   ),
+                          Constant(type='int',
+                                   value='1'
+                                   ),
+                          Constant(type='int',
+                                   value='2'
+                                   ),
+                          Constant(type='int',
+                                   value='3'
+                                   ),
+                          Constant(type='int',
+                                   value='4'
+                                   ),
+                          Constant(type='int',
+                                   value='5'
+                                   ),
+                          Constant(type='int',
+                                   value='6'
+                                   ),
+                          Constant(type='int',
+                                   value='7'
+                                   ),
+                          Constant(type='int',
+                                   value='8'
+                                   ),
+                          Constant(type='int',
+                                   value='9'
+                                   )
+                         ]
+                   ),
+     bitsize=None
+     )
+[91mTraceback (most recent call last):
+  File "/home/jose/Documents/gitRepos/scratchComputer/pythonScripts/compiler/compiler.py", line 1832, in <module>
+    covertFuncToAssembly(funcDef)
+  File "/home/jose/Documents/gitRepos/scratchComputer/pythonScripts/compiler/compiler.py", line 1713, in covertFuncToAssembly
+    instructions += convertAstItem(funcDef.body, scope, indentLevel=1)
+  File "/home/jose/Documents/gitRepos/scratchComputer/pythonScripts/compiler/compiler.py", line 1662, in convertAstItem
+    instructions += convertAstItem(subItem, scope, indentLevel=indentLevel)
+  File "/home/jose/Documents/gitRepos/scratchComputer/pythonScripts/compiler/compiler.py", line 1670, in convertAstItem
+    instructionsTemp, variableName = convertDeclItem(item, scope, indentLevel=indentLevel)
+  File "/home/jose/Documents/gitRepos/scratchComputer/pythonScripts/compiler/compiler.py", line 1525, in convertDeclItem
+    raise Exception("UNSUPPORTED DECLARATION | convertDeclItem\n{}".format(item))
+Exception: UNSUPPORTED DECLARATION | convertDeclItem
+Decl(name='y_array',
+     quals=[
+           ],
+     storage=[
+             ],
+     funcspec=[
+              ],
+     type=ArrayDecl(type=TypeDecl(declname='y_array',
+                                  quals=[
+                                        ],
+                                  type=IdentifierType(names=['int'
+                                                            ]
+                                                      )
+                                  ),
+                    dim=Constant(type='int',
+                                 value='10'
+                                 ),
+                    dim_quals=[
+                              ]
+                    ),
+     init=InitList(exprs=[Constant(type='int',
+                                   value='0'
+                                   ),
+                          Constant(type='int',
+                                   value='1'
+                                   ),
+                          Constant(type='int',
+                                   value='2'
+                                   ),
+                          Constant(type='int',
+                                   value='3'
+                                   ),
+                          Constant(type='int',
+                                   value='4'
+                                   ),
+                          Constant(type='int',
+                                   value='5'
+                                   ),
+                          Constant(type='int',
+                                   value='6'
+                                   ),
+                          Constant(type='int',
+                                   value='7'
+                                   ),
+                          Constant(type='int',
+                                   value='8'
+                                   ),
+                          Constant(type='int',
+                                   value='9'
+                                   )
+                         ]
+                   ),
+     bitsize=None
+     )
+[0m

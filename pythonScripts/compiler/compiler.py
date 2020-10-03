@@ -18,6 +18,19 @@ g_ifCounter = 0
 g_variableNameCoutners = {}
 
 g_dataSegment = {}
+g_typeSizeDictionary = {
+	"int": 4,
+	"unsigned int": 4,
+	"short": 2,
+	"unsigned short": 2,
+	"long": 8,
+	"unsigned long": 8,
+	"char": 1,
+	"unsigned char": 1,
+	"float": 4,
+	"double": 8,
+	"long double": 10
+}
 
 
 #Colored printed for errors
@@ -288,7 +301,25 @@ class scopeController:
 		return instructions, variableName
 
 
-	def addVariable(self, variableName, register=None, varType=None, size=4, signed=True, indentLevel=0):
+	def getArraySize(self, arrayDecl):
+		'''
+		Returns the size of an array in bytes.
+		'''
+		arrayLength = int(arrayDecl.dim.value)
+		arrayType = arrayDecl.type
+
+		if isinstance(arrayType, c_ast.TypeDecl):
+			elementType = "".join(arrayType.type.names)
+			elementSize = g_typeSizeDictionary[elementType]
+
+			return arrayLength * elementSize
+		elif isinstance(arrayType, c_ast.ArrayDecl):
+			return arrayLength * self.getArraySize(arrayType)
+		else:
+			raise Exception("Input declaration must be a c_ast.ArrayDecl object")
+
+
+	def addVariable(self, variableName, register=None, varType=None, size=None, signed=None, indentLevel=0):
 		'''
 		Declare a new variable in this scope.
 		If register keyword is included, the variable will be initialized the the value currently stored in specified register. 
@@ -297,20 +328,50 @@ class scopeController:
 		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
+		#Get size of variable
+		varSize = None
+		if (size):
+			varSize = size
+		elif (varType):
+			if isinstance(varType, c_ast.TypeDecl):
+				names = "".join(varType.type.names)
+				varSize = g_typeSizeDictionary[names]
+			elif isinstance(varType, c_ast.ArrayDecl):
+				varSize = self.getArraySize(varType)
+		else:
+			varSize = 4
+
+		#Get if variable is signed
+		varSigned = None
+		if (signed):
+			varSigned = signed
+		elif (varType):
+			if isinstance(varType, c_ast.TypeDecl):
+				names = varType.type.names
+				if ("unsigned" in names):
+					varSigned = False
+				else:
+					varSigned = True
+			elif isinstance(varType, c_ast.ArrayDecl):
+				varSigned = None
+		else:
+			varSigned = True
+
+		#Set register location
 		if (register):
 			#Current register location specified
 			self.usedRegisters[register] = variableName
 			if (register in self.availableRegisters):
 				self.availableRegisters.remove(register)
 
-			self.variableDict[variableName] = variable(variableName, register=register, varType=varType, size=size, signed=signed)
+			self.variableDict[variableName] = variable(variableName, register=register, varType=varType, size=varSize, signed=varSigned)
 		else:
 			#No register location specified. Assign one
 			instructionsTemp, registerDest = self.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
 			instructions += instructionsTemp
 
 			self.usedRegisters[registerDest] = variableName
-			self.variableDict[variableName] = variable(variableName, register=registerDest, varType=varType, size=size, signed=signed)
+			self.variableDict[variableName] = variable(variableName, register=registerDest, varType=varType, size=varSize, signed=varSigned)
 
 		return instructions
 
@@ -351,7 +412,7 @@ class scopeController:
 
 		#Check if variable already on stack
 		if (variableName in self.localStack):
-			#Get location of variable relative to current stack pointer
+			#Get location of variable relative to current stack pointer  #<TODO> handle storing values on non-word aligned locations
 			varLocation = 0
 			currentLocation = 0
 			for var in self.localStack:
@@ -792,6 +853,35 @@ class scopeController:
 		return stateDict
 
 
+def getArrayElementPointer(arrayName, subscript, scope, indentLevel=0):
+	'''
+	Get a pointer to an array element into a register
+
+	Returns:
+		<tuple> ( <instructionList> instructions , <str> pointerRegister )
+	'''
+	instructions = instructionList(scope)
+	indentString = "".join(["\t" for i in range(indentLevel)])
+	global g_cFileCoord
+
+	elementPointerReg = None
+
+	#Get pointer to start of array
+	instructionsTemp, arrayPointerReg = scope.getPointer(arrayName, indentLevel=indentLevel)
+	instructions += instructionsTemp
+
+	#Get pointer offset from subscript into register
+	instructionsTemp, offsetReg = operandToRegister(subscript, scope, indentLevel=indentLevel)
+	instructions += instructionsTemp
+
+	#Combine offset and array pointer
+	elementPointerReg = offsetReg
+	instructions.append("{}add {}, {}, {}".format(indentString, elementPointerReg, arrayPointerReg, offsetReg))
+
+
+	return instructions, elementPointerReg
+
+
 def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 	'''
 	Moved the operandItem into an register.
@@ -870,7 +960,7 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 			instructions += instructionsTemp
 			instructions.append("{}mv {}, a0".format(indentString, operandReg))
 	else:
-		errorStr = "UNSUPPORTED OPERAND\n{}".format(operandItem)
+		errorStr = "UNSUPPORTED OPERAND | {}\n{}".format(g_cFileCoord, operandItem)
 		raise Exception(errorStr)
 
 
@@ -1315,7 +1405,7 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 	instructionsTemp, rightValReg = operandToRegister(rightOperand, scope, indentLevel=indentLevel)  
 	instructions += instructionsTemp
 
-	#Get left value into register  #<TODO> handle values small enought for immediates
+	#Get left value into register  #<TODO> handle constant values small enough for immediates
 	isPointerDereference = False
 	pointerRegister = None
 	leftOperand = item.lvalue
@@ -1346,8 +1436,23 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 			else:
 				raise Exception("UNSUPPORTED DEREFERENCE TYPE | {}".format(g_cFileCoord))
 
-	instructionsTemp, leftValReg = operandToRegister(leftOperand, scope, indentLevel=indentLevel)
-	instructions += instructionsTemp
+	isArrayReference = False
+	if isinstance(leftOperand, c_ast.ArrayRef):
+		isArrayReference = True
+
+		arrayName = leftOperand.name
+		subscript = leftOperand.subscript
+		#Get pointer to array element
+		instructionsTemp, pointerRegister = getArrayElementPointer(arrayName, subscript, scope, indentLevel=indentLevel)
+		instructions += instructionsTemp
+		#Load element into leftValReg
+		instructionsTemp, leftValReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+		instructions += instructionsTemp
+		instructions.append("{}lw {}, 0({})".format(indentString, leftValReg, pointerReg))  #<TODO> handle sub-word length values
+
+	if (not isArrayReference):
+		instructionsTemp, leftValReg = operandToRegister(leftOperand, scope, indentLevel=indentLevel)
+		instructions += instructionsTemp
 
 	#Handler operators
 	#<TODO>, handle unsigned operands
@@ -1362,9 +1467,9 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 	else:
 		raise Exception("UNSUPPORTED OPERATOR \"{}\" | convertAssignmentItem".format(operator))
 
-	if (isPointerDereference):
+	if (isPointerDereference or isArrayReference):
 		#Update memory with value
-		instructions.append("{}sw {}, 0({})".format(indentString, leftValReg, pointerRegister))
+		instructions.append("{}sw {}, 0({})".format(indentString, leftValReg, pointerRegister)) #<TODO> handle sub-word length values
 		instructions += scope.releaseRegister(leftValReg, indentLevel=indentLevel)
 	elif isinstance(leftOperand, c_ast.ID):
 		#Left operand is a variable. Update in memory
@@ -1480,7 +1585,7 @@ def convertDeclItem(item, scope, indentLevel=0):
 			#Initialized variable to a constant value
 			instructionsTemp, destinationRegister = scope.getFreeRegister(indentLevel=indentLevel)
 			instructions += instructionsTemp
-			instructions += scope.addVariable(variableName, register=destinationRegister, varType=item.type, size=4, signed=True, indentLevel=indentLevel)
+			instructions += scope.addVariable(variableName, register=destinationRegister, varType=item.type, signed=True, indentLevel=indentLevel)
 
 
 			value = int(item.init.value) #<TODO> Handle floats and doubles
@@ -1504,14 +1609,54 @@ def convertDeclItem(item, scope, indentLevel=0):
 		elif isinstance(item.init, c_ast.FuncCall):
 			#Initialized variable is result of function call
 			instructions += convertFuncCallItem(item.init, scope, indentLevel=indentLevel)
-			instructions += scope.addVariable(variableName, register="a0", varType=item.type, size=4, signed=True, indentLevel=indentLevel)
+			instructions += scope.addVariable(variableName, register="a0", varType=item.type, indentLevel=indentLevel)
+		elif isinstance(item.init, c_ast.InitList):
+			if isinstance(item.type, c_ast.ArrayDecl):
+				#Add array to scope
+				instructions += scope.addVariable(variableName, varType=item.type, signed=True, indentLevel=indentLevel)
 
+				#Get pointer to start of array
+				instructionsTemp, pointerReg = scope.getPointer(variableName, indentLevel=indentLevel)
+				instructions += instructionsTemp
+
+				for arrayIndex in range(0, len(item.init.exprs)):
+					expression = item.init.exprs[arrayIndex]
+					if isinstance(expression, c_ast.Constant):
+						#Get constant into a register
+						instructionsTemp, tempReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+						instructions += instructionsTemp
+
+						instructionsTemp, valueReg = operandToRegister(expression, scope, targetReg=tempReg, indentLevel=indentLevel)
+						instructions += instructionsTemp
+
+						#Determine pointer offset
+						elementSize = g_typeSizeDictionary[expression.type]
+						pointerOffset = elementSize * arrayIndex
+
+						#Store value onto stack
+						if (elementSize == 4):
+							instructions.append("{}sw {}, {}({})".format(indentString, valueReg, pointerOffset, pointerReg))
+						elif (elementSize == 2):
+							instructions.append("{}sh {}, {}({})".format(indentString, valueReg, pointerOffset, pointerReg))
+						elif (elementSize == 1):
+							instructions.append("{}sb {}, {}({})".format(indentString, valueReg, pointerOffset, pointerReg))
+						else:
+							raise Exception("UNSUPPORTED ARRAY ELEMENT SIZE | {}".format(g_cFileCoord))
+
+						#Release temp register
+						instructions += scope.releaseRegister(tempReg)
+					else:
+						raise Exception("UNSUPPORTED INITIAL VALUE FOR ARRAY | {}".format(g_cFileCoord))
+
+				instructions += scope.releaseRegister(pointerReg)
+			else:
+				raise Exception("Cannot initialize non-array to a list of values | {}".format(g_cFileCoord))
 
 		else:
 			raise Exception("UNSUPPORTED DECLARATION | convertDeclItem\n{}".format(item))
 	else:
 		#Declared without initial value
-		instructions += scope.addVariable(variableName, varType=item.type, size=4, signed=True, indentLevel=indentLevel)
+		instructions += scope.addVariable(variableName, varType=item.type, indentLevel=indentLevel)
 
 	#Allocate space on stack for variable
 	instructions += scope.storeStack(variableName, indentLevel=indentLevel)
@@ -1690,7 +1835,7 @@ def covertFuncToAssembly(funcDef):
 		argIndex = 0
 		for arg in inputParameters:
 			registerName = "a{}".format(argIndex)
-			instructions += scope.addVariable(arg.name, register=registerName,varType=arg.type.type.names, size=4, signed=True, indentLevel=1)
+			instructions += scope.addVariable(arg.name, register=registerName, varType=arg.type, signed=True, indentLevel=1)
 
 
 			argIndex += 1
