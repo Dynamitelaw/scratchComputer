@@ -75,11 +75,12 @@ class variable:
 		variable type
 		variable size (in bytes)
 	'''
-	def __init__(self, name, register=None, varType=None, size=None, signed=True):
+	def __init__(self, name, register=None, varType=None, size=None, subElementSize=None, signed=True):
 		self.name = name
 		self.register = register
 		self.type = varType
 		self.size = size
+		self.subElementSize = subElementSize
 		self.signed = signed
 	def __str__(self):
 		tempDict = {}
@@ -312,9 +313,12 @@ class scopeController:
 			elementType = "".join(arrayType.type.names)
 			elementSize = g_typeSizeDictionary[elementType]
 
-			return arrayLength * elementSize
+			returnVar = [arrayLength * elementSize, [elementSize]]
+			return returnVar
 		elif isinstance(arrayType, c_ast.ArrayDecl):
-			return arrayLength * self.getArraySize(arrayType)
+			subArraySize, subElementSize = self.getArraySize(arrayType)
+			returnVar = [arrayLength * subArraySize, [subArraySize]+subElementSize]
+			return returnVar
 		else:
 			raise Exception("Input declaration must be a c_ast.ArrayDecl object")
 
@@ -330,6 +334,7 @@ class scopeController:
 
 		#Get size of variable
 		varSize = None
+		subElementSize = None
 		if (size):
 			varSize = size
 		elif (varType):
@@ -337,7 +342,7 @@ class scopeController:
 				names = "".join(varType.type.names)
 				varSize = g_typeSizeDictionary[names]
 			elif isinstance(varType, c_ast.ArrayDecl):
-				varSize = self.getArraySize(varType)
+				varSize, subElementSize = self.getArraySize(varType)
 		else:
 			varSize = 4
 
@@ -359,19 +364,30 @@ class scopeController:
 
 		#Set register location
 		if (register):
-			#Current register location specified
-			self.usedRegisters[register] = variableName
-			if (register in self.availableRegisters):
-				self.availableRegisters.remove(register)
+			if (variableName in self.variableDict):
+				instructions += self.moveVariable(variableName, register, indentLevel=indentLevel)
+			else:
+				#Current register location specified
+				if (register in self.usedRegisters):
+					print(self.usedRegisters.items())
+					raise Exception("Register \"{}\" already in use by variable \"{}\"".format(register, self.usedRegisters[register]))
 
-			self.variableDict[variableName] = variable(variableName, register=register, varType=varType, size=varSize, signed=varSigned)
+				self.usedRegisters[register] = variableName
+
+				if (register in self.availableRegisters):
+					self.availableRegisters.remove(register)
+
+				self.variableDict[variableName] = variable(variableName, register=register, varType=varType, size=varSize, subElementSize=subElementSize, signed=varSigned)
 		else:
-			#No register location specified. Assign one
-			instructionsTemp, registerDest = self.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
-			instructions += instructionsTemp
+			if (variableName in self.variableDict):
+				pass
+			else:
+				#No register location specified. Assign one
+				instructionsTemp, registerDest = self.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+				instructions += instructionsTemp
 
-			self.usedRegisters[registerDest] = variableName
-			self.variableDict[variableName] = variable(variableName, register=registerDest, varType=varType, size=varSize, signed=varSigned)
+				self.usedRegisters[registerDest] = variableName
+				self.variableDict[variableName] = variable(variableName, register=registerDest, varType=varType, size=varSize, subElementSize=subElementSize, signed=varSigned)
 
 		return instructions
 
@@ -447,6 +463,10 @@ class scopeController:
 		return instructions
 
 
+	def getVariable(self, variableName):
+		return self.variableDict[variableName]
+
+
 	def getPointer(self, variableName, regDestOverride=None, indentLevel=0):
 		'''
 		Get the memory location of specified variable on the stack.
@@ -464,7 +484,7 @@ class scopeController:
 		if (variableName in self.variableDict):
 			variableObj = self.variableDict[variableName]
 		else:
-			raise Exception("ERROR: variable \"{}\" not declared in scope".format(variableName))
+			raise Exception("ERROR: variable \"{}\" not declared in scope | {}".format(variableName, g_cFileCoord))
 
 		if not (variableName in self.localStack):
 			#Allocate space on stack for variable
@@ -603,6 +623,8 @@ class scopeController:
 		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
+		self.availableRegisters.sort()
+		
 		registerName = None
 
 		if (regOverride):
@@ -664,7 +686,7 @@ class scopeController:
 			#Returning a save register that doesn't belong to us yet. Save onto stack
 			variableName = "<SAVE>_{}".format(registerName)
 			instructions += self.addVariable(variableName, register=registerName, indentLevel=indentLevel)
-			instructions += self.storeStack(variableName, indentLevel=indentLevel)
+			instructions += self.storeStack(variableName, freeRegister=True, indentLevel=indentLevel)
 			self.virginSaveRegisters.remove(registerName)
 
 
@@ -871,12 +893,22 @@ def getArrayElementPointer(arrayName, subscript, scope, indentLevel=0):
 	instructions += instructionsTemp
 
 	#Get pointer offset from subscript into register
-	instructionsTemp, offsetReg = operandToRegister(subscript, scope, indentLevel=indentLevel)
+	arrayVariable = scope.getVariable(arrayName)
+	elementLength = arrayVariable.subElementSize[0]
+
+	instructionsTemp, offsetIndex = operandToRegister(subscript, scope, indentLevel=indentLevel)
 	instructions += instructionsTemp
+	instructionsTemp, elementLengthReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+	instructions += instructionsTemp
+	instructions.append("{}addi {}, zero, {}".format(indentString, elementLengthReg, elementLength))  #<TODO> handle element lengths too long for immediate
+	offsetReg = elementLengthReg
+	instructions.append("{}mul {}, {}, {}".format(indentString, offsetReg, offsetIndex, elementLengthReg))
 
 	#Combine offset and array pointer
-	elementPointerReg = offsetReg
+	elementPointerReg = arrayPointerReg
 	instructions.append("{}add {}, {}, {}".format(indentString, elementPointerReg, arrayPointerReg, offsetReg))
+
+	instructions += scope.releaseRegister(offsetReg, indentLevel=indentLevel)
 
 
 	return instructions, elementPointerReg
@@ -959,6 +991,20 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 			instructionsTemp, operandReg = scope.getFreeRegister(regOverride=targetReg, indentLevel=indentLevel)
 			instructions += instructionsTemp
 			instructions.append("{}mv {}, a0".format(indentString, operandReg))
+	elif isinstance(operandItem, c_ast.ArrayRef):
+		isArrayReference = True
+
+		arrayName = operandItem.name.name
+		subscript = operandItem.subscript
+		#Get pointer to array element
+		instructionsTemp, pointerRegister = getArrayElementPointer(arrayName, subscript, scope, indentLevel=indentLevel)
+		instructions += instructionsTemp
+		#Load element into operandReg
+		instructionsTemp, operandReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+		instructions += instructionsTemp
+		instructions.append("{}lw {}, 0({})".format(indentString, operandReg, pointerRegister))  #<TODO> handle sub-word length values
+		#Release pointer register
+		instructions += scope.releaseRegister(pointerRegister, indentLevel=indentLevel)
 	else:
 		errorStr = "UNSUPPORTED OPERAND | {}\n{}".format(g_cFileCoord, operandItem)
 		raise Exception(errorStr)
@@ -1440,7 +1486,7 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 	if isinstance(leftOperand, c_ast.ArrayRef):
 		isArrayReference = True
 
-		arrayName = leftOperand.name
+		arrayName = leftOperand.name.name
 		subscript = leftOperand.subscript
 		#Get pointer to array element
 		instructionsTemp, pointerRegister = getArrayElementPointer(arrayName, subscript, scope, indentLevel=indentLevel)
@@ -1448,7 +1494,7 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 		#Load element into leftValReg
 		instructionsTemp, leftValReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
 		instructions += instructionsTemp
-		instructions.append("{}lw {}, 0({})".format(indentString, leftValReg, pointerReg))  #<TODO> handle sub-word length values
+		instructions.append("{}lw {}, 0({})".format(indentString, leftValReg, pointerRegister))  #<TODO> handle sub-word length values
 
 	if (not isArrayReference):
 		instructionsTemp, leftValReg = operandToRegister(leftOperand, scope, indentLevel=indentLevel)

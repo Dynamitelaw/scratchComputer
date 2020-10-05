@@ -61,7 +61,7 @@ p, li { white-space: pre-wrap; }
 		########
 		# Syntax highlighting
 		########
-		lineList = line.rstrip().replace("(", " ( ").replace(")", " ) ").replace(";", " ; ").replace(",", " , ").replace("\t", "").split(" ")
+		lineList = line.rstrip().replace("(", " ( ").replace(")", " ) ").replace(";", " ; ").replace(",", " , ").replace("\t", "").replace("{", " { ").replace("}", " } ").replace("[", " [ ").replace("]", " ] ").replace("<", "&lt;").replace(">", "&gt;").split(" ")
 		lineList =  list(filter(lambda i: i != "", lineList))
 
 		#Color defs
@@ -75,7 +75,7 @@ p, li { white-space: pre-wrap; }
 
 		#C keywords
 		c_blueKeywords = ["int", "float", "char", "double", "long", "unisgned", "byte", "bool"]
-		c_redKeywords = ["return", "if", "else", "&&", "||", "!"]
+		c_redKeywords = ["return", "if", "else", "&&", "||", "!", "for", "while"]
 		c_constantKeywords = ["true", "false"]
 
 		#assembly keywords
@@ -275,16 +275,25 @@ def getCycleMap(vcdFilePath, configPath):
 				currentCycle = timeCycleMap[timeStep]
 
 				for cycle in range(previousCycle, currentCycle, 1):
-					cycleMap[cycle][displayKey] = str(utils.binStringToInt(previousBinaryString))
+					try:
+						cycleMap[cycle][displayKey] = str(utils.binStringToInt(previousBinaryString))
+					except Exception as e:
+						cycleMap[cycle][displayKey] = "???"
 
-				cycleMap[currentCycle][displayKey] = str(utils.binStringToInt(binaryString))
+				try:
+					cycleMap[currentCycle][displayKey] = str(utils.binStringToInt(binaryString))
+				except Exception as e:
+					cycleMap[currentCycle][displayKey] = "???"
 
 				previousTimeStep = timeStep
 				previousCycle = timeCycleMap[previousTimeStep]
 				previousBinaryString = binaryString
 
 		for cycle in range(previousCycle, len(cycleMap), 1):
-			cycleMap[cycle][displayKey] = str(utils.binStringToInt(previousBinaryString))
+			try:
+				cycleMap[cycle][displayKey] = str(utils.binStringToInt(previousBinaryString))
+			except Exception as e:
+				cycleMap[cycle][displayKey] = "???"
 
 	return cycleMap
 

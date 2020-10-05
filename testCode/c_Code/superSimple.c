@@ -16,7 +16,7 @@ int main()
 
 	for (int i=0; i<arrayLength; i++)
 	{
-		x[i] = i;
+		x_array[i] = i;
 	}
 
 	int xElement;
@@ -24,8 +24,8 @@ int main()
 	int sumArray[10];
 	for (int i=0; i<arrayLength; i++)
 	{
-		xElement = x[i];
-		yElement = y[i];
+		xElement = x_array[i];
+		yElement = y_array[i];
 
 		if (xElement != i) return -1;
 		if (yElement != i) return -1;
@@ -37,7 +37,7 @@ int main()
 	{
 		sumElement = sumArray[i];
 
-		if (sumElement != i*i) return -1;
+		if (sumElement != i*2) return -1;
 	}
 
 
