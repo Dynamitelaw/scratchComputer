@@ -382,12 +382,8 @@ class scopeController:
 			if (variableName in self.variableDict):
 				pass
 			else:
-				#No register location specified. Assign one
-				instructionsTemp, registerDest = self.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
-				instructions += instructionsTemp
-
-				self.usedRegisters[registerDest] = variableName
-				self.variableDict[variableName] = variable(variableName, register=registerDest, varType=varType, size=varSize, subElementSize=subElementSize, signed=varSigned)
+				#No register location specified. Leave blank
+				self.variableDict[variableName] = variable(variableName, register=None, varType=varType, size=varSize, subElementSize=subElementSize, signed=varSigned)
 
 		return instructions
 
@@ -440,19 +436,21 @@ class scopeController:
 			stackOffset = currentStackSize - varLocation
 
 			#Update value of variable in stack
-			if (variableObj.size == 1):
-				instructions.append("{}sb {}, {}(sp)".format(indentString, variableObj.register, stackOffset))
-			elif (variableObj.size == 2):
-				instructions.append("{}sh {}, {}(sp)".format(indentString, variableObj.register, stackOffset))
-			elif (variableObj.size == 4):
-				instructions.append("{}sw {}, {}(sp)".format(indentString, variableObj.register, stackOffset))
+			if (variableObj.register):
+				if (variableObj.size == 1):
+					instructions.append("{}sb {}, {}(sp)".format(indentString, variableObj.register, stackOffset))
+				elif (variableObj.size == 2):
+					instructions.append("{}sh {}, {}(sp)".format(indentString, variableObj.register, stackOffset))
+				elif (variableObj.size == 4):
+					instructions.append("{}sw {}, {}(sp)".format(indentString, variableObj.register, stackOffset))
 
 		else:
 			#Allocate space on stack and store current value of regSource
 			self.localStack[variableName] = variableObj.size	
 
 			instructions.append("{}addi sp, sp, -{}".format(indentString, variableObj.size))
-			instructions.append("{}sw {}, 0(sp)".format(indentString, variableObj.register))
+			if (variableObj.register):
+				instructions.append("{}sw {}, 0(sp)".format(indentString, variableObj.register))
 
 
 		if (freeRegister):
@@ -624,7 +622,7 @@ class scopeController:
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
 		self.availableRegisters.sort()
-		
+
 		registerName = None
 
 		if (regOverride):
@@ -1755,9 +1753,11 @@ def convertForItem(item, scope, indentLevel=0):
 
 
 	#For loop body
+	scopeBranch = copy.deepcopy(scope)
 	loopBodyItem = item.stmt
 	instructions.append("{}\t{}:".format(indentString, bodyLabel))
-	instructions += convertAstItem(loopBodyItem, scope, indentLevel=indentLevel+2)
+	instructions += convertAstItem(loopBodyItem, scopeBranch, indentLevel=indentLevel+2)
+	instructions += scope.mergeScopeBranch(scopeBranch, indentLevel=indentLevel+1)
 
 	#For loop increment
 	nextItem = item.next
@@ -1812,9 +1812,11 @@ def convertWhileItem(item, scope, indentLevel=0):
 
 
 	#While loop body
+	scopeBranch = copy.deepcopy(scope)
 	loopBodyItem = item.stmt
 	instructions.append("{}\t{}:".format(indentString, bodyLabel))
-	instructions += convertAstItem(loopBodyItem, scope, indentLevel=indentLevel+2)
+	instructions += convertAstItem(loopBodyItem, scopeBranch, indentLevel=indentLevel+2)
+	instructions += scope.mergeScopeBranch(scopeBranch, indentLevel=indentLevel+1)
 
 	#While loop exit
 	instructions.append("{}\tj {}".format(indentString, startLabel))
