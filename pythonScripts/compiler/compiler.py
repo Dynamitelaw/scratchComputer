@@ -230,6 +230,7 @@ class scopeController:
 		self.loadHistory = []
 		self.virginSaveRegisters = ["s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11"]
 		self.expressionCounter = 0
+		self.stackBufferCounter = 0
 
 
 	def mergeScopeBranch(self, scopeBranch, indentLevel=0):
@@ -445,12 +446,40 @@ class scopeController:
 					instructions.append("{}sw {}, {}(sp)".format(indentString, variableObj.register, stackOffset))
 
 		else:
+			#Get current size of stack
+			currentStackSize = 0
+			for var in self.localStack:
+				currentStackSize += self.localStack[var]
+
+			#Add buffer space if needed
+			#<TODO> reassign buffer space to store sub-word variables when possible
+			bufferSize = 0
+			if (variableObj.size >= 4):
+				if (currentStackSize%4 != 0):
+					#SP is not word aligned. Need to add buffer space to stack
+					bufferName = "<BUFFER>_{}".format(self.stackBufferCounter)
+					self.stackBufferCounter += 1
+					bufferSize = 4 - (currentStackSize%4)
+					self.localStack[bufferName] = bufferSize
+			elif (variableObj.size >= 2):
+				if (currentStackSize%2 != 0):
+					#SP is not half aligned. Need to add buffer space to stack
+					bufferName = "<BUFFER>_{}".format(self.stackBufferCounter)
+					self.stackBufferCounter += 1
+					bufferSize = 2 - (currentStackSize%2)
+					self.localStack[bufferName] = bufferSize
+
 			#Allocate space on stack and store current value of regSource
 			self.localStack[variableName] = variableObj.size	
 
-			instructions.append("{}addi sp, sp, -{}".format(indentString, variableObj.size))
+			instructions.append("{}addi sp, sp, -{}".format(indentString, variableObj.size+bufferSize))
 			if (variableObj.register):
-				instructions.append("{}sw {}, 0(sp)".format(indentString, variableObj.register))
+				if (variableObj.size == 1):
+					instructions.append("{}sb {}, 0(sp)".format(indentString, variableObj.register))
+				elif (variableObj.size == 2):
+					instructions.append("{}sh {}, 0(sp)".format(indentString, variableObj.register))
+				elif (variableObj.size == 4):
+					instructions.append("{}sw {}, 0(sp)".format(indentString, variableObj.register))
 
 
 		if (freeRegister):
@@ -1000,7 +1029,14 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 		#Load element into operandReg
 		instructionsTemp, operandReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
 		instructions += instructionsTemp
-		instructions.append("{}lw {}, 0({})".format(indentString, operandReg, pointerRegister))  #<TODO> handle sub-word length values
+
+		elementSize = scope.variableDict[arrayName].subElementSize[-1]
+		if (elementSize == 4):
+			instructions.append("{}lw {}, 0({})".format(indentString, operandReg, pointerRegister)) #<TODO> handle unsigned values
+		elif (elementSize == 2):
+			instructions.append("{}lh {}, 0({})".format(indentString, operandReg, pointerRegister))
+		elif (elementSize == 1):
+			instructions.append("{}lb {}, 0({})".format(indentString, operandReg, pointerRegister))
 		#Release pointer register
 		instructions += scope.releaseRegister(pointerRegister, indentLevel=indentLevel)
 	else:
@@ -1137,7 +1173,13 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 			instructionsTemp, regDest = scope.getFreeRegister(regOverride=targetReg, preferTemp=True, indentLevel=indentLevel)
 			instructions += instructionsTemp
 
-			instructions.append("{}lw {}, 0({})".format(indentString, regDest, regPointer))
+			varSize = scope.variableDict[item.expr.name].subElementSize[-1]
+			if (varSize == 4):
+				instructions.append("{}lw {}, 0({})".format(indentString, regDest, regPointer)) #<TODO> handle unsigned values
+			elif (varSize == 2):
+				instructions.append("{}lh {}, 0({})".format(indentString, regDest, regPointer))
+			elif (varSize == 1):
+				instructions.append("{}lb {}, 0({})".format(indentString, regDest, regPointer))
 
 			#Get or create variable name for reference result
 			if (targetVariableName):
@@ -1454,6 +1496,7 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 	pointerRegister = None
 	leftOperand = item.lvalue
 	leftValReg = None
+	arrayName = None
 	if isinstance(leftOperand, c_ast.UnaryOp):
 		if (leftOperand.op == "*"):
 			isPointerDereference = True
@@ -1492,7 +1535,14 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 		#Load element into leftValReg
 		instructionsTemp, leftValReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
 		instructions += instructionsTemp
-		instructions.append("{}lw {}, 0({})".format(indentString, leftValReg, pointerRegister))  #<TODO> handle sub-word length values
+
+		elementSize = scope.variableDict[arrayName].subElementSize[-1]
+		if (elementSize == 4):
+			instructions.append("{}lw {}, 0({})".format(indentString, leftValReg, pointerRegister)) #<TODO> handle unsigned values
+		elif (elementSize == 2):
+			instructions.append("{}lh {}, 0({})".format(indentString, leftValReg, pointerRegister))
+		elif (elementSize == 1):
+			instructions.append("{}lb {}, 0({})".format(indentString, leftValReg, pointerRegister))
 
 	if (not isArrayReference):
 		instructionsTemp, leftValReg = operandToRegister(leftOperand, scope, indentLevel=indentLevel)
@@ -1513,7 +1563,13 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 
 	if (isPointerDereference or isArrayReference):
 		#Update memory with value
-		instructions.append("{}sw {}, 0({})".format(indentString, leftValReg, pointerRegister)) #<TODO> handle sub-word length values
+		elementSize = scope.variableDict[arrayName].subElementSize[-1]
+		if (elementSize == 4):
+			instructions.append("{}sw {}, 0({})".format(indentString, leftValReg, pointerRegister))
+		elif (elementSize == 2):
+			instructions.append("{}sh {}, 0({})".format(indentString, leftValReg, pointerRegister))
+		elif (elementSize == 1):
+			instructions.append("{}sb {}, 0({})".format(indentString, leftValReg, pointerRegister))
 		instructions += scope.releaseRegister(leftValReg, indentLevel=indentLevel)
 	elif isinstance(leftOperand, c_ast.ID):
 		#Left operand is a variable. Update in memory
@@ -1687,8 +1743,9 @@ def convertDeclItem(item, scope, indentLevel=0):
 						else:
 							raise Exception("UNSUPPORTED ARRAY ELEMENT SIZE | {}".format(g_cFileCoord))
 
-						#Release temp register
+						#Release temp registers
 						instructions += scope.releaseRegister(tempReg)
+						instructions += scope.releaseRegister(valueReg)
 					else:
 						raise Exception("UNSUPPORTED INITIAL VALUE FOR ARRAY | {}".format(g_cFileCoord))
 
