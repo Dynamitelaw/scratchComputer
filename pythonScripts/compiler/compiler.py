@@ -66,6 +66,83 @@ class dataElement:
 		self.signed = signed
 
 
+def getArraySize(arrayDecl):
+		'''
+		Returns the size of an array in bytes.
+		'''
+		arrayLength = int(arrayDecl.dim.value)
+		arrayType = arrayDecl.type
+
+		if isinstance(arrayType, c_ast.TypeDecl):
+			elementType = "".join(arrayType.type.names)
+			elementSize = g_typeSizeDictionary[elementType]
+
+			returnVar = [arrayLength * elementSize, [elementSize]]
+			return returnVar
+		elif isinstance(arrayType, c_ast.ArrayDecl):
+			subArraySize, subElementSize = getArraySize(arrayType)
+			returnVar = [arrayLength * subArraySize, [subArraySize]+subElementSize]
+			return returnVar
+		else:
+			raise Exception("Input declaration must be a c_ast.ArrayDecl object")
+
+
+class struct:
+	'''
+	This class is used to represent all defined structures
+	This acts as a place to store:
+		struct name
+		struct size
+		member items
+		member offsets
+	'''
+	class structMember:
+		def __init__(self, name, size, memberType=None, reference=None, offset=None):
+			self.name = name
+			self.size = size
+			self.type = memberType
+			self.reference = reference
+			self.offset = offset
+
+	def __init__(self, structItem):
+		print(structItem)
+		self.name = structItem.name
+		self.size = 0
+		self.subMembers = {}
+
+		subMembersTemp = []  #[(size, name), ...]
+
+		for declItem in structItem.decls:
+			if isinstance(declItem.type, c_ast.ArrayDecl):
+				name = declItem.name
+				size = getArraySize(declItem.type)[0]
+				subMembersTemp.append((size, name))
+
+				self.subMembers[name] = self.structMember(name, size)
+				self.size += size
+			elif isinstance(declItem.type.type, c_ast.IdentifierType):
+				name = declItem.name
+				varType = " ".join(declItem.type.type.names)
+				size = g_typeSizeDictionary[varType]
+				subMembersTemp.append((size, name))
+
+				self.subMembers[name] = self.structMember(name, size)
+				self.size += size
+			elif isinstance(declItem.type.type, c_ast.Struct):
+				name = declItem.name
+				structType = declItem.type.type.name
+				size = g_typeSizeDictionary[structType]
+				subMembersTemp.append((size, name))
+
+				self.subMembers[name] = self.structMember(name, size)
+				self.size += size
+			else:
+				raise Exception("Unsupported decl in structure\n{}".format(declItem))
+
+		subMembersTemp.sort(reverse=True)
+		print(subMembersTemp)
+
+
 class variable:
 	'''
 	This class is used to represent all explicit and implicit variables in a given scope.
@@ -303,27 +380,6 @@ class scopeController:
 		return instructions, variableName
 
 
-	def getArraySize(self, arrayDecl):
-		'''
-		Returns the size of an array in bytes.
-		'''
-		arrayLength = int(arrayDecl.dim.value)
-		arrayType = arrayDecl.type
-
-		if isinstance(arrayType, c_ast.TypeDecl):
-			elementType = "".join(arrayType.type.names)
-			elementSize = g_typeSizeDictionary[elementType]
-
-			returnVar = [arrayLength * elementSize, [elementSize]]
-			return returnVar
-		elif isinstance(arrayType, c_ast.ArrayDecl):
-			subArraySize, subElementSize = self.getArraySize(arrayType)
-			returnVar = [arrayLength * subArraySize, [subArraySize]+subElementSize]
-			return returnVar
-		else:
-			raise Exception("Input declaration must be a c_ast.ArrayDecl object")
-
-
 	def addVariable(self, variableName, register=None, varType=None, size=None, signed=None, indentLevel=0):
 		'''
 		Declare a new variable in this scope.
@@ -340,10 +396,16 @@ class scopeController:
 			varSize = size
 		elif (varType):
 			if isinstance(varType, c_ast.TypeDecl):
-				names = "".join(varType.type.names)
-				varSize = g_typeSizeDictionary[names]
+				if isinstance(varType.type, c_ast.IdentifierType):
+					names = "".join(varType.type.names)
+					varSize = g_typeSizeDictionary[names]
+				elif isinstance(varType.type, c_ast.Struct):
+					name = varType.type.name
+					varSize = g_typeSizeDictionary[name]
+				else:
+					raise Exception("Unsupported TypeDecl | {}\n{}".format(g_cFileCoord, varType))
 			elif isinstance(varType, c_ast.ArrayDecl):
-				varSize, subElementSize = self.getArraySize(varType)
+				varSize, subElementSize = getArraySize(varType)
 		else:
 			varSize = 4
 
@@ -1960,7 +2022,7 @@ def covertFuncToAssembly(funcDef):
 	funcDef.coord = instructions  #Borrow coord variable, since it seems to be unused by pycparser
 
 
-def getFunctionDefinitions(ast):
+def getDefinitions(ast):
 	'''
 	Returns a dictionary of function definitions in the following format
 		{"<functionName>": c_ast.FuncDef, ...}
@@ -1973,14 +2035,22 @@ def getFunctionDefinitions(ast):
 	childrens = [item[1] for item in ast.children()]
 	functions = {}
 	globalVarDelcarations = []
+	structDeclarations = []
 
 	for item in childrens:
 		if isinstance(item,c_ast.FuncDef):
 			functions[item.decl.name] = item
 		elif isinstance(item, c_ast.Decl):
-			globalVarDelcarations.append(item)
+			if isinstance(item.type, c_ast.TypeDecl):
+				globalVarDelcarations.append(item)
+			elif isinstance(item.type, c_ast.Struct):
+				structDeclarations.append(item)
+			else:
+				raise Exception("Unsupported item declared\n{}".format(item))	
+		else:
+			raise Exception("Unsupported item declared\n{}".format(item))
 
-	return functions, globalVarDelcarations
+	return functions, globalVarDelcarations, structDeclarations
 
 
 def precleanCFile(filepath):
@@ -2056,11 +2126,20 @@ Currently only supports a subset of the C language
 		cleanFilePath = precleanCFile(cFilePath)
 		ast = parse_file(cleanFilePath, use_cpp=True)
 
-		#Translate functions into assembly snippets
+		#Get function defs, global declarations, and struct defs
 		definedFunctions = {}
 		globalVarDelcarations = []
-		definedFunctions, globalVarDelcarations = getFunctionDefinitions(ast)  #<TODO> handle global variables
+		structDeclarations = []
+		definedFunctions, globalVarDelcarations, structDeclarations = getDefinitions(ast)  #<TODO> handle global variables
+
+		#Parse struct definitions
+		for structDecl in structDeclarations:
+			structObj = struct(structDecl.type)
+			g_typeSizeDictionary[structObj.name] = structObj.size
+
+		sys.exit()
 		
+		#Translate functions into assembly snippets
 		if ("main" in definedFunctions):
 			for functionName in definedFunctions:
 				#<TODO> multithread these translations
