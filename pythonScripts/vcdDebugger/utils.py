@@ -26,8 +26,9 @@ def binStringToInt(binaryString, signed=False):
 	value = None
 
 	if (len(binaryString) == 32):
+		#Handle 2s compliment
 		positivePortion = int(binaryString[1:], 2)
-		negativePortion = int(binaryString[0], 2)*2**(len(binaryString)-1)
+		negativePortion = int(binaryString[0], 2)*2**31
 
 		value = positivePortion - negativePortion
 	else:
