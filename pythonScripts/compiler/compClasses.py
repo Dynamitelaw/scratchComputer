@@ -48,11 +48,11 @@ class structDef:
 		member offsets
 	'''
 	class structMember:
-		def __init__(self, name, size, memberType=None, reference=None, offset=None):
+		def __init__(self, name, size, memberType=None, structType=None, offset=None):
 			self.name = name
 			self.size = size
 			self.type = memberType
-			self.reference = reference  #for use if a member is another structure
+			self.structType = structType  #for use if a member is another structure
 			self.offset = offset
 
 		def __str__(self):
@@ -61,7 +61,7 @@ class structDef:
 			tempDict["type"] = self.type
 			tempDict["size"] = self.size
 			tempDict["offset"] = self.offset
-			tempDict["reference"] = self.reference
+			tempDict["structType"] = self.structType
 
 			return str(tempDict)
 		def __repr__(self):
@@ -70,7 +70,7 @@ class structDef:
 			tempDict["type"] = self.type
 			tempDict["size"] = self.size
 			tempDict["offset"] = self.offset
-			tempDict["reference"] = self.reference
+			tempDict["structType"] = self.structType
 
 			return str(tempDict)
 
@@ -103,34 +103,44 @@ class structDef:
 				size = globals.typeSizeDictionary[structType]
 				membersTemp.append((size, name))
 
-				self.members[name] = self.structMember(name, size)
+				subMembers = globals.structDictionary[structType].members
+				for subName in subMembers:
+					memberName = "{}.{}".format(name, subName)
+					subSize = globals.structDictionary[structType].members[subName].size
+					membersTemp.append((subSize, memberName))
+
+				self.members[name] = self.structMember(name, size, structType=structType)
 			else:
 				raise Exception("Unsupported decl in structure | {}\n{}".format(globals.cFileCoord, declItem))
 
-		#Determine struct size and member offsets
+		#Determine struct size and offsets of primary members
 		membersTemp.sort(reverse=True)
 		self.size = 0
+		subReferences = []
 
 		for element in membersTemp:
 			size, name = element
+			if ("." in name):
+				#This is a reference to another struct member. Get offset later. Do not include in total size
+				subReferences.append(name)
+			else:
+				#Add buffer space between items if we need to
+				bufferSize = 0
+				if (size >= 4):
+					if (self.size%4 != 0):
+						#Current structure not word aligned. Need to add buffer space
+						bufferSize = 4 - (self.size%4)
+				elif (size >= 2):
+					if (self.size%2 != 0):
+						#Current structure not half aligned. Need to add buffer space
+						bufferSize = 2 - (self.size%2)
+				self.size += bufferSize
 
-			#Add buffer space between items if we need to
-			bufferSize = 0
-			if (size >= 4):
-				if (self.size%4 != 0):
-					#Current structure not word aligned. Need to add buffer space
-					bufferSize = 4 - (self.size%4)
-			elif (size >= 2):
-				if (self.size%2 != 0):
-					#Current structure not half aligned. Need to add buffer space
-					bufferSize = 2 - (self.size%2)
-			self.size += bufferSize
+				#Set offset for struct member
+				self.members[name].offset = self.size
 
-			#Set offset for struct member
-			self.members[name].offset = self.size
-
-			#Increment struct size
-			self.size += size
+				#Increment struct size
+				self.size += size
 
 		#Add buffer space to end of struct if we need to
 		bufferSize = 0
@@ -138,6 +148,18 @@ class structDef:
 			#Current structure not word aligned. Need to add buffer space
 			bufferSize = 4 - (self.size%4)
 		self.size += bufferSize
+
+		#Determine offsets of submembers
+		for name in subReferences:
+			subRootName = name.split(".")[0]
+			subMemberName = ".".join(name.split(".")[1:])
+			rootOffset = self.members[subRootName].offset
+			rootType = self.members[subRootName].structType
+			subMemberOffset = globals.structDictionary[rootType].members[subMemberName].offset
+			offset = rootOffset + subMemberOffset
+			
+			self.members[name] = copy.deepcopy(globals.structDictionary[rootType].members[subMemberName])
+			self.members[name].offset = offset
 
 
 	def __str__(self):

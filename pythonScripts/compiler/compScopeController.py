@@ -89,6 +89,7 @@ class scopeController:
 		self.virginSaveRegisters = ["s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11"]
 		self.expressionCounter = 0
 		self.stackBufferCounter = 0
+		self.pointerCounter = 0
 
 	def __str__(self):
 		tempDict = {}
@@ -387,6 +388,19 @@ class scopeController:
 			#Allocate space on stack for variable
 			instructions += self.storeStack(variableName, indentLevel=indentLevel)
 
+
+		#Create pointer variable and get free register
+		regDest = None
+		pointerName = "<PTR_{}>_&{}".format(self.pointerCounter, variableName)
+		self.pointerCounter += 1
+		if (pointerName in self.variableDict):
+			regDest = self.variableDict[pointerName].register
+		
+		if (not regDest):
+			instructionsTemp, regDest = self.getFreeRegister(preferTemp=True, regOverride=regDestOverride, indentLevel=indentLevel)
+			instructions += instructionsTemp
+			instructions +=  self.addVariable(pointerName, register=regDest, volatileRegister=True, indentLevel=indentLevel)
+
 		#Get location of variable relative to current stack pointer
 		varLocation = 0
 		currentLocation = 0
@@ -397,17 +411,6 @@ class scopeController:
 		currentStackSize = currentLocation
 
 		stackOffset = currentStackSize - varLocation
-
-		#Write address of variable to register
-		regDest = None
-		pointerName = "<PTR>_&{}".format(variableName)
-		if (pointerName in self.variableDict):
-			regDest = self.variableDict[pointerName].register
-		
-		if (not regDest):
-			instructionsTemp, regDest = self.getFreeRegister(preferTemp=True, regOverride=regDestOverride, indentLevel=indentLevel)
-			instructions += instructionsTemp
-			instructions +=  self.addVariable(pointerName, register=regDest, volatileRegister=True, indentLevel=indentLevel)
 
 
 		instructions.append("{}addi {}, sp, {}".format(indentString, regDest, stackOffset))  #<TODO> handle if offset is too big for immediate

@@ -1,9 +1,17 @@
 
 int g_integerDeclare;
 
+struct tempStruct
+{
+	int tertiaryInt;
+};
+
+
 struct dummyStruct
 {
 	char dummyString[10];
+	int k;
+	struct tempStruct subName;
 };
 
 struct Coordinate
@@ -40,6 +48,10 @@ int main()
 
 	if (distanceSquared != 50) return -1;
 
+	p1.name.subName.tertiaryInt = 73;
+	p1.name.subName.tertiaryInt += 2;
+	int k = p1.name.subName.tertiaryInt / 3;
+	if (k != 25) return -1;
 
 	return 42;
 }

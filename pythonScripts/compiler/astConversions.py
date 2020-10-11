@@ -42,21 +42,31 @@ def getArrayElementPointer(arrayName, subscript, scope, indentLevel=0):
 	return instructions, elementPointerReg
 
 
-def getStructMemberPointer(structName, memberName, scope, indentLevel=0):
+def getStructMemberPointer(structRef, scope, indentLevel=0):
 	'''
 	Get a pointer to a struct member into a register
 
 	Returns:
-		<tuple> ( <instructionList> instructions , <str> pointerRegister , <struct> structDef)
+		<tuple> ( <instructionList> instructions , <str> pointerRegister , <struct> structDef , <str> memberName)
 	'''
 	instructions = instructionList(scope)
 	indentString = "".join(["\t" for i in range(indentLevel)])
 
-	memberPointerReg = None
+	#Get name of root struct
+	structName = structRef.name
+	while (not isinstance(structName, str)):
+		structName = structName.name
 
 	#Get pointer to start of struct
 	instructionsTemp, structPointerReg, pointerVariableName = scope.getPointer(structName, indentLevel=indentLevel)
 	instructions += instructionsTemp
+
+	#Get member name
+	tempRef = structRef
+	memberName = tempRef.field.name
+	while (not isinstance(tempRef.name, c_ast.ID)):
+		tempRef = tempRef.name
+		memberName = tempRef.field.name + "." + memberName
 
 	#Get offset of member
 	structVariable = scope.getVariable(structName)
@@ -68,7 +78,7 @@ def getStructMemberPointer(structName, memberName, scope, indentLevel=0):
 	if (offset > 0):
 		instructions.append("{}addi {}, {}, {}".format(indentString, memberPointerReg, structPointerReg, offset))  #<TODO> handle offsets too large for immediate
 
-	return instructions, memberPointerReg, structDefObject
+	return instructions, memberPointerReg, structDefObject, memberName
 
 
 def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
@@ -167,10 +177,8 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 		#Release pointer register
 		instructions += scope.releaseRegister(pointerRegister, indentLevel=indentLevel)
 	elif isinstance(operandItem, c_ast.StructRef):
-		structName = operandItem.name.name
-		memberName = operandItem.field.name
 		#Get pointer to struct member
-		instructionsTemp, pointerRegister, structDef = getStructMemberPointer(structName, memberName, scope, indentLevel=indentLevel)
+		instructionsTemp, pointerRegister, structDef, memberName = getStructMemberPointer(operandItem, scope, indentLevel=indentLevel)
 		instructions += instructionsTemp
 
 		#Load member into operandReg
@@ -694,10 +702,8 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 	if isinstance(leftOperand, c_ast.StructRef):
 		isStructReference = True
 
-		structName = leftOperand.name.name
-		memberName = leftOperand.field.name
 		#Get pointer to struct member
-		instructionsTemp, pointerRegister, structDef = getStructMemberPointer(structName, memberName, scope, indentLevel=indentLevel)
+		instructionsTemp, pointerRegister, structDef, memberName = getStructMemberPointer(leftOperand, scope, indentLevel=indentLevel)
 		instructions += instructionsTemp
 
 		#Load member into leftValReg
