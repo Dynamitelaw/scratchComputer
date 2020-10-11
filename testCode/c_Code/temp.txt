@@ -1,320 +1,42 @@
-TypeDecl(declname='x',
-         quals=[
-               ],
-         type=IdentifierType(names=['int'
-                                   ]
-                             )
+{'name': 'main', 'variableDict': {'temp': {'name': 'temp', 'register': None, 'type': '"None"', 'size': 4, 'signed': True}}, 'localStack': OrderedDict(), 'usedRegisters': OrderedDict(), 'availableRegisters': ['a0', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 's0', 's1', 's10', 's11', 's2', 's3', 's4', 's5', 's6', 's7', 's8', 's9', 't2', 't3', 't4', 't5', 't6'], 'virginSaveRegisters': ['s0', 's1', 's2', 's3', 's4', 's5', 's6', 's7', 's8', 's9', 's10', 's11']}
+========================
+Constant(type='int',
+         value='0'
          )
-TypeDecl!!!!!!!!!!!!!!!!!!
-TypeDecl(declname='x',
-         quals=[
-               ],
-         type=IdentifierType(names=['int'
-                                   ]
-                             )
+zero
+========================
+Constant(type='int',
+         value='0'
          )
-TypeDecl(declname='y',
-         quals=[
-               ],
-         type=IdentifierType(names=['int'
-                                   ]
-                             )
+zero
+========================
+Constant(type='int',
+         value='0'
          )
-TypeDecl!!!!!!!!!!!!!!!!!!
-TypeDecl(declname='y',
-         quals=[
-               ],
-         type=IdentifierType(names=['int'
-                                   ]
-                             )
+zero
+========================
+Constant(type='int',
+         value='3'
          )
-TypeDecl(declname='z',
-         quals=[
-               ],
-         type=IdentifierType(names=['int'
-                                   ]
-                             )
-         )
-TypeDecl!!!!!!!!!!!!!!!!!!
-TypeDecl(declname='z',
-         quals=[
-               ],
-         type=IdentifierType(names=['int'
-                                   ]
-                             )
-         )
+t5
+========================
+{'name': 'main', 'variableDict': {'temp': {'name': 'temp', 'register': None, 'type': '"None"', 'size': 4, 'signed': True}, 'originPoint': {'name': 'originPoint', 'register': None, 'type': '"TypeDecl(declname=\'originPoint\',quals=[],type=Struct(name=\'Coordinate\',decls=None))"', 'size': 28, 'signed': None}, 'p1': {'name': 'p1', 'register': None, 'type': '"TypeDecl(declname=\'p1\',quals=[],type=Struct(name=\'Coordinate\',decls=None))"', 'size': 28, 'signed': None}, '<EXPR_RESULT>_0': {'name': '<EXPR_RESULT>_0', 'register': None, 'type': '"None"', 'size': 4, 'signed': True}}, 'localStack': OrderedDict([('temp', 4), ('originPoint', 28), ('p1', 28)]), 'usedRegisters': OrderedDict(), 'availableRegisters': ['a2', 'a3', 'a4', 'a5', 'a6', 'a7', 's0', 's1', 's10', 's11', 's2', 's3', 's4', 's5', 's6', 's7', 's8', 's9'], 'virginSaveRegisters': ['s0', 's1', 's2', 's3', 's4', 's5', 's6', 's7', 's8', 's9', 's10', 's11']}
+UnaryOp(op='-',
+        expr=Constant(type='int',
+                      value='4'
+                      )
+        )
 None
-None
-None
-Decl(name='twoD_array',
-     quals=[
-           ],
-     storage=[
-             ],
-     funcspec=[
-              ],
-     type=ArrayDecl(type=ArrayDecl(type=TypeDecl(declname='twoD_array',
-                                                 quals=[
-                                                       ],
-                                                 type=IdentifierType(names=['int'
-                                                                           ]
-                                                                     )
-                                                 ),
-                                   dim=Constant(type='int',
-                                                value='3'
-                                                ),
-                                   dim_quals=[
-                                             ]
-                                   ),
-                    dim=Constant(type='int',
-                                 value='5'
-                                 ),
-                    dim_quals=[
-                              ]
-                    ),
-     init=None,
-     bitsize=None
-     )
-ArrayDecl(type=ArrayDecl(type=TypeDecl(declname='twoD_array',
-                                       quals=[
-                                             ],
-                                       type=IdentifierType(names=['int'
-                                                                 ]
-                                                           )
-                                       ),
-                         dim=Constant(type='int',
-                                      value='3'
-                                      ),
-                         dim_quals=[
-                                   ]
-                         ),
-          dim=Constant(type='int',
-                       value='5'
-                       ),
-          dim_quals=[
-                    ]
-          )
-ArrayDecl(type=ArrayDecl(type=TypeDecl(declname='twoD_array',
-                                       quals=[
-                                             ],
-                                       type=IdentifierType(names=['int'
-                                                                 ]
-                                                           )
-                                       ),
-                         dim=Constant(type='int',
-                                      value='3'
-                                      ),
-                         dim_quals=[
-                                   ]
-                         ),
-          dim=Constant(type='int',
-                       value='5'
-                       ),
-          dim_quals=[
-                    ]
-          )
-Decl(name='arrayLength',
-     quals=[
-           ],
-     storage=[
-             ],
-     funcspec=[
-              ],
-     type=TypeDecl(declname='arrayLength',
-                   quals=[
-                         ],
-                   type=IdentifierType(names=['int'
-                                             ]
-                                       )
-                   ),
-     init=Constant(type='int',
-                   value='10'
-                   ),
-     bitsize=None
-     )
-None
-TypeDecl(declname='arrayLength',
-         quals=[
-               ],
-         type=IdentifierType(names=['int'
-                                   ]
-                             )
+========================
+Constant(type='int',
+         value='5'
          )
-TypeDecl!!!!!!!!!!!!!!!!!!
-TypeDecl(declname='arrayLength',
-         quals=[
-               ],
-         type=IdentifierType(names=['int'
-                                   ]
-                             )
-         )
-Decl(name='x_array',
-     quals=[
-           ],
-     storage=[
-             ],
-     funcspec=[
-              ],
-     type=ArrayDecl(type=TypeDecl(declname='x_array',
-                                  quals=[
-                                        ],
-                                  type=IdentifierType(names=['int'
-                                                            ]
-                                                      )
-                                  ),
-                    dim=Constant(type='int',
-                                 value='10'
-                                 ),
-                    dim_quals=[
-                              ]
-                    ),
-     init=None,
-     bitsize=None
-     )
-ArrayDecl(type=TypeDecl(declname='x_array',
-                        quals=[
-                              ],
-                        type=IdentifierType(names=['int'
-                                                  ]
-                                            )
-                        ),
-          dim=Constant(type='int',
-                       value='10'
-                       ),
-          dim_quals=[
-                    ]
-          )
-ArrayDecl(type=TypeDecl(declname='x_array',
-                        quals=[
-                              ],
-                        type=IdentifierType(names=['int'
-                                                  ]
-                                            )
-                        ),
-          dim=Constant(type='int',
-                       value='10'
-                       ),
-          dim_quals=[
-                    ]
-          )
-Decl(name='y_array',
-     quals=[
-           ],
-     storage=[
-             ],
-     funcspec=[
-              ],
-     type=ArrayDecl(type=TypeDecl(declname='y_array',
-                                  quals=[
-                                        ],
-                                  type=IdentifierType(names=['int'
-                                                            ]
-                                                      )
-                                  ),
-                    dim=Constant(type='int',
-                                 value='10'
-                                 ),
-                    dim_quals=[
-                              ]
-                    ),
-     init=InitList(exprs=[Constant(type='int',
-                                   value='0'
-                                   ),
-                          Constant(type='int',
-                                   value='1'
-                                   ),
-                          Constant(type='int',
-                                   value='2'
-                                   ),
-                          Constant(type='int',
-                                   value='3'
-                                   ),
-                          Constant(type='int',
-                                   value='4'
-                                   ),
-                          Constant(type='int',
-                                   value='5'
-                                   ),
-                          Constant(type='int',
-                                   value='6'
-                                   ),
-                          Constant(type='int',
-                                   value='7'
-                                   ),
-                          Constant(type='int',
-                                   value='8'
-                                   ),
-                          Constant(type='int',
-                                   value='9'
-                                   )
-                         ]
-                   ),
-     bitsize=None
-     )
+a3
+{'name': 'main', 'variableDict': {'temp': {'name': 'temp', 'register': None, 'type': '"None"', 'size': 4, 'signed': True}, 'originPoint': {'name': 'originPoint', 'register': None, 'type': '"TypeDecl(declname=\'originPoint\',quals=[],type=Struct(name=\'Coordinate\',decls=None))"', 'size': 28, 'signed': None}, 'p1': {'name': 'p1', 'register': None, 'type': '"TypeDecl(declname=\'p1\',quals=[],type=Struct(name=\'Coordinate\',decls=None))"', 'size': 28, 'signed': None}, '<EXPR_RESULT>_0': {'name': '<EXPR_RESULT>_0', 'register': None, 'type': '"None"', 'size': 4, 'signed': True}, 'distanceSquared': {'name': 'distanceSquared', 'register': 'a5', 'type': '"None"', 'size': 4, 'signed': True}, '<EXPR_RESULT>_1': {'name': '<EXPR_RESULT>_1', 'register': 'a6', 'type': '"None"', 'size': 4, 'signed': True}, '<EXPR_RESULT>_2': {'name': '<EXPR_RESULT>_2', 'register': 'a7', 'type': '"None"', 'size': 4, 'signed': True}, '<EXPR_RESULT>_3': {'name': '<EXPR_RESULT>_3', 'register': 's0', 'type': '"None"', 'size': 4, 'signed': True}, '<SAVE>_s0': {'name': '<SAVE>_s0', 'register': None, 'type': '"None"', 'size': 4, 'signed': True}, '<SAVE>_s1': {'name': '<SAVE>_s1', 'register': None, 'type': '"None"', 'size': 4, 'signed': True}, '<SAVE>_s10': {'name': '<SAVE>_s10', 'register': None, 'type': '"None"', 'size': 4, 'signed': True}, '<EXPR_RESULT>_4': {'name': '<EXPR_RESULT>_4', 'register': 's1', 'type': '"None"', 'size': 4, 'signed': True}, '<SAVE>_s11': {'name': '<SAVE>_s11', 'register': None, 'type': '"None"', 'size': 4, 'signed': True}, '<EXPR_RESULT>_5': {'name': '<EXPR_RESULT>_5', 'register': 's10', 'type': '"None"', 'size': 4, 'signed': True}, '<EXPR_RESULT>_6': {'name': '<EXPR_RESULT>_6', 'register': 's2', 'type': '"None"', 'size': 4, 'signed': True}, '<SAVE>_s2': {'name': '<SAVE>_s2', 'register': None, 'type': '"None"', 'size': 4, 'signed': True}, '<SAVE>_s3': {'name': '<SAVE>_s3', 'register': None, 'type': '"None"', 'size': 4, 'signed': True}, '<SAVE>_s4': {'name': '<SAVE>_s4', 'register': None, 'type': '"None"', 'size': 4, 'signed': True}, '<EXPR_RESULT>_7': {'name': '<EXPR_RESULT>_7', 'register': 's3', 'type': '"None"', 'size': 4, 'signed': True}, '<SAVE>_s5': {'name': '<SAVE>_s5', 'register': None, 'type': '"None"', 'size': 4, 'signed': True}, '<EXPR_RESULT>_8': {'name': '<EXPR_RESULT>_8', 'register': 's4', 'type': '"None"', 'size': 4, 'signed': True}, '<EXPR_RESULT>_9': {'name': '<EXPR_RESULT>_9', 'register': 's6', 'type': '"None"', 'size': 4, 'signed': True}, '<SAVE>_s6': {'name': '<SAVE>_s6', 'register': None, 'type': '"None"', 'size': 4, 'signed': True}, '<SAVE>_s7': {'name': '<SAVE>_s7', 'register': None, 'type': '"None"', 'size': 4, 'signed': True}, '<SAVE>_s8': {'name': '<SAVE>_s8', 'register': None, 'type': '"None"', 'size': 4, 'signed': True}, '<EXPR_RESULT>_10': {'name': '<EXPR_RESULT>_10', 'register': 's7', 'type': '"None"', 'size': 4, 'signed': True}, '<SAVE>_s9': {'name': '<SAVE>_s9', 'register': None, 'type': '"None"', 'size': 4, 'signed': True}, '<EXPR_RESULT>_11': {'name': '<EXPR_RESULT>_11', 'register': None, 'type': '"None"', 'size': 4, 'signed': True}}, 'localStack': OrderedDict([('temp', 4), ('originPoint', 28), ('p1', 28), ('<SAVE>_s0', 4), ('<SAVE>_s1', 4), ('<SAVE>_s10', 4), ('<SAVE>_s11', 4), ('<SAVE>_s2', 4), ('<SAVE>_s3', 4), ('<SAVE>_s4', 4), ('<SAVE>_s5', 4), ('<SAVE>_s6', 4), ('<SAVE>_s7', 4), ('<SAVE>_s8', 4), ('<SAVE>_s9', 4), ('distanceSquared', 4)]), 'usedRegisters': OrderedDict([('a5', 'distanceSquared'), ('a6', '<EXPR_RESULT>_1'), ('a7', '<EXPR_RESULT>_2'), ('s0', '<EXPR_RESULT>_3'), ('s1', '<EXPR_RESULT>_4'), ('s10', '<EXPR_RESULT>_5'), ('s2', '<EXPR_RESULT>_6'), ('s3', '<EXPR_RESULT>_7'), ('s4', '<EXPR_RESULT>_8'), ('s6', '<EXPR_RESULT>_9'), ('s7', '<EXPR_RESULT>_10')]), 'availableRegisters': ['a0'], 'virginSaveRegisters': []}
 [91mTraceback (most recent call last):
-  File "/home/jose/Documents/gitRepos/scratchComputer/pythonScripts/compiler/compiler.py", line 1832, in <module>
-    covertFuncToAssembly(funcDef)
-  File "/home/jose/Documents/gitRepos/scratchComputer/pythonScripts/compiler/compiler.py", line 1713, in covertFuncToAssembly
-    instructions += convertAstItem(funcDef.body, scope, indentLevel=1)
-  File "/home/jose/Documents/gitRepos/scratchComputer/pythonScripts/compiler/compiler.py", line 1662, in convertAstItem
-    instructions += convertAstItem(subItem, scope, indentLevel=indentLevel)
-  File "/home/jose/Documents/gitRepos/scratchComputer/pythonScripts/compiler/compiler.py", line 1670, in convertAstItem
-    instructionsTemp, variableName = convertDeclItem(item, scope, indentLevel=indentLevel)
-  File "/home/jose/Documents/gitRepos/scratchComputer/pythonScripts/compiler/compiler.py", line 1525, in convertDeclItem
-    raise Exception("UNSUPPORTED DECLARATION | convertDeclItem\n{}".format(item))
-Exception: UNSUPPORTED DECLARATION | convertDeclItem
-Decl(name='y_array',
-     quals=[
-           ],
-     storage=[
-             ],
-     funcspec=[
-              ],
-     type=ArrayDecl(type=TypeDecl(declname='y_array',
-                                  quals=[
-                                        ],
-                                  type=IdentifierType(names=['int'
-                                                            ]
-                                                      )
-                                  ),
-                    dim=Constant(type='int',
-                                 value='10'
-                                 ),
-                    dim_quals=[
-                              ]
-                    ),
-     init=InitList(exprs=[Constant(type='int',
-                                   value='0'
-                                   ),
-                          Constant(type='int',
-                                   value='1'
-                                   ),
-                          Constant(type='int',
-                                   value='2'
-                                   ),
-                          Constant(type='int',
-                                   value='3'
-                                   ),
-                          Constant(type='int',
-                                   value='4'
-                                   ),
-                          Constant(type='int',
-                                   value='5'
-                                   ),
-                          Constant(type='int',
-                                   value='6'
-                                   ),
-                          Constant(type='int',
-                                   value='7'
-                                   ),
-                          Constant(type='int',
-                                   value='8'
-                                   ),
-                          Constant(type='int',
-                                   value='9'
-                                   )
-                         ]
-                   ),
-     bitsize=None
-     )
+  File "/home/jose/Documents/gitRepos/scratchComputer/pythonScripts/compiler/assembler.py", line 932, in main
+    instructions, linedInstructions, initializedData = parseAssemblyFile(asmPath)
+  File "/home/jose/Documents/gitRepos/scratchComputer/pythonScripts/compiler/assembler.py", line 447, in parseAssemblyFile
+    raise Exception("ERROR: {} , line #{} | Unkown label \"{}\"".format(filepath, lineNumber, arg))
+Exception: ERROR: superSimple.asm , line #38 | Unkown label "None"
 [0m

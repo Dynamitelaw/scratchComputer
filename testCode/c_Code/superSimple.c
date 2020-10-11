@@ -22,7 +22,7 @@ struct Coordinate
 
 int main()
 {
-	int temp = 5;
+	int temp = -5;
 	struct Coordinate originPoint;
 	originPoint.x = 0;
 	originPoint.y = 0;
@@ -33,7 +33,10 @@ int main()
 	p1.y = -4;
 	p1.z = 5;
 
-	int distanceSquared = (p1.x - originPoint.x)*(p1.x - originPoint.x) + (p1.y - originPoint.y)*(p1.y - originPoint.y) + (p1.z - originPoint.z)*(p1.z - originPoint.z);
+	int xDiff = p1.x - originPoint.x;
+	int yDiff = p1.y - originPoint.y;
+	int zDiff = p1.z - originPoint.z;
+	int distanceSquared = xDiff*xDiff + yDiff*yDiff + zDiff*zDiff;
 
 	if (distanceSquared != 50) return -1;
 

@@ -23,4 +23,14 @@ def dictToJson(dictionary):
 
 
 def binStringToInt(binaryString, signed=False):
-	return int(binaryString, 2)
+	value = None
+
+	if (len(binaryString) == 32):
+		positivePortion = int(binaryString[1:], 2)
+		negativePortion = int(binaryString[0], 2)*2**(len(binaryString)-1)
+
+		value = positivePortion - negativePortion
+	else:
+		value = int(binaryString, 2)
+
+	return value

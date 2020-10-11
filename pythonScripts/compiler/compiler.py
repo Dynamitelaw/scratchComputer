@@ -31,6 +31,7 @@ g_typeSizeDictionary = {
 	"double": 8,
 	"long double": 10
 }
+g_structDictionary = {}
 
 
 #Colored printed for errors
@@ -104,43 +105,105 @@ class struct:
 			self.reference = reference
 			self.offset = offset
 
-	def __init__(self, structItem):
-		print(structItem)
-		self.name = structItem.name
-		self.size = 0
-		self.subMembers = {}
+		def __str__(self):
+			tempDict = {}
+			tempDict["name"] = self.name
+			tempDict["type"] = self.type
+			tempDict["size"] = self.size
+			tempDict["offset"] = self.offset
+			tempDict["reference"] = self.reference
 
-		subMembersTemp = []  #[(size, name), ...]
+			return str(tempDict)
+		def __repr__(self):
+			tempDict = {}
+			tempDict["name"] = self.name
+			tempDict["type"] = self.type
+			tempDict["size"] = self.size
+			tempDict["offset"] = self.offset
+			tempDict["reference"] = self.reference
+
+			return str(tempDict)
+
+	def __init__(self, structItem):
+		global g_cFileCoord
+		g_cFileCoord = structItem.coord
+
+		self.name = structItem.name
+		self.members = {}
+
+		membersTemp = []  #[(size, name), ...]
 
 		for declItem in structItem.decls:
 			if isinstance(declItem.type, c_ast.ArrayDecl):
 				name = declItem.name
 				size = getArraySize(declItem.type)[0]
-				subMembersTemp.append((size, name))
+				membersTemp.append((size, name))
 
-				self.subMembers[name] = self.structMember(name, size)
-				self.size += size
+				self.members[name] = self.structMember(name, size)
 			elif isinstance(declItem.type.type, c_ast.IdentifierType):
 				name = declItem.name
 				varType = " ".join(declItem.type.type.names)
 				size = g_typeSizeDictionary[varType]
-				subMembersTemp.append((size, name))
+				membersTemp.append((size, name))
 
-				self.subMembers[name] = self.structMember(name, size)
-				self.size += size
+				self.members[name] = self.structMember(name, size)
 			elif isinstance(declItem.type.type, c_ast.Struct):
 				name = declItem.name
 				structType = declItem.type.type.name
 				size = g_typeSizeDictionary[structType]
-				subMembersTemp.append((size, name))
+				membersTemp.append((size, name))
 
-				self.subMembers[name] = self.structMember(name, size)
-				self.size += size
+				self.members[name] = self.structMember(name, size)
 			else:
-				raise Exception("Unsupported decl in structure\n{}".format(declItem))
+				raise Exception("Unsupported decl in structure | {}\n{}".format(g_cFileCoord, declItem))
 
-		subMembersTemp.sort(reverse=True)
-		print(subMembersTemp)
+		#Determine struct size and member offsets
+		membersTemp.sort(reverse=True)
+		self.size = 0
+
+		for element in membersTemp:
+			size, name = element
+
+			#Add buffer space between items if we need to
+			bufferSize = 0
+			if (size >= 4):
+				if (self.size%4 != 0):
+					#Current structure not word aligned. Need to add buffer space
+					bufferSize = 4 - (self.size%4)
+			elif (size >= 2):
+				if (self.size%2 != 0):
+					#Current structure not half aligned. Need to add buffer space
+					bufferSize = 2 - (self.size%2)
+			self.size += bufferSize
+
+			#Set offset for struct member
+			self.members[name].offset = self.size
+
+			#Increment struct size
+			self.size += size
+
+		#Add buffer space to end of struct if we need to
+		bufferSize = 0
+		if (self.size%4 != 0):
+			#Current structure not word aligned. Need to add buffer space
+			bufferSize = 4 - (self.size%4)
+		self.size += bufferSize
+
+
+	def __str__(self):
+		tempDict = {}
+		tempDict["name"] = self.name
+		tempDict["size"] = self.size
+		tempDict["members"] = self.members
+
+		return str(tempDict)
+	def __repr__(self):
+		tempDict = {}
+		tempDict["name"] = self.name
+		tempDict["size"] = self.size
+		tempDict["members"] = self.members
+
+		return str(tempDict)
 
 
 class variable:
@@ -152,13 +215,15 @@ class variable:
 		variable type
 		variable size (in bytes)
 	'''
-	def __init__(self, name, register=None, varType=None, size=None, subElementSize=None, signed=True):
+	def __init__(self, name, register=None, varType=None, size=None, subElementSize=None, signed=True, volatileRegister=False):
 		self.name = name
 		self.register = register
 		self.type = varType
 		self.size = size
 		self.subElementSize = subElementSize
 		self.signed = signed
+		self.volatileRegister = volatileRegister
+
 	def __str__(self):
 		tempDict = {}
 		tempDict["name"] = self.name
@@ -166,15 +231,17 @@ class variable:
 		tempDict["type"] = self.type
 		tempDict["size"] = self.size
 		tempDict["signed"] = self.signed
+		tempDict["volatileRegister"] = self.volatileRegister
 
 		return str(tempDict)
 	def __repr__(self):
 		tempDict = {}
 		tempDict["name"] = self.name
 		tempDict["register"] = self.register
-		tempDict["type"] = self.type
+		tempDict["type"] = "\"{}\"".format(self.type).replace("\n","").replace(" ", "")
 		tempDict["size"] = self.size
 		tempDict["signed"] = self.signed
+		tempDict["volatileRegister"] = self.volatileRegister
 
 		return str(tempDict)
 
@@ -192,6 +259,14 @@ class instructionList:
 		self.scopeStates = []
 		self.coords = []
 		self.scope = scope
+
+	def __str__(self):
+		return str(self.instructions)
+
+
+	def __repr__(self):
+		return str(self.instructions)
+
 
 	def append(self, instructionString):
 		'''
@@ -309,6 +384,27 @@ class scopeController:
 		self.expressionCounter = 0
 		self.stackBufferCounter = 0
 
+	def __str__(self):
+		tempDict = {}
+		tempDict["name"] = self.name
+		tempDict["variableDict"] = self.variableDict
+		tempDict["localStack"] = self.localStack
+		tempDict["usedRegisters"] = self.usedRegisters
+		tempDict["availableRegisters"] = self.availableRegisters
+		tempDict["virginSaveRegisters"] = self.virginSaveRegisters
+
+		return str(tempDict)
+	def __repr__(self):
+		tempDict = {}
+		tempDict["name"] = self.name
+		tempDict["variableDict"] = self.variableDict
+		tempDict["localStack"] = self.localStack
+		tempDict["usedRegisters"] = self.usedRegisters
+		tempDict["availableRegisters"] = self.availableRegisters
+		tempDict["virginSaveRegisters"] = self.virginSaveRegisters
+
+		return str(tempDict)
+
 
 	def mergeScopeBranch(self, scopeBranch, indentLevel=0):
 		'''
@@ -380,7 +476,7 @@ class scopeController:
 		return instructions, variableName
 
 
-	def addVariable(self, variableName, register=None, varType=None, size=None, signed=None, indentLevel=0):
+	def addVariable(self, variableName, register=None, varType=None, size=None, signed=None, volatileRegister=False, indentLevel=0):
 		'''
 		Declare a new variable in this scope.
 		If register keyword is included, the variable will be initialized the the value currently stored in specified register. 
@@ -414,13 +510,13 @@ class scopeController:
 		if (signed):
 			varSigned = signed
 		elif (varType):
-			if isinstance(varType, c_ast.TypeDecl):
+			if isinstance(varType.type, c_ast.IdentifierType):
 				names = varType.type.names
 				if ("unsigned" in names):
 					varSigned = False
 				else:
 					varSigned = True
-			elif isinstance(varType, c_ast.ArrayDecl):
+			else:
 				varSigned = None
 		else:
 			varSigned = True
@@ -440,13 +536,13 @@ class scopeController:
 				if (register in self.availableRegisters):
 					self.availableRegisters.remove(register)
 
-				self.variableDict[variableName] = variable(variableName, register=register, varType=varType, size=varSize, subElementSize=subElementSize, signed=varSigned)
+				self.variableDict[variableName] = variable(variableName, register=register, varType=varType, size=varSize, subElementSize=subElementSize, signed=varSigned, volatileRegister=volatileRegister)
 		else:
 			if (variableName in self.variableDict):
 				pass
 			else:
 				#No register location specified. Leave blank
-				self.variableDict[variableName] = variable(variableName, register=None, varType=varType, size=varSize, subElementSize=subElementSize, signed=varSigned)
+				self.variableDict[variableName] = variable(variableName, register=None, varType=varType, size=varSize, subElementSize=subElementSize, signed=varSigned, volatileRegister=volatileRegister)
 
 		return instructions
 
@@ -458,9 +554,10 @@ class scopeController:
 		if (variableName):
 			try:
 				variableObj = self.variableDict[variableName]
-				del self.usedRegisters[variableObj.register]
-				self.availableRegisters.append(variableObj.register)
-				self.availableRegisters.sort()
+				if (variableObj.register):
+					del self.usedRegisters[variableObj.register]
+					self.availableRegisters.append(variableObj.register)
+					self.availableRegisters.sort()
 				del self.variableDict[variableName]
 			except Exception as e:
 				raise Exception("ERROR: Could not remove variable \"{}\"{}".format(variableName, e))
@@ -485,69 +582,74 @@ class scopeController:
 		else:
 			raise Exception("ERROR: variable \"{}\" not declared in scope".format(variableName))
 
-		#Check if variable already on stack
-		if (variableName in self.localStack):
-			#Get location of variable relative to current stack pointer  #<TODO> handle storing values on non-word aligned locations
-			varLocation = 0
-			currentLocation = 0
-			for var in self.localStack:
-				currentLocation += self.localStack[var]
-				if (var == variableName):
-					varLocation = currentLocation
-			currentStackSize = currentLocation
 
-			stackOffset = currentStackSize - varLocation
+		if (not variableObj.volatileRegister):
+			#Check if variable already on stack
+			if (variableName in self.localStack):
+				#Get location of variable relative to current stack pointer  #<TODO> handle storing values on non-word aligned locations
+				varLocation = 0
+				currentLocation = 0
+				for var in self.localStack:
+					currentLocation += self.localStack[var]
+					if (var == variableName):
+						varLocation = currentLocation
+				currentStackSize = currentLocation
 
-			#Update value of variable in stack
-			if (variableObj.register):
-				if (variableObj.size == 1):
-					instructions.append("{}sb {}, {}(sp)".format(indentString, variableObj.register, stackOffset))
-				elif (variableObj.size == 2):
-					instructions.append("{}sh {}, {}(sp)".format(indentString, variableObj.register, stackOffset))
-				elif (variableObj.size == 4):
-					instructions.append("{}sw {}, {}(sp)".format(indentString, variableObj.register, stackOffset))
+				stackOffset = currentStackSize - varLocation
 
-		else:
-			#Get current size of stack
-			currentStackSize = 0
-			for var in self.localStack:
-				currentStackSize += self.localStack[var]
+				#Update value of variable in stack
+				if (variableObj.register):
+					if (variableObj.size == 1):
+						instructions.append("{}sb {}, {}(sp)".format(indentString, variableObj.register, stackOffset))
+					elif (variableObj.size == 2):
+						instructions.append("{}sh {}, {}(sp)".format(indentString, variableObj.register, stackOffset))
+					elif (variableObj.size == 4):
+						instructions.append("{}sw {}, {}(sp)".format(indentString, variableObj.register, stackOffset))
 
-			#Add buffer space if needed
-			#<TODO> reassign buffer space to store sub-word variables when possible
-			bufferSize = 0
-			if (variableObj.size >= 4):
-				if (currentStackSize%4 != 0):
-					#SP is not word aligned. Need to add buffer space to stack
-					bufferName = "<BUFFER>_{}".format(self.stackBufferCounter)
-					self.stackBufferCounter += 1
-					bufferSize = 4 - (currentStackSize%4)
-					self.localStack[bufferName] = bufferSize
-			elif (variableObj.size >= 2):
-				if (currentStackSize%2 != 0):
-					#SP is not half aligned. Need to add buffer space to stack
-					bufferName = "<BUFFER>_{}".format(self.stackBufferCounter)
-					self.stackBufferCounter += 1
-					bufferSize = 2 - (currentStackSize%2)
-					self.localStack[bufferName] = bufferSize
+			else:
+				#Get current size of stack
+				currentStackSize = 0
+				for var in self.localStack:
+					currentStackSize += self.localStack[var]
 
-			#Allocate space on stack and store current value of regSource
-			self.localStack[variableName] = variableObj.size	
+				#Add buffer space if needed
+				#<TODO> reassign buffer space to store sub-word variables when possible
+				bufferSize = 0
+				if (variableObj.size >= 4):
+					if (currentStackSize%4 != 0):
+						#SP is not word aligned. Need to add buffer space to stack
+						bufferName = "<BUFFER>_{}".format(self.stackBufferCounter)
+						self.stackBufferCounter += 1
+						bufferSize = 4 - (currentStackSize%4)
+						self.localStack[bufferName] = bufferSize
+				elif (variableObj.size >= 2):
+					if (currentStackSize%2 != 0):
+						#SP is not half aligned. Need to add buffer space to stack
+						bufferName = "<BUFFER>_{}".format(self.stackBufferCounter)
+						self.stackBufferCounter += 1
+						bufferSize = 2 - (currentStackSize%2)
+						self.localStack[bufferName] = bufferSize
 
-			instructions.append("{}addi sp, sp, -{}".format(indentString, variableObj.size+bufferSize))
-			if (variableObj.register):
-				if (variableObj.size == 1):
-					instructions.append("{}sb {}, 0(sp)".format(indentString, variableObj.register))
-				elif (variableObj.size == 2):
-					instructions.append("{}sh {}, 0(sp)".format(indentString, variableObj.register))
-				elif (variableObj.size == 4):
-					instructions.append("{}sw {}, 0(sp)".format(indentString, variableObj.register))
+				#Allocate space on stack and store current value of regSource
+				self.localStack[variableName] = variableObj.size	
+
+				instructions.append("{}addi sp, sp, -{}".format(indentString, variableObj.size+bufferSize))
+				if (variableObj.register):
+					if (variableObj.size == 1):
+						instructions.append("{}sb {}, 0(sp)".format(indentString, variableObj.register))
+					elif (variableObj.size == 2):
+						instructions.append("{}sh {}, 0(sp)".format(indentString, variableObj.register))
+					elif (variableObj.size == 4):
+						instructions.append("{}sw {}, 0(sp)".format(indentString, variableObj.register))
 
 
 		if (freeRegister):
 			del self.usedRegisters[variableObj.register]
 			self.availableRegisters.append(variableObj.register)
 			variableObj.register = None
+
+		if (variableObj.volatileRegister):
+			self.removeVariable(variableName)
 
 		return instructions
 
@@ -563,7 +665,7 @@ class scopeController:
 		Returns an instructionList object, and the register name the pointer was written to.
 
 		returnType:
-			<tuple> ( <instructionList> instructions , <str> destinationRegister )
+			<tuple> ( <instructionList> instructions , <str> destinationRegister , <str> pointerVariableName)
 		'''
 		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
@@ -591,13 +693,21 @@ class scopeController:
 		stackOffset = currentStackSize - varLocation
 
 		#Write address of variable to register
-		instructionsTemp, regDest = self.getFreeRegister(preferTemp=True, regOverride=regDestOverride, indentLevel=indentLevel)
-		instructions += instructionsTemp
+		regDest = None
+		pointerName = "<PTR>_&{}".format(variableName)
+		if (pointerName in self.variableDict):
+			regDest = self.variableDict[pointerName].register
+		
+		if (not regDest):
+			instructionsTemp, regDest = self.getFreeRegister(preferTemp=True, regOverride=regDestOverride, indentLevel=indentLevel)
+			instructions += instructionsTemp
+			instructions +=  self.addVariable(pointerName, register=regDest, volatileRegister=True, indentLevel=indentLevel)
+
 
 		instructions.append("{}addi {}, sp, {}".format(indentString, regDest, stackOffset))  #<TODO> handle if offset is too big for immediate
 
 
-		return instructions, regDest
+		return instructions, regDest, pointerName
 
 
 	def loadStack(self, variableName, regDestOverride=None, indentLevel=0):
@@ -781,7 +891,7 @@ class scopeController:
 
 		if ((not registerName) and (forceFree)):
 			#No free register. Eject a variable to get a free one
-			ejectVariableName, registerName = self.usedRegisters.items()[0]
+			registerName, ejectVariableName = list(self.usedRegisters.items())[0]
 			instructions += self.storeStack(ejectVariableName, freeRegister=True, indentLevel=indentLevel)
 
 
@@ -978,7 +1088,7 @@ def getArrayElementPointer(arrayName, subscript, scope, indentLevel=0):
 	elementPointerReg = None
 
 	#Get pointer to start of array
-	instructionsTemp, arrayPointerReg = scope.getPointer(arrayName, indentLevel=indentLevel)
+	instructionsTemp, arrayPointerReg, pointerVariableName = scope.getPointer(arrayName, indentLevel=indentLevel)
 	instructions += instructionsTemp
 
 	#Get pointer offset from subscript into register
@@ -1001,6 +1111,36 @@ def getArrayElementPointer(arrayName, subscript, scope, indentLevel=0):
 
 
 	return instructions, elementPointerReg
+
+
+def getStructMemberPointer(structName, memberName, scope, indentLevel=0):
+	'''
+	Get a pointer to a struct member into a register
+
+	Returns:
+		<tuple> ( <instructionList> instructions , <str> pointerRegister , <struct> structDef)
+	'''
+	instructions = instructionList(scope)
+	indentString = "".join(["\t" for i in range(indentLevel)])
+	global g_cFileCoord
+
+	memberPointerReg = None
+
+	#Get pointer to start of struct
+	instructionsTemp, structPointerReg, pointerVariableName = scope.getPointer(structName, indentLevel=indentLevel)
+	instructions += instructionsTemp
+
+	#Get offset of member
+	structVariable = scope.getVariable(structName)
+	structDefObject = g_structDictionary[structVariable.type.type.name]
+	offset = structDefObject.members[memberName].offset
+
+	#Combine offset and struct pointer
+	memberPointerReg = structPointerReg
+	if (offset > 0):
+		instructions.append("{}addi {}, {}, {}".format(indentString, memberPointerReg, structPointerReg, offset))  #<TODO> handle offsets too large for immediate
+
+	return instructions, memberPointerReg, structDefObject
 
 
 def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
@@ -1081,8 +1221,6 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 			instructions += instructionsTemp
 			instructions.append("{}mv {}, a0".format(indentString, operandReg))
 	elif isinstance(operandItem, c_ast.ArrayRef):
-		isArrayReference = True
-
 		arrayName = operandItem.name.name
 		subscript = operandItem.subscript
 		#Get pointer to array element
@@ -1098,6 +1236,26 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 		elif (elementSize == 2):
 			instructions.append("{}lh {}, 0({})".format(indentString, operandReg, pointerRegister))
 		elif (elementSize == 1):
+			instructions.append("{}lb {}, 0({})".format(indentString, operandReg, pointerRegister))
+		#Release pointer register
+		instructions += scope.releaseRegister(pointerRegister, indentLevel=indentLevel)
+	elif isinstance(operandItem, c_ast.StructRef):
+		structName = operandItem.name.name
+		memberName = operandItem.field.name
+		#Get pointer to struct member
+		instructionsTemp, pointerRegister, structDef = getStructMemberPointer(structName, memberName, scope, indentLevel=indentLevel)
+		instructions += instructionsTemp
+
+		#Load member into operandReg
+		instructionsTemp, operandReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+		instructions += instructionsTemp
+
+		memberSize = structDef.members[memberName].size
+		if (memberSize == 4):
+			instructions.append("{}lw {}, 0({})".format(indentString, operandReg, pointerRegister)) #<TODO> handle unsigned values
+		elif (memberSize == 2):
+			instructions.append("{}lh {}, 0({})".format(indentString, operandReg, pointerRegister))
+		elif (memberSize == 1):
 			instructions.append("{}lb {}, 0({})".format(indentString, operandReg, pointerRegister))
 		#Release pointer register
 		instructions += scope.releaseRegister(pointerRegister, indentLevel=indentLevel)
@@ -1142,6 +1300,7 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 		instructions.append("{}addi {}, {}, 1".format(indentString, operandReg, operandReg))
 		if isinstance(item.expr, c_ast.ID):
 			resultVariableName = item.expr.name
+
 	elif (operator == "p--"):
 		#Get operand into register
 		instructionsTemp, operandReg = operandToRegister(item.expr, scope, indentLevel=indentLevel)
@@ -1151,19 +1310,11 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 		instructions.append("{}addi {}, {}, -1".format(indentString, operandReg, operandReg))
 		if isinstance(item.expr, c_ast.ID):
 			resultVariableName = item.expr.name
+
 	elif (operator == "-"):
 		#Get operand into register
 		instructionsTemp, operandReg = operandToRegister(item.expr, scope, indentLevel=indentLevel)
 		instructions += instructionsTemp
-
-		#Get or create variable name for result of negation
-		if (targetVariableName):
-			instructions += scope.addVariable(targetVariableName, size=resultSize, varType=resultType, indentLevel=indentLevel)
-
-			resultVariableName = targetVariableName
-		else:
-			instructionsTemp, resultVariableName = scope.createExpressionResult(indentLevel=indentLevel)
-			instructions += instructionsTemp
 
 		#Get a register to store result
 		regDest = ""
@@ -1174,14 +1325,24 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 			instructionsTemp, regDest = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
 			instructions += instructionsTemp
 
+		#Get or create variable name for result of negation
+		if (targetVariableName):
+			instructions += scope.addVariable(targetVariableName, size=resultSize, register=regDest, varType=resultType, indentLevel=indentLevel)
+
+			resultVariableName = targetVariableName
+		else:
+			instructionsTemp, resultVariableName = scope.createExpressionResult(register=regDest, indentLevel=indentLevel)
+			instructions += instructionsTemp
+
+		#Negate operand
 		instructionsTemp, tempRegister = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
 		instructions += instructionsTemp
 
-		#Negate operand
 		instructions.append("{}addi {}, zero, -1".format(indentString, tempRegister))
 		instructions.append("{}mul {}, {}, {}".format(indentString, regDest, operandReg, tempRegister))
 
 		instructions += scope.releaseRegister(tempRegister)
+
 	elif (operator == "!"):
 		#Get operand into register
 		instructionsTemp, operandReg = operandToRegister(item.expr, scope, indentLevel=indentLevel)
@@ -1211,19 +1372,11 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 
 			#Logically invert operand
 			instructions.append("{}sltu {}, {}, zero".format(indentString, regDest, operandReg))
+
 	elif (operator == "&"):
 		#Get memory location of variable
-		instructionsTemp, regDest = scope.getPointer(item.expr.name, regDestOverride=targetReg, indentLevel=indentLevel)
+		instructionsTemp, regDest, resultVariableName = scope.getPointer(item.expr.name, regDestOverride=targetReg, indentLevel=indentLevel)
 		instructions += instructionsTemp
-
-		#Get or create variable name for reference result
-		if (targetVariableName):
-			instructions += scope.addVariable(targetVariableName, register=regDest, size=resultSize, varType=resultType, indentLevel=indentLevel)
-
-			resultVariableName = targetVariableName
-		else:
-			instructionsTemp, resultVariableName = scope.createExpressionResult(register=regDest, indentLevel=indentLevel)
-			instructions += instructionsTemp
 	elif (operator == "*"):
 		if isinstance(item.expr, c_ast.ID):
 			#Get memory location of variable
@@ -1253,6 +1406,7 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 				instructions += instructionsTemp
 		else:
 			raise Exception("ATTEMPT TO DEREFERENCE CONSTANT | convertUnaryOpItem\n{}".format(item.coord))
+
 	else:
 		print(item)
 		raise Exception("UNSUPPORTED OPERATOR \"{}\"| convertUnaryOpItem".format(operator))
@@ -1553,12 +1707,17 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 	instructionsTemp, rightValReg = operandToRegister(rightOperand, scope, indentLevel=indentLevel)  
 	instructions += instructionsTemp
 
-	#Get left value into register  #<TODO> handle constant values small enough for immediates
-	isPointerDereference = False
-	pointerRegister = None
+	#########
+	# Get left value into register  #<TODO> handle constant values small enough for immediates
+	#########
 	leftOperand = item.lvalue
 	leftValReg = None
-	arrayName = None
+	leftSize = None
+
+	#Handle pointer dereference
+	isPointerDereference = False
+	pointerRegister = None
+
 	if isinstance(leftOperand, c_ast.UnaryOp):
 		if (leftOperand.op == "*"):
 			isPointerDereference = True
@@ -1585,7 +1744,10 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 			else:
 				raise Exception("UNSUPPORTED DEREFERENCE TYPE | {}".format(g_cFileCoord))
 
+	#Handle array element references
 	isArrayReference = False
+	arrayName = None
+
 	if isinstance(leftOperand, c_ast.ArrayRef):
 		isArrayReference = True
 
@@ -1598,19 +1760,45 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 		instructionsTemp, leftValReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
 		instructions += instructionsTemp
 
-		elementSize = scope.variableDict[arrayName].subElementSize[-1]
-		if (elementSize == 4):
+		leftSize = scope.variableDict[arrayName].subElementSize[-1]
+		if (leftSize == 4):
 			instructions.append("{}lw {}, 0({})".format(indentString, leftValReg, pointerRegister)) #<TODO> handle unsigned values
-		elif (elementSize == 2):
+		elif (leftSize == 2):
 			instructions.append("{}lh {}, 0({})".format(indentString, leftValReg, pointerRegister))
-		elif (elementSize == 1):
+		elif (leftSize == 1):
 			instructions.append("{}lb {}, 0({})".format(indentString, leftValReg, pointerRegister))
 
-	if (not isArrayReference):
+	#Handle struct member references
+	isStructReference = False
+	if isinstance(leftOperand, c_ast.StructRef):
+		isStructReference = True
+
+		structName = leftOperand.name.name
+		memberName = leftOperand.field.name
+		#Get pointer to struct member
+		instructionsTemp, pointerRegister, structDef = getStructMemberPointer(structName, memberName, scope, indentLevel=indentLevel)
+		instructions += instructionsTemp
+
+		#Load member into leftValReg
+		instructionsTemp, leftValReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+		instructions += instructionsTemp
+
+		leftSize = structDef.members[memberName].size
+		if (leftSize == 4):
+			instructions.append("{}lw {}, 0({})".format(indentString, leftValReg, pointerRegister)) #<TODO> handle unsigned values
+		elif (leftSize == 2):
+			instructions.append("{}lh {}, 0({})".format(indentString, leftValReg, pointerRegister))
+		elif (leftSize == 1):
+			instructions.append("{}lb {}, 0({})".format(indentString, leftValReg, pointerRegister))
+
+	#Get left value into register if not already handled
+	if ((not isArrayReference) and (not isStructReference)):
 		instructionsTemp, leftValReg = operandToRegister(leftOperand, scope, indentLevel=indentLevel)
 		instructions += instructionsTemp
 
-	#Handler operators
+	#########
+	# Handler operators
+	#########
 	#<TODO>, handle unsigned operands
 	operator = item.op
 
@@ -1623,19 +1811,23 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 	else:
 		raise Exception("UNSUPPORTED OPERATOR \"{}\" | convertAssignmentItem".format(operator))
 
-	if (isPointerDereference or isArrayReference):
+	#Update values in memory
+	if (isPointerDereference or isArrayReference or isStructReference):
 		#Update memory with value
-		elementSize = scope.variableDict[arrayName].subElementSize[-1]
-		if (elementSize == 4):
+		if (leftSize == 4):
 			instructions.append("{}sw {}, 0({})".format(indentString, leftValReg, pointerRegister))
-		elif (elementSize == 2):
+		elif (leftSize == 2):
 			instructions.append("{}sh {}, 0({})".format(indentString, leftValReg, pointerRegister))
-		elif (elementSize == 1):
+		elif (leftSize == 1):
 			instructions.append("{}sb {}, 0({})".format(indentString, leftValReg, pointerRegister))
 		instructions += scope.releaseRegister(leftValReg, indentLevel=indentLevel)
 	elif isinstance(leftOperand, c_ast.ID):
 		#Left operand is a variable. Update in memory
 		instructions += scope.storeStack(leftOperand.name, indentLevel=indentLevel)
+
+	#Release pointer register
+	if (pointerRegister):
+		instructions += scope.releaseRegister(pointerRegister, indentLevel=indentLevel)
 
 
 	return instructions
@@ -1766,6 +1958,11 @@ def convertDeclItem(item, scope, indentLevel=0):
 		elif isinstance(item.init, c_ast.BinaryOp):
 			#Initialized variable is result of binary expression
 			instructionsTemp, resultVariableName = convertBinaryOpItem(item.init, scope, targetVariableName=variableName, indentLevel=indentLevel)
+			instructions += instructionsTemp
+
+		elif isinstance(item.init, c_ast.UnaryOp):
+			#Initialized variable is result of binary expression
+			instructionsTemp, resultVariableName = convertUnaryOpItem(item.init, scope, targetVariableName=variableName, indentLevel=indentLevel)
 			instructions += instructionsTemp
 
 		elif isinstance(item.init, c_ast.FuncCall):
@@ -2136,8 +2333,7 @@ Currently only supports a subset of the C language
 		for structDecl in structDeclarations:
 			structObj = struct(structDecl.type)
 			g_typeSizeDictionary[structObj.name] = structObj.size
-
-		sys.exit()
+			g_structDictionary[structObj.name] = structObj
 		
 		#Translate functions into assembly snippets
 		if ("main" in definedFunctions):
@@ -2257,5 +2453,5 @@ Currently only supports a subset of the C language
 		os.remove(cleanFilePath)
 
 	except Exception as e:
-		printColor(traceback.format_exc(), color=COLORS.ERROR)
+		printColor("{}\n{}".format(traceback.format_exc(), g_cFileCoord), color=COLORS.ERROR)
 		sys.exit()

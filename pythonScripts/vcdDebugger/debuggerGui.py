@@ -74,7 +74,7 @@ p, li { white-space: pre-wrap; }
 		orange = "fd9622"
 
 		#C keywords
-		c_blueKeywords = ["int", "float", "char", "double", "long", "unisgned", "byte", "bool"]
+		c_blueKeywords = ["int", "float", "char", "double", "long", "unisgned", "byte", "bool", "struct"]
 		c_redKeywords = ["return", "if", "else", "&&", "||", "!", "for", "while"]
 		c_constantKeywords = ["true", "false"]
 
