@@ -30,28 +30,41 @@ struct Coordinate
 
 int main()
 {
+	
 	int temp = -5;
 	struct Coordinate originPoint;
 	originPoint.x = 0;
 	originPoint.y = 0;
 	originPoint.z = 0;
+	
 
 	struct Coordinate p1;
 	p1.x = 3;
 	p1.y = -4;
 	p1.z = 5;
 
+	
 	int xDiff = p1.x - originPoint.x;
 	int yDiff = p1.y - originPoint.y;
 	int zDiff = p1.z - originPoint.z;
 	int distanceSquared = xDiff*xDiff + yDiff*yDiff + zDiff*zDiff;
 
 	if (distanceSquared != 50) return -1;
+	
 
 	p1.name.subName.tertiaryInt = 73;
 	p1.name.subName.tertiaryInt += 2;
 	int k = p1.name.subName.tertiaryInt / 3;
 	if (k != 25) return -1;
+
+	char dummyArray[10];
+	dummyArray[1] = 2;
+
+	p1.name.dummyString[0] = 13;
+	p1.name.dummyString[1] = 29;
+	p1.name.dummyString[2] = p1.name.dummyString[0] + p1.name.dummyString[1];
+	k = p1.name.dummyString[2];
+	if (k != 42) return -1;
 
 	return 42;
 }

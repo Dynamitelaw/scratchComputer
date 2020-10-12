@@ -1680,7 +1680,7 @@ class Ui_MainWindow(object):
 				if (regName in usedRegisters):
 					regDisplay.setVariableText(usedRegisters[regName])
 				else:
-					regDisplay.setVariableText("<None>")
+					regDisplay.setVariableText("-")
 		except Exception as e:
 			pass
 

@@ -1,4 +1,5 @@
 from collections import OrderedDict
+import copy
 
 from pycparser import c_parser, c_ast, parse_file, c_generator
 import compGlobals as globals
@@ -59,6 +60,7 @@ class scopeController:
 			tempDict["register"] = self.register
 			tempDict["type"] = self.type
 			tempDict["size"] = self.size
+			tempDict["subElementSize"] = self.subElementSize
 			tempDict["signed"] = self.signed
 			tempDict["volatileRegister"] = self.volatileRegister
 
@@ -69,6 +71,7 @@ class scopeController:
 			tempDict["register"] = self.register
 			tempDict["type"] = "\"{}\"".format(self.type).replace("\n","").replace(" ", "")
 			tempDict["size"] = self.size
+			tempDict["subElementSize"] = self.subElementSize
 			tempDict["signed"] = self.signed
 			tempDict["volatileRegister"] = self.volatileRegister
 
@@ -87,9 +90,11 @@ class scopeController:
 			]
 		self.loadHistory = []
 		self.virginSaveRegisters = ["s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11"]
+
 		self.expressionCounter = 0
 		self.stackBufferCounter = 0
 		self.pointerCounter = 0
+		self.tagCounter = 0
 
 	def __str__(self):
 		tempDict = {}
@@ -235,8 +240,9 @@ class scopeController:
 			else:
 				#Current register location specified
 				if (register in self.usedRegisters):
-					print(self.usedRegisters.items())
-					raise Exception("Register \"{}\" already in use by variable \"{}\"".format(register, self.usedRegisters[register]))
+					if not ("<TAG_" in self.usedRegisters[register]):
+						print(self.usedRegisters.items())
+						raise Exception("Register \"{}\" already in use by variable \"{}\"".format(register, self.usedRegisters[register]))
 
 				self.usedRegisters[register] = variableName
 
@@ -516,7 +522,7 @@ class scopeController:
 			return None
 
 
-	def getFreeRegister(self, preferTemp=False, tempsAllowed=True, forceFree=True, regOverride=None, indentLevel=0):
+	def getFreeRegister(self, preferTemp=False, tempsAllowed=True, forceFree=True, regOverride=None, tag="None", indentLevel=0):
 		'''
 		Returns the name of an available register to the caller.
 		params:
@@ -540,6 +546,12 @@ class scopeController:
 			instructions += self.releaseRegister(registerName, indentLevel=indentLevel)
 			self.availableRegisters.remove(registerName)
 
+			#Tag released register
+			tagName = "<TAG_{}>_{}".format(self.tagCounter, tag)
+			self.tagCounter += 1
+			instructions += self.addVariable(tagName, register=registerName, volatileRegister=True,indentLevel=indentLevel)
+			self.usedRegisters[registerName] = tagName
+
 			return instructions, registerName
 
 		if (preferTemp):
@@ -549,6 +561,12 @@ class scopeController:
 				registerName = t_Registers[0]
 				self.availableRegisters.remove(registerName)
 
+				#Tag released register
+				tagName = "<TAG_{}>_{}".format(self.tagCounter, tag)
+				self.tagCounter += 1
+				instructions += self.addVariable(tagName, register=registerName, volatileRegister=True,indentLevel=indentLevel)
+				self.usedRegisters[registerName] = tagName
+
 				return instructions, registerName
 
 			#Check for free argument register
@@ -556,6 +574,12 @@ class scopeController:
 			if (len(a_Registers) > 0):
 				registerName = a_Registers[0]
 				self.availableRegisters.remove(registerName)
+
+				#Tag released register
+				tagName = "<TAG_{}>_{}".format(self.tagCounter, tag)
+				self.tagCounter += 1
+				instructions += self.addVariable(tagName, register=registerName, volatileRegister=True,indentLevel=indentLevel)
+				self.usedRegisters[registerName] = tagName
 
 				return instructions, registerName
 
@@ -579,6 +603,12 @@ class scopeController:
 					registerName = t_Registers[0]
 					self.availableRegisters.remove(registerName)
 
+					#Tag released register
+					tagName = "<TAG_{}>_{}".format(self.tagCounter, tag)
+					self.tagCounter += 1
+					instructions += self.addVariable(tagName, register=registerName, volatileRegister=True,indentLevel=indentLevel)
+					self.usedRegisters[registerName] = tagName
+
 					return instructions, registerName
 
 				#Check for free argument register
@@ -586,6 +616,12 @@ class scopeController:
 				if (len(a_Registers) > 0):
 					registerName = a_Registers[0]
 					self.availableRegisters.remove(registerName)
+
+					#Tag released register
+					tagName = "<TAG_{}>_{}".format(self.tagCounter, tag)
+					self.tagCounter += 1
+					instructions += self.addVariable(tagName, register=registerName, volatileRegister=True,indentLevel=indentLevel)
+					self.usedRegisters[registerName] = tagName
 
 					return instructions, registerName
 
@@ -603,8 +639,31 @@ class scopeController:
 			registerName, ejectVariableName = list(self.usedRegisters.items())[0]
 			instructions += self.storeStack(ejectVariableName, freeRegister=True, indentLevel=indentLevel)
 
+		#Tag released register
+		tagName = "<TAG_{}>_{}".format(self.tagCounter, tag)
+		self.tagCounter += 1
+		instructions += self.addVariable(tagName, register=registerName, volatileRegister=True,indentLevel=indentLevel)
+		self.usedRegisters[registerName] = tagName
 
 		return instructions, registerName
+
+
+	def regexReleaseVariable(self, variableRegex, indentLevel=0):
+		'''
+		Deallocates a batch of registers, whose allocated variables contain variableRegex.
+
+		returnType:
+			<instructionList> instructions
+		'''
+		instructions = instructionList(self)
+
+		for registerName in copy.deepcopy(self.usedRegisters):
+			if (registerName in self.usedRegisters):
+				variableName = self.usedRegisters[registerName]
+				if (variableRegex in variableName):  #<TODO> implement actual regex matching
+					instructions += self.releaseRegister(registerName, indentLevel=indentLevel)
+
+		return instructions
 
 
 	def releaseRegister(self, registerName, indentLevel=0):
@@ -741,7 +800,7 @@ class scopeController:
 		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
-		for variableName in self.variableDict:
+		for variableName in copy.deepcopy(self.variableDict):
 			if ("<SAVE>" in variableName):
 				regDest = variableName.replace("<SAVE>_", "")
 				instructions += self.moveVariable(variableName, regDest, indentLevel=indentLevel)
@@ -778,6 +837,7 @@ class scopeController:
 		stateDict = {}
 		stateDict["scope"] = {"name": self.name}
 		stateDict["usedRegisters"] = self.usedRegisters
+		stateDict["availableRegisters"] = self.availableRegisters
 		stateDict["localStack"] = [{v: self.localStack[v]} for v in self.localStack]
 
 		return stateDict

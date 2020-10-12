@@ -1,32 +1,64 @@
+import copy 
+
 from pycparser import c_parser, c_ast, parse_file, c_generator
 import compGlobals as globals
 from compScopeController import *
 from compClasses import *
 
 
-def getArrayElementPointer(arrayName, subscript, scope, indentLevel=0):
+def getArrayElementPointer(arrayRef, scope, indentLevel=0):
 	'''
 	Get a pointer to an array element into a register
 
 	Returns:
-		<tuple> ( <instructionList> instructions , <str> pointerRegister )
+		<tuple> ( <instructionList> instructions , <str> pointerRegister , <int> size)
 	'''
+
 	instructions = instructionList(scope)
 	indentString = "".join(["\t" for i in range(indentLevel)])
 
-	elementPointerReg = None
+	#Get name of array root
+	arrayRootName = arrayRef.name
+	while (not isinstance(arrayRootName, str)):
+		arrayRootName = arrayRootName.name
+
+	subscript = arrayRef.subscript
 
 	#Get pointer to start of array
-	instructionsTemp, arrayPointerReg, pointerVariableName = scope.getPointer(arrayName, indentLevel=indentLevel)
+	instructionsTemp, arrayPointerReg, pointerVariableName = scope.getPointer(arrayRootName, indentLevel=indentLevel)
 	instructions += instructionsTemp
+
+	#Determine element length and starting offset from pointer
+	rootVariable = scope.getVariable(arrayRootName)
+	elementLength = None
+	size = None  #Size of root element in array
+
+	if isinstance(rootVariable.type, c_ast.ArrayDecl):
+		elementLength = rootVariable.subElementSize[0]
+		size = rootVariable.subElementSize[-1]
+	elif isinstance(rootVariable.type.type, c_ast.Struct):
+		structDefObject = globals.structDictionary[rootVariable.type.type.name]
+		#Get member name
+		tempRef = copy.deepcopy(arrayRef.name)
+		memberName = tempRef.field.name
+		while (not isinstance(tempRef.name, c_ast.ID)):
+			tempRef = tempRef.name
+			memberName = tempRef.field.name + "." + memberName
+
+		#Get element length
+		elementLength = structDefObject.members[memberName].subDimensions[0]
+		size = structDefObject.members[memberName].subDimensions[-1]
+
+		#Increase pointer reg by member offset
+		memberOffset = structDefObject.members[memberName].offset
+		instructions.append("{}addi {}, {}, {}".format(indentString, arrayPointerReg, arrayPointerReg, memberOffset))  #<TODO> handle offsets too large for immediate
+	else:
+		raise Exception("UNSUPPORTED ARRAY ROOT TYPE | {}\n{}".format(globals.cFileCoord, rootVariable))
 
 	#Get pointer offset from subscript into register
-	arrayVariable = scope.getVariable(arrayName)
-	elementLength = arrayVariable.subElementSize[0]
-
 	instructionsTemp, offsetIndex = operandToRegister(subscript, scope, indentLevel=indentLevel)
 	instructions += instructionsTemp
-	instructionsTemp, elementLengthReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+	instructionsTemp, elementLengthReg = scope.getFreeRegister(preferTemp=True, tag="elementLength", indentLevel=indentLevel)
 	instructions += instructionsTemp
 	instructions.append("{}addi {}, zero, {}".format(indentString, elementLengthReg, elementLength))  #<TODO> handle element lengths too long for immediate
 	offsetReg = elementLengthReg
@@ -39,7 +71,7 @@ def getArrayElementPointer(arrayName, subscript, scope, indentLevel=0):
 	instructions += scope.releaseRegister(offsetReg, indentLevel=indentLevel)
 
 
-	return instructions, elementPointerReg
+	return instructions, elementPointerReg, size
 
 
 def getStructMemberPointer(structRef, scope, indentLevel=0):
@@ -47,7 +79,7 @@ def getStructMemberPointer(structRef, scope, indentLevel=0):
 	Get a pointer to a struct member into a register
 
 	Returns:
-		<tuple> ( <instructionList> instructions , <str> pointerRegister , <struct> structDef , <str> memberName)
+		<tuple> ( <instructionList> instructions , <str> pointerRegister , <int> size)
 	'''
 	instructions = instructionList(scope)
 	indentString = "".join(["\t" for i in range(indentLevel)])
@@ -62,7 +94,7 @@ def getStructMemberPointer(structRef, scope, indentLevel=0):
 	instructions += instructionsTemp
 
 	#Get member name
-	tempRef = structRef
+	tempRef = copy.deepcopy(structRef)
 	memberName = tempRef.field.name
 	while (not isinstance(tempRef.name, c_ast.ID)):
 		tempRef = tempRef.name
@@ -78,7 +110,10 @@ def getStructMemberPointer(structRef, scope, indentLevel=0):
 	if (offset > 0):
 		instructions.append("{}addi {}, {}, {}".format(indentString, memberPointerReg, structPointerReg, offset))  #<TODO> handle offsets too large for immediate
 
-	return instructions, memberPointerReg, structDefObject, memberName
+	#Get member size
+	size = structDefObject.members[memberName].size
+
+	return instructions, memberPointerReg, size
 
 
 def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
@@ -122,10 +157,10 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 		elif (value < 2048) and (value >= -2048):
 			#Value is small enough for addi
 			if (targetReg):
-				instructionsTemp, operandReg = scope.getFreeRegister(regOverride=targetReg)
+				instructionsTemp, operandReg = scope.getFreeRegister(regOverride=targetReg, tag="CONSTANT", indentLevel=indentLevel)
 				instructions += instructionsTemp
 			else:
-				instructionsTemp, operandReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+				instructionsTemp, operandReg = scope.getFreeRegister(preferTemp=True, tag="CONSTANT", indentLevel=indentLevel)
 				instructions += instructionsTemp
 			instructions.append("{}addi {}, zero, {}".format(indentString, operandReg, value))
 		else:
@@ -135,7 +170,7 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 			dataLabelName = "data_{}_{}".format(dataType, value)
 			globals.dataSegment[dataLabelName] = dataElement(dataLabelName, value=value, size=4)
 			#Load into register
-			instructionsTemp, operandReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel, regOverride=targetReg)
+			instructionsTemp, operandReg = scope.getFreeRegister(preferTemp=True, tag="CONSTANT", indentLevel=indentLevel, regOverride=targetReg)
 			instructions += instructionsTemp
 			instructions.append("{}lw {}, {}".format(indentString, operandReg, dataLabelName))
 
@@ -154,20 +189,17 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 		instructions += convertFuncCallItem(operandItem, scope, indentLevel=indentLevel)
 		operandReg = "a0"
 		if (targetReg):
-			instructionsTemp, operandReg = scope.getFreeRegister(regOverride=targetReg, indentLevel=indentLevel)
+			instructionsTemp, operandReg = scope.getFreeRegister(regOverride=targetReg, tag="funcResult", indentLevel=indentLevel)
 			instructions += instructionsTemp
 			instructions.append("{}mv {}, a0".format(indentString, operandReg))
 	elif isinstance(operandItem, c_ast.ArrayRef):
-		arrayName = operandItem.name.name
-		subscript = operandItem.subscript
 		#Get pointer to array element
-		instructionsTemp, pointerRegister = getArrayElementPointer(arrayName, subscript, scope, indentLevel=indentLevel)
+		instructionsTemp, pointerRegister, elementSize = getArrayElementPointer(operandItem, scope, indentLevel=indentLevel)
 		instructions += instructionsTemp
 		#Load element into operandReg
-		instructionsTemp, operandReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+		instructionsTemp, operandReg = scope.getFreeRegister(preferTemp=True, tag="arrayElement", indentLevel=indentLevel)
 		instructions += instructionsTemp
 
-		elementSize = scope.variableDict[arrayName].subElementSize[-1]
 		if (elementSize == 4):
 			instructions.append("{}lw {}, 0({})".format(indentString, operandReg, pointerRegister)) #<TODO> handle unsigned values
 		elif (elementSize == 2):
@@ -178,14 +210,13 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 		instructions += scope.releaseRegister(pointerRegister, indentLevel=indentLevel)
 	elif isinstance(operandItem, c_ast.StructRef):
 		#Get pointer to struct member
-		instructionsTemp, pointerRegister, structDef, memberName = getStructMemberPointer(operandItem, scope, indentLevel=indentLevel)
+		instructionsTemp, pointerRegister, memberSize = getStructMemberPointer(operandItem, scope, indentLevel=indentLevel)
 		instructions += instructionsTemp
 
 		#Load member into operandReg
-		instructionsTemp, operandReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+		instructionsTemp, operandReg = scope.getFreeRegister(preferTemp=True, tag="structMember", indentLevel=indentLevel)
 		instructions += instructionsTemp
 
-		memberSize = structDef.members[memberName].size
 		if (memberSize == 4):
 			instructions.append("{}lw {}, 0({})".format(indentString, operandReg, pointerRegister)) #<TODO> handle unsigned values
 		elif (memberSize == 2):
@@ -256,7 +287,7 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 			instructions += scope.releaseRegister(targetReg, indentLevel=indentLevel)
 			regDest = targetReg
 		else:
-			instructionsTemp, regDest = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+			instructionsTemp, regDest = scope.getFreeRegister(preferTemp=True, tag="negation", indentLevel=indentLevel)
 			instructions += instructionsTemp
 
 		#Get or create variable name for result of negation
@@ -269,7 +300,7 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 			instructions += instructionsTemp
 
 		#Negate operand
-		instructionsTemp, tempRegister = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+		instructionsTemp, tempRegister = scope.getFreeRegister(preferTemp=True, tag="temp", indentLevel=indentLevel)
 		instructions += instructionsTemp
 
 		instructions.append("{}addi {}, zero, -1".format(indentString, tempRegister))
@@ -301,7 +332,7 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 				instructions += scope.releaseRegister(targetReg, indentLevel=indentLevel)
 				regDest = targetReg
 			else:
-				instructionsTemp, regDest = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+				instructionsTemp, regDest = scope.getFreeRegister(preferTemp=True, tag="logicalInvert", indentLevel=indentLevel)
 				instructions += instructionsTemp
 
 			#Logically invert operand
@@ -319,7 +350,7 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 
 			#Load value from memory
 			#<TODO> handle values smaller than 4 bytes
-			instructionsTemp, regDest = scope.getFreeRegister(regOverride=targetReg, preferTemp=True, indentLevel=indentLevel)
+			instructionsTemp, regDest = scope.getFreeRegister(regOverride=targetReg, tag="dereference", preferTemp=True, indentLevel=indentLevel)
 			instructions += instructionsTemp
 
 			varSize = scope.variableDict[item.expr.name].subElementSize[-1]
@@ -391,7 +422,7 @@ def convertBinaryOpItem(item, scope, branch=None, targetVariableName=None, targe
 			instructions += scope.releaseRegister(targetReg, indentLevel=indentLevel)
 			regDest = targetReg
 		else:
-			instructionsTemp, regDest = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+			instructionsTemp, regDest = scope.getFreeRegister(preferTemp=True, tag="binaryOp", indentLevel=indentLevel)
 			instructions += instructionsTemp
 
 	if (not branch):
@@ -430,7 +461,7 @@ def convertBinaryOpItem(item, scope, branch=None, targetVariableName=None, targe
 		if (branch):
 			instructions.append("{}beq {}, {}, {}".format(indentString, leftOperandReg, rightOperandReg, branch))
 		else:
-			instructionsTemp, tempRegister = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+			instructionsTemp, tempRegister = scope.getFreeRegister(preferTemp=True, tag="temp", indentLevel=indentLevel)
 			instructions += instructionsTemp
 			instructions.append("{}slt {}, {}, {}".format(indentString, regDest, leftOperandReg, rightOperandReg))
 			instructions.append("{}slt {}, {}, {}".format(indentString, tempRegister, rightOperandReg, leftOperandReg))
@@ -465,7 +496,7 @@ def convertBinaryOpItem(item, scope, branch=None, targetVariableName=None, targe
 		if (branch):
 			instructions.append("{}bne {}, {}, {}".format(indentString, leftOperandReg, rightOperandReg, branch))
 		else:
-			instructionsTemp, tempRegister = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+			instructionsTemp, tempRegister = scope.getFreeRegister(preferTemp=True, tag="temp", indentLevel=indentLevel)
 			instructions += instructionsTemp
 			instructions.append("{}slt {}, {}, {}".format(indentString, regDest, leftOperandReg, rightOperandReg))
 			instructions.append("{}slt {}, {}, {}".format(indentString, tempRegister, rightOperandReg, leftOperandReg))
@@ -473,7 +504,7 @@ def convertBinaryOpItem(item, scope, branch=None, targetVariableName=None, targe
 			instructions += scope.releaseRegister(tempRegister)
 	elif (operator == "&&"):
 		if (branch):
-			instructionsTemp, tempRegister = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+			instructionsTemp, tempRegister = scope.getFreeRegister(preferTemp=True, tag="temp", indentLevel=indentLevel)
 			instructions += instructionsTemp
 			instructions.append("{}mul {}, {}, {}".format(indentString, tempRegister, leftOperandReg, rightOperandReg))
 			instructions.append("{}bne {}, zero, {}".format(indentString, tempRegister, branch))
@@ -583,7 +614,7 @@ def convertFuncCallItem(item, scope, indentLevel=0):
 			if (argIndex != 0):
 				#Save current values of prepared arugements
 				for saveIndex in range(0,argIndex):
-					instructionsTemp, tempSaveReg = scope.getFreeRegister(tempsAllowed=False, indentLevel=indentLevel)
+					instructionsTemp, tempSaveReg = scope.getFreeRegister(tempsAllowed=False, tag="argumentSave", indentLevel=indentLevel)
 					instructions += instructionsTemp
 					instructions.append("{}mv {}, a{}".format(indentString, tempSaveReg, saveIndex))
 
@@ -657,7 +688,7 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 				pointerRegister = scope.getRegisterLocation(leftOperand.expr.name)
 			elif isinstance(leftOperand.expr, c_ast.Constant):
 				#Pointer is a constant
-				instructionsTemp, pointerRegister = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+				instructionsTemp, pointerRegister = scope.getFreeRegister(preferTemp=True, tag="pointer", indentLevel=indentLevel)
 				instructions += instructionsTemp
 
 				pointerValue = int(leftOperand.expr.value)
@@ -675,21 +706,17 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 
 	#Handle array element references
 	isArrayReference = False
-	arrayName = None
 
 	if isinstance(leftOperand, c_ast.ArrayRef):
 		isArrayReference = True
 
-		arrayName = leftOperand.name.name
-		subscript = leftOperand.subscript
 		#Get pointer to array element
-		instructionsTemp, pointerRegister = getArrayElementPointer(arrayName, subscript, scope, indentLevel=indentLevel)
+		instructionsTemp, pointerRegister, leftSize = getArrayElementPointer(leftOperand, scope, indentLevel=indentLevel)
 		instructions += instructionsTemp
 		#Load element into leftValReg
-		instructionsTemp, leftValReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+		instructionsTemp, leftValReg = scope.getFreeRegister(preferTemp=True, tag="assignLeft", indentLevel=indentLevel)
 		instructions += instructionsTemp
 
-		leftSize = scope.variableDict[arrayName].subElementSize[-1]
 		if (leftSize == 4):
 			instructions.append("{}lw {}, 0({})".format(indentString, leftValReg, pointerRegister)) #<TODO> handle unsigned values
 		elif (leftSize == 2):
@@ -703,14 +730,13 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 		isStructReference = True
 
 		#Get pointer to struct member
-		instructionsTemp, pointerRegister, structDef, memberName = getStructMemberPointer(leftOperand, scope, indentLevel=indentLevel)
+		instructionsTemp, pointerRegister, leftSize = getStructMemberPointer(leftOperand, scope, indentLevel=indentLevel)
 		instructions += instructionsTemp
 
 		#Load member into leftValReg
-		instructionsTemp, leftValReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+		instructionsTemp, leftValReg = scope.getFreeRegister(preferTemp=True, tag="assignLeft", indentLevel=indentLevel)
 		instructions += instructionsTemp
 
-		leftSize = structDef.members[memberName].size
 		if (leftSize == 4):
 			instructions.append("{}lw {}, 0({})".format(indentString, leftValReg, pointerRegister)) #<TODO> handle unsigned values
 		elif (leftSize == 2):
@@ -862,7 +888,7 @@ def convertDeclItem(item, scope, indentLevel=0):
 		#Declared with initial value
 		if isinstance(item.init, c_ast.Constant):
 			#Initialized variable to a constant value
-			instructionsTemp, destinationRegister = scope.getFreeRegister(indentLevel=indentLevel)
+			instructionsTemp, destinationRegister = scope.getFreeRegister(tag="declare", indentLevel=indentLevel)
 			instructions += instructionsTemp
 			instructions += scope.addVariable(variableName, register=destinationRegister, varType=item.type, signed=True, indentLevel=indentLevel)
 
@@ -907,7 +933,7 @@ def convertDeclItem(item, scope, indentLevel=0):
 					expression = item.init.exprs[arrayIndex]
 					if isinstance(expression, c_ast.Constant):
 						#Get constant into a register
-						instructionsTemp, tempReg = scope.getFreeRegister(preferTemp=True, indentLevel=indentLevel)
+						instructionsTemp, tempReg = scope.getFreeRegister(preferTemp=True, tag="temp", indentLevel=indentLevel)
 						instructions += instructionsTemp
 
 						instructionsTemp, valueReg = operandToRegister(expression, scope, targetReg=tempReg, indentLevel=indentLevel)
@@ -1060,7 +1086,7 @@ def convertWhileItem(item, scope, indentLevel=0):
 	return instructions
 
 
-def convertAstItem(item, scope, indentLevel=0):
+def convertAstItem(item, scope, indentLevel=0, freeTempRegisters=False):
 	'''
 	Converts a c_ast object into an assembly snippet.
 	Returns an instructionList item
@@ -1073,7 +1099,7 @@ def convertAstItem(item, scope, indentLevel=0):
 
 	if isinstance(item, c_ast.Compound):
 		for subItem in item.block_items:
-			instructions += convertAstItem(subItem, scope, indentLevel=indentLevel)
+			instructions += convertAstItem(subItem, scope, indentLevel=indentLevel, freeTempRegisters=freeTempRegisters)
 	elif isinstance(item, c_ast.If):
 		instructions += convertIfItem(item, scope, indentLevel=indentLevel)
 	elif isinstance(item, c_ast.Return):
@@ -1096,6 +1122,8 @@ def convertAstItem(item, scope, indentLevel=0):
 	else:
 		raise Exception("UNSUPPORTED ITEM | convertAstItem\n{}".format(item))
 		
+	if (freeTempRegisters):
+		scope.regexReleaseVariable("<TAG_", indentLevel=indentLevel)
 
 	return instructions
 
@@ -1124,7 +1152,7 @@ def covertFuncToAssembly(funcDef):
 			argIndex += 1
 
 	#Write function body
-	instructions += convertAstItem(funcDef.body, scope, indentLevel=1)
+	instructions += convertAstItem(funcDef.body, scope, indentLevel=1, freeTempRegisters=True)
 
 	#Restore save variables
 	instructions += scope.restoreSaves(indentLevel=1)

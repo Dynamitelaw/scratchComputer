@@ -184,7 +184,7 @@ Currently only supports a subset of the C language
 			else:
 				asmFile.write("{}\n".format(inst))
 
-			if not (("#" in inst) or (":" in inst)):
+			if not (":" in inst):
 				programCounter += 4
 
 		asmFile.write("\n")
@@ -207,7 +207,7 @@ Currently only supports a subset of the C language
 				else:
 					asmFile.write("{}\n".format(inst))
 
-				if not (("#" in inst) or (":" in inst)):
+				if not (":" in inst):
 					programCounter += 4
 			asmFile.write("\n")
 

@@ -48,9 +48,10 @@ class structDef:
 		member offsets
 	'''
 	class structMember:
-		def __init__(self, name, size, memberType=None, structType=None, offset=None):
+		def __init__(self, name, size, subDimensions=None, memberType=None, structType=None, offset=None):
 			self.name = name
 			self.size = size
+			self.subDimensions = subDimensions
 			self.type = memberType
 			self.structType = structType  #for use if a member is another structure
 			self.offset = offset
@@ -60,6 +61,7 @@ class structDef:
 			tempDict["name"] = self.name
 			tempDict["type"] = self.type
 			tempDict["size"] = self.size
+			tempDict["subDimensions"] = self.subDimensions
 			tempDict["offset"] = self.offset
 			tempDict["structType"] = self.structType
 
@@ -69,6 +71,7 @@ class structDef:
 			tempDict["name"] = self.name
 			tempDict["type"] = self.type
 			tempDict["size"] = self.size
+			tempDict["subDimensions"] = self.subDimensions
 			tempDict["offset"] = self.offset
 			tempDict["structType"] = self.structType
 
@@ -86,10 +89,10 @@ class structDef:
 		for declItem in structItem.decls:
 			if isinstance(declItem.type, c_ast.ArrayDecl):
 				name = declItem.name
-				size = getArraySize(declItem.type)[0]
+				size, subDimensions = getArraySize(declItem.type)
 				membersTemp.append((size, name))
 
-				self.members[name] = self.structMember(name, size)
+				self.members[name] = self.structMember(name, size, subDimensions=subDimensions)
 			elif isinstance(declItem.type.type, c_ast.IdentifierType):
 				name = declItem.name
 				varType = " ".join(declItem.type.type.names)
@@ -103,26 +106,28 @@ class structDef:
 				size = globals.typeSizeDictionary[structType]
 				membersTemp.append((size, name))
 
+				self.members[name] = self.structMember(name, size, structType=structType)
+				
+				#This is a nested struct. Copy over subMembers from child struct definition
 				subMembers = globals.structDictionary[structType].members
 				for subName in subMembers:
 					memberName = "{}.{}".format(name, subName)
 					subSize = globals.structDictionary[structType].members[subName].size
 					membersTemp.append((subSize, memberName))
 
-				self.members[name] = self.structMember(name, size, structType=structType)
 			else:
 				raise Exception("Unsupported decl in structure | {}\n{}".format(globals.cFileCoord, declItem))
 
 		#Determine struct size and offsets of primary members
 		membersTemp.sort(reverse=True)
 		self.size = 0
-		subReferences = []
+		nestedReferences = []
 
 		for element in membersTemp:
 			size, name = element
 			if ("." in name):
-				#This is a reference to another struct member. Get offset later. Do not include in total size
-				subReferences.append(name)
+				#This is a reference to a nested struct member. Get offset later. Do not include in total size
+				nestedReferences.append(name)
 			else:
 				#Add buffer space between items if we need to
 				bufferSize = 0
@@ -149,8 +154,8 @@ class structDef:
 			bufferSize = 4 - (self.size%4)
 		self.size += bufferSize
 
-		#Determine offsets of submembers
-		for name in subReferences:
+		#Determine offsets of nested submembers
+		for name in nestedReferences:
 			subRootName = name.split(".")[0]
 			subMemberName = ".".join(name.split(".")[1:])
 			rootOffset = self.members[subRootName].offset
