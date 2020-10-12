@@ -13,7 +13,6 @@ def getArrayElementPointer(arrayRef, scope, indentLevel=0):
 	Returns:
 		<tuple> ( <instructionList> instructions , <str> pointerRegister , <int> size)
 	'''
-
 	instructions = instructionList(scope)
 	indentString = "".join(["\t" for i in range(indentLevel)])
 
@@ -30,24 +29,27 @@ def getArrayElementPointer(arrayRef, scope, indentLevel=0):
 
 	#Determine element length and starting offset from pointer
 	rootVariable = scope.getVariable(arrayRootName)
-	elementLength = None
-	size = None  #Size of root element in array
+	subElementSize = None
+	elementLength = None  #Size of root element in array
 
 	if isinstance(rootVariable.type, c_ast.ArrayDecl):
-		elementLength = rootVariable.subElementSize[0]
-		size = rootVariable.subElementSize[-1]
+		subElementSize = rootVariable.subElementSize
+		elementLength = rootVariable.subElementSize[-1]	
 	elif isinstance(rootVariable.type.type, c_ast.Struct):
 		structDefObject = globals.structDictionary[rootVariable.type.type.name]
 		#Get member name
-		tempRef = copy.deepcopy(arrayRef.name)
+		tempRef = copy.deepcopy(arrayRef)
+		while isinstance(tempRef, c_ast.ArrayRef):
+			tempRef = tempRef.name
+
 		memberName = tempRef.field.name
 		while (not isinstance(tempRef.name, c_ast.ID)):
 			tempRef = tempRef.name
 			memberName = tempRef.field.name + "." + memberName
 
 		#Get element length
-		elementLength = structDefObject.members[memberName].subDimensions[0]
-		size = structDefObject.members[memberName].subDimensions[-1]
+		subElementSize = structDefObject.members[memberName].subDimensions
+		elementLength = structDefObject.members[memberName].subDimensions[-1]
 
 		#Increase pointer reg by member offset
 		memberOffset = structDefObject.members[memberName].offset
@@ -55,23 +57,43 @@ def getArrayElementPointer(arrayRef, scope, indentLevel=0):
 	else:
 		raise Exception("UNSUPPORTED ARRAY ROOT TYPE | {}\n{}".format(globals.cFileCoord, rootVariable))
 
-	#Get pointer offset from subscript into register
-	instructionsTemp, offsetIndex = operandToRegister(subscript, scope, indentLevel=indentLevel)
-	instructions += instructionsTemp
-	instructionsTemp, elementLengthReg = scope.getFreeRegister(preferTemp=True, tag="elementLength", indentLevel=indentLevel)
-	instructions += instructionsTemp
-	instructions.append("{}addi {}, zero, {}".format(indentString, elementLengthReg, elementLength))  #<TODO> handle element lengths too long for immediate
-	offsetReg = elementLengthReg
-	instructions.append("{}mul {}, {}, {}".format(indentString, offsetReg, offsetIndex, elementLengthReg))
 
-	#Combine offset and array pointer
-	elementPointerReg = arrayPointerReg
-	instructions.append("{}add {}, {}, {}".format(indentString, elementPointerReg, arrayPointerReg, offsetReg))
+	#Determine subscript depth (>1 for multi-dimensional arrays)
+	subscriptDepth = 1
+	tempArrayRef = copy.deepcopy(arrayRef)
+	while isinstance(tempArrayRef.name, c_ast.ArrayRef):
+		subscriptDepth += 1
+		tempArrayRef = tempArrayRef.name
 
-	instructions += scope.releaseRegister(offsetReg, indentLevel=indentLevel)
+	#Increase root pointer by offset
+	for i in range(subscriptDepth, 0, -1):
+		#Get size of iTh dimenstion
+		subSize = subElementSize[-1*i]
 
+		#Get correct subscript item
+		tempArrayRef = copy.deepcopy(arrayRef)
+		for j in range(0, i-1, 1):
+			tempArrayRef = tempArrayRef.name
 
-	return instructions, elementPointerReg, size
+		subscript = tempArrayRef.subscript
+
+		#Get pointer offset from subscript into register
+		instructionsTemp, offsetIndex = operandToRegister(subscript, scope, indentLevel=indentLevel)
+		instructions += instructionsTemp
+		instructionsTemp, elementLengthReg = scope.getFreeRegister(preferTemp=True, tag="elementLength_dim{}".format(subscriptDepth-i), indentLevel=indentLevel)
+		instructions += instructionsTemp
+		instructions.append("{}addi {}, zero, {}".format(indentString, elementLengthReg, subSize))  #<TODO> handle element lengths too long for immediate
+		offsetReg = elementLengthReg
+		instructions.append("{}mul {}, {}, {}".format(indentString, offsetReg, offsetIndex, elementLengthReg))
+
+		#Combine offset and array pointer
+		elementPointerReg = arrayPointerReg
+		instructions.append("{}add {}, {}, {}".format(indentString, elementPointerReg, arrayPointerReg, offsetReg))
+
+		#Release offset register
+		instructions += scope.releaseRegister(offsetReg, indentLevel=indentLevel)
+
+	return instructions, elementPointerReg, elementLength
 
 
 def getStructMemberPointer(structRef, scope, indentLevel=0):
@@ -965,6 +987,24 @@ def convertDeclItem(item, scope, indentLevel=0):
 				instructions += scope.releaseRegister(pointerReg)
 			else:
 				raise Exception("Cannot initialize non-array to a list of values | {}".format(globals.cFileCoord))
+
+		elif isinstance(item.init, c_ast.ArrayRef):
+			#Get destination register
+			instructionsTemp, destinationRegister = scope.getFreeRegister(tag="declare", indentLevel=indentLevel)
+			instructions += instructionsTemp
+			instructions += scope.addVariable(variableName, register=destinationRegister, varType=item.type, signed=True, indentLevel=indentLevel)
+
+			#Get pointer to array element
+			instructionsTemp, pointerRegister, size = getArrayElementPointer(item.init, scope, indentLevel=indentLevel)
+			instructions += instructionsTemp
+
+			#Load element into destination register
+			if (size == 4):
+				instructions.append("{}lw {}, 0({})".format(indentString, destinationRegister, pointerRegister)) #<TODO> handle unsigned values
+			elif (size == 2):
+				instructions.append("{}lh {}, 0({})".format(indentString, destinationRegister, pointerRegister))
+			elif (size == 1):
+				instructions.append("{}lb {}, 0({})".format(indentString, destinationRegister, pointerRegister))
 
 		else:
 			raise Exception("UNSUPPORTED DECLARATION | convertDeclItem\n{}".format(item))

@@ -77,6 +77,7 @@ class structDef:
 
 			return str(tempDict)
 
+	
 	def __init__(self, structItem):
 		globals.cFileCoord = structItem.coord
 
@@ -174,6 +175,8 @@ class structDef:
 		tempDict["members"] = self.members
 
 		return str(tempDict)
+	
+
 	def __repr__(self):
 		tempDict = {}
 		tempDict["name"] = self.name
@@ -197,6 +200,7 @@ class instructionList:
 		self.coords = []
 		self.scope = scope
 
+	
 	def __str__(self):
 		return str(self.instructions)
 
@@ -216,6 +220,7 @@ class instructionList:
 		else:
 			self.coords.append({"file": None, "lineNum": None})
 
+	
 	def __add__(self, otherList):
 		returnList = instructionList(self.scope)
 		returnList.instructions = copy.deepcopy(self.instructions) + copy.deepcopy(otherList.instructions)
@@ -224,9 +229,11 @@ class instructionList:
 
 		return returnList
 
+	
 	def length(self):
 		return len(self.instructions)
 
+	
 	def updateScopeState(self):
 		if (len(self.scopeStates) > 0):
 			self.scopeStates[-1] = self.scope.getState()

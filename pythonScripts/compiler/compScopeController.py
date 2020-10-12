@@ -96,6 +96,7 @@ class scopeController:
 		self.pointerCounter = 0
 		self.tagCounter = 0
 
+	
 	def __str__(self):
 		tempDict = {}
 		tempDict["name"] = self.name
@@ -106,6 +107,8 @@ class scopeController:
 		tempDict["virginSaveRegisters"] = self.virginSaveRegisters
 
 		return str(tempDict)
+	
+
 	def __repr__(self):
 		tempDict = {}
 		tempDict["name"] = self.name
@@ -193,6 +196,9 @@ class scopeController:
 		Declare a new variable in this scope.
 		If register keyword is included, the variable will be initialized the the value currently stored in specified register. 
 		Specified register will be removed from available registers.
+
+		Returns:
+			<instructionList> instructions
 		'''
 		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
@@ -771,6 +777,7 @@ class scopeController:
 
 		return instructions
 
+	
 	def alignStack(self, indentLevel=0):
 		'''
 		If current stack is not word aligned, will add buffer space to stack
@@ -793,7 +800,7 @@ class scopeController:
 			self.stackBufferCounter += 1
 			bufferSize = 4 - (currentStackSize%4)
 			self.localStack[bufferName] = bufferSize
-			
+
 			instructions.append("{}addi sp, sp, -{}".format(indentString, bufferSize))
 
 		return instructions
@@ -861,6 +868,7 @@ class scopeController:
 
 		return instructions
 
+	
 	def getState(self):
 		stateDict = {}
 		stateDict["scope"] = {"name": self.name}
