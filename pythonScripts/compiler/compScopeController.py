@@ -205,7 +205,7 @@ class scopeController:
 		elif (varType):
 			if isinstance(varType, c_ast.TypeDecl):
 				if isinstance(varType.type, c_ast.IdentifierType):
-					names = "".join(varType.type.names)
+					names = " ".join(varType.type.names)
 					varSize = globals.typeSizeDictionary[names]
 				elif isinstance(varType.type, c_ast.Struct):
 					name = varType.type.name
@@ -640,10 +640,11 @@ class scopeController:
 			instructions += self.storeStack(ejectVariableName, freeRegister=True, indentLevel=indentLevel)
 
 		#Tag released register
-		tagName = "<TAG_{}>_{}".format(self.tagCounter, tag)
-		self.tagCounter += 1
-		instructions += self.addVariable(tagName, register=registerName, volatileRegister=True,indentLevel=indentLevel)
-		self.usedRegisters[registerName] = tagName
+		if (registerName):
+			tagName = "<TAG_{}>_{}".format(self.tagCounter, tag)
+			self.tagCounter += 1
+			instructions += self.addVariable(tagName, register=registerName, volatileRegister=True,indentLevel=indentLevel)
+			self.usedRegisters[registerName] = tagName
 
 		return instructions, registerName
 
@@ -767,6 +768,33 @@ class scopeController:
 					#No free register. Save to stack
 					instructions += self.storeStack(variableName, freeRegister=True, indentLevel=indentLevel)
 
+
+		return instructions
+
+	def alignStack(self, indentLevel=0):
+		'''
+		If current stack is not word aligned, will add buffer space to stack
+
+		returnType:
+			<instructionList> instructions
+		'''
+		instructions = instructionList(self)
+		indentString = "".join(["\t" for i in range(indentLevel)])
+
+		#Get current size of stack
+		currentStackSize = 0
+		for var in self.localStack:
+			currentStackSize += self.localStack[var]
+
+		#Add buffer space if needed
+		if (currentStackSize%4 != 0):
+			#SP is not word aligned. Need to add buffer space to stack
+			bufferName = "<BUFFER>_{}".format(self.stackBufferCounter)
+			self.stackBufferCounter += 1
+			bufferSize = 4 - (currentStackSize%4)
+			self.localStack[bufferName] = bufferSize
+			
+			instructions.append("{}addi sp, sp, -{}".format(indentString, bufferSize))
 
 		return instructions
 

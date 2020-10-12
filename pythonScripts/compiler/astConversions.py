@@ -643,6 +643,9 @@ def convertFuncCallItem(item, scope, indentLevel=0):
 	#Save temps
 	instructions += scope.saveTemps(indentLevel=indentLevel)
 
+	#Align stack
+	instructions += scope.alignStack(indentLevel=indentLevel)
+
 	#Call function
 	instructions.append("{}jal {}".format(indentString, functionName))
 
@@ -1119,6 +1122,8 @@ def convertAstItem(item, scope, indentLevel=0, freeTempRegisters=False):
 	elif isinstance(item, c_ast.BinaryOp):
 		instructionsTemp, variableName  = convertBinaryOpItem(item, scope, indentLevel=indentLevel)
 		instructions += instructionsTemp
+	elif isinstance(item, c_ast.FuncCall):
+		instructions += convertFuncCallItem(item, scope, indentLevel=indentLevel)
 	else:
 		raise Exception("UNSUPPORTED ITEM | convertAstItem\n{}".format(item))
 		
