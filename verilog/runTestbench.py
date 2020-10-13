@@ -1,6 +1,7 @@
 import argparse
 import os
 import sys
+import time
 
 class COLORS:
 	DEFAULT = '\033[0m'
@@ -75,6 +76,7 @@ help yourself
 		os.mkdir("simulation/{}".format(testbenchName))
 
 	#Compile into vvp with icarus verilog
+	print("Compiling verilog")
 	command = "iverilog {} -I rtl -I testbenches -g2005-sv -o simulation/{}/{}.vvp | grep error".format(testbenchPath, testbenchName, testbenchName)
 	print("+ {}{}".format(command, COLORS.ERROR))
 	os.system(command)
@@ -85,9 +87,14 @@ help yourself
 	if (dumpValues):
 		dumpFlag = "-vcd"
 
+	print("Running simulation")
+	startTime = time.time()
 	command = "vvp simulation/{}/{}.vvp {}".format(testbenchName, testbenchName, dumpFlag)
 	print("+ {}".format(command))
 	os.system(command)
+	endTime = time.time()
+
+	print("runtime = {}".format(endTime-startTime))
 
 	#Move dump file
 	command = "mv dump.vcd simulation/{}/{}_dump.vcd".format(testbenchName, testbenchName)

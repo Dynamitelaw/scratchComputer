@@ -31,3 +31,6 @@ typeSizeDictionary = {
 
 global structDictionary
 structDictionary = {}
+
+global globalScope
+globalScope = None

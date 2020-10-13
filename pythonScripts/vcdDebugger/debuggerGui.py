@@ -72,10 +72,11 @@ p, li { white-space: pre-wrap; }
 		purple = "ac80ff"
 		grey = "848066"
 		orange = "fd9622"
+		yellow = "e7db74"
 
 		#C keywords
 		c_blueKeywords = ["int", "float", "char", "double", "long", "unisgned", "byte", "bool", "struct"]
-		c_redKeywords = ["return", "if", "else", "&&", "||", "!", "for", "while"]
+		c_redKeywords = ["return", "if", "else", "&&", "||", "!", "for", "while", "#include", "#define"]
 		c_constantKeywords = ["true", "false"]
 
 		#assembly keywords
@@ -133,7 +134,14 @@ p, li { white-space: pre-wrap; }
 						k = float(lineElement)
 						color = purple
 					except Exception as e:
-						pass		
+						pass
+					#Strings = yellow
+					if ((lineElement[0]=="\"") or (lineElement[0]=="\'")):
+						color = yellow	
+					#Defined names = green
+					if (index>0):
+						if (lineList[index-1]=="#define"):
+							color = green	
 					#Comments = grey
 					if (inComment):
 						color = grey

@@ -9,7 +9,7 @@ import utils
 from utils import COLORS, printColor
 import compGlobals as globals
 from compClasses import dataElement, structDef
-from astConversions import covertFuncToAssembly
+from astConversions import covertFuncToAssembly, convertDeclItem
 
 
 def getDefinitions(ast):
@@ -55,6 +55,7 @@ def precleanCFile(filepath):
 		<str> filePath
 	'''
 	cFileIn = open(filepath, "r")
+	rootPath = os.path.dirname(os.path.abspath(filepath))
 
 	cOutPath = "{}.temp".format(os.path.split(filepath)[-1])
 	cFileOut = open(cOutPath, "w")
@@ -64,9 +65,15 @@ def precleanCFile(filepath):
 		inLine = cFileIn.readline()
 		outline = inLine
 
-		outline = outline.replace("true", "1")
-		outline = outline.replace("false", "0")
-		outline = outline.replace("bool ", "unsigned char ")
+		if ("#include" in outline):
+			includePath = outline.split(" ")[-1].rstrip().replace("\"", "")
+			if (includePath[0] != "/"):
+				includePath = "{}".format(os.path.join(rootPath, includePath))
+			outline = " ".join([outline.split(" ")[0], "\"{}\"\n".format(includePath)])
+		else:
+			outline = outline.replace("true", "1")
+			outline = outline.replace("false", "0")
+			outline = outline.replace("bool ", "unsigned char ")
 
 		cFileOut.write(outline)
 
@@ -124,6 +131,10 @@ Currently only supports a subset of the C language
 		globalVarDelcarations = []
 		structDeclarations = []
 		definedFunctions, globalVarDelcarations, structDeclarations = getDefinitions(ast)  #<TODO> handle global variables
+
+		#Parse global declarations
+		#<TODO>
+		#print(globalVarDelcarations)
 
 		#Parse struct definitions
 		for structDecl in structDeclarations:

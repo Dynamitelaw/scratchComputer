@@ -1,14 +1,12 @@
+//Import header
+#include "simplerHeader.h"
 
-struct arrayHolder
-{
-	int array[3][7][10];
-};
 
 int main()
 {
-	int columns = 10;
-	int rows = 7;
-	int height = 3;
+	int columns = COLUMNS;
+	int rows = ROWS;
+	int height = HEIGHT;
 
 	struct arrayHolder holder;
 	//int array[3][7][10];
@@ -19,7 +17,7 @@ int main()
 		{
 			for (int c=0; c<columns; c++)
 			{
-				holder.array[h][r][c] = h + r + c;
+				holder.array[h][r][c] = addThreeInts(h, r, c);
 			}
 		}
 	}
