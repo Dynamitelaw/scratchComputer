@@ -94,7 +94,7 @@ help yourself
 	os.system(command)
 	endTime = time.time()
 
-	print("runtime = {}".format(endTime-startTime))
+	print("runtime = {} seconds".format(endTime-startTime))
 
 	#Move dump file
 	command = "mv dump.vcd simulation/{}/{}_dump.vcd".format(testbenchName, testbenchName)

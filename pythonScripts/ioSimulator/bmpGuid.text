@@ -1,0 +1,61 @@
+#########
+# File Header
+#########
+#<NOTE> all integers are little endian
+
+#Field
+	#offset = 0x00
+	#size = 2
+42 4d
+
+#Size (of file)
+	#offset = 0x02
+	#size = 4
+00 00 00 00
+
+#Reserve shit
+	#offset = 0x06
+	#size = 4
+00 00 00 00
+
+#Starting address
+	#offset = 0x0A
+	#size = 4
+00 00 00 00
+
+
+#########
+# DIB Header (OS/2 1.x BITMAPCOREHEADER)
+#########
+
+#Size (of this header)
+	#offset = 0x0E
+	#size = 4
+0C 00 00 00
+
+#Width in pixels
+	#offset = 0x12
+	#size = 2
+05 00
+
+#Height in pixels
+	#offset = 0x14
+	#size = 2
+01 00
+
+#Number of color planes, must be 1
+	#offset = 0x16
+	#size = 2
+01 00
+
+#Number of bits per pixel
+	#offset = 0x18
+	#size = 2
+18 00
+
+
+############
+# Pixel array
+############
+#<NOTE> each pixel is a 32 bit word, regardless of bpp
+#<NOTE> 
