@@ -58,9 +58,31 @@ module RAM(
 	wire [7:0] dataWriteIn_byte3;
 	assign dataWriteIn_byte3 = dataWriteIn[31:24];
 
+	`ifdef FRAME_BUFFER_ENABLE
+	integer frameBufferFile;
+	wire [`frameBufferSize*8-1:0]frameBufferArray;
+	genvar i;
+	for (i=0; i<`frameBufferSize/4; i=i+1) assign frameBufferArray[32*i+31:32*i] = memory[`frameBufferStart/4 + i];
+	//for (i=0; i<`frameBufferSize/4; i=i+1) assign frameBufferArray[32*i+31:32*i] = addressIn;
+	`endif
+
 	always @(posedge clk) begin : ram_proc
 		if (load) dataReadOut <= memory[addressIn/4];
 		if (store) memory[addressIn/4] <= memoryIn;
+
+		`ifdef FRAME_BUFFER_ENABLE
+		if (store) begin
+			//if ((addressIn > `frameBufferStart) && (addressIn < `frameBufferStart+`frameBufferSize)) begin
+				//We have written to the frame buffer. Update output binary file
+				frameBufferFile = $fopen("simulation/coreTestbench/frameBuffer.b","wb"); // open in binary mode
+				//$fwrite(frameBufferFile, "%u", memory[`frameBufferStart/4:(`frameBufferStart+`frameBufferSize)/4]);
+				$fwrite(frameBufferFile, "%u", frameBufferArray);
+				//$fwrite(frameBufferFile, "%u", memory[1]);
+				//$fwrite(frameBufferFile, "%u", 32'h4D424D42);
+				$fclose(frameBufferFile);
+			//end
+		end
+		`endif
 	end
 	
 	always @(*) begin

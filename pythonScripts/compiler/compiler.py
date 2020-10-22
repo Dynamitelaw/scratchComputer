@@ -106,7 +106,21 @@ Currently only supports a subset of the C language
 	cFilePath = arguments.filepath
 	hexPathArg = arguments.hexPath
 	indexPath = arguments.indexPath
-	memorySize = arguments.memorySize
+
+	memorySizeString = arguments.memorySize
+	memorySize = None
+	if ("K" in memorySizeString):
+		memorySizeString = memorySizeString.replace("K", "")
+		memorySize = int(4 * int(int(memorySizeString) / 4)) * 2**10
+	elif ("M" in memorySizeString):
+		memorySizeString = memorySizeString.replace("M", "")
+		memorySize = int(4 * int(int(memorySizeString) / 4)) * 2**20
+	elif ("G" in memorySizeString):
+		memorySizeString = memorySizeString.replace("G", "")
+		memorySize = int(4 * int(int(memorySizeString) / 4)) * 2**30
+	else:
+		memorySize = int(4 * int(int(memorySizeString) / 4))
+
 	keepasm = arguments.keepasm
 	logisim = arguments.logisim
 

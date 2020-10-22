@@ -5,9 +5,10 @@ struct arrayHolder
 
 int addThreeInts(int x, int y, int z)
 {
-	return x + y + z;
+	return y * z * 50;
 }
 
-#define COLUMNS 3
-#define ROWS 3
-#define HEIGHT 3
+#define COLUMNS 64
+#define ROWS 48
+
+#define FRAME_BUFFER_ADDRESS 4096

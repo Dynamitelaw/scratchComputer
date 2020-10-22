@@ -375,7 +375,7 @@ def convertUnaryOpItem(item, scope, branch=None, targetVariableName=None, target
 			instructionsTemp, regDest = scope.getFreeRegister(regOverride=targetReg, tag="dereference", preferTemp=True, indentLevel=indentLevel)
 			instructions += instructionsTemp
 
-			varSize = scope.variableDict[item.expr.name].subElementSize[-1]
+			varSize = scope.variableDict[item.expr.name].size
 			if (varSize == 4):
 				instructions.append("{}lw {}, 0({})".format(indentString, regDest, regPointer)) #<TODO> handle unsigned values
 			elif (varSize == 2):
@@ -706,6 +706,8 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 	if isinstance(leftOperand, c_ast.UnaryOp):
 		if (leftOperand.op == "*"):
 			isPointerDereference = True
+			leftSize = 4;
+
 			#Get pointer into register
 			if isinstance(leftOperand.expr, c_ast.ID):
 				#Pointer is a variable
@@ -798,6 +800,8 @@ def convertAssignmentItem(item, scope, indentLevel=0):
 			instructions.append("{}sh {}, 0({})".format(indentString, leftValReg, pointerRegister))
 		elif (leftSize == 1):
 			instructions.append("{}sb {}, 0({})".format(indentString, leftValReg, pointerRegister))
+		else:
+			raise Exception("leftSize is not defined | convertAssignmentItem")
 		instructions += scope.releaseRegister(leftValReg, indentLevel=indentLevel)
 	elif isinstance(leftOperand, c_ast.ID):
 		#Left operand is a variable. Update in memory
@@ -931,6 +935,11 @@ def convertDeclItem(item, scope, indentLevel=0):
 				#Load into register
 				instructions.append("{}lw {}, {}".format(indentString, destinationRegister, dataLabelName))
 
+		elif isinstance(item.init, c_ast.ID):
+			#Initialized variable is set to another variable
+			#<TODO>
+			raise Exception("TODO, add support for variable inits\n{}".format(item))
+
 		elif isinstance(item.init, c_ast.BinaryOp):
 			#Initialized variable is result of binary expression
 			instructionsTemp, resultVariableName = convertBinaryOpItem(item.init, scope, targetVariableName=variableName, indentLevel=indentLevel)
@@ -951,7 +960,7 @@ def convertDeclItem(item, scope, indentLevel=0):
 				instructions += scope.addVariable(variableName, varType=item.type, signed=True, indentLevel=indentLevel)
 
 				#Get pointer to start of array
-				instructionsTemp, pointerReg = scope.getPointer(variableName, indentLevel=indentLevel)
+				instructionsTemp, pointerReg, pointerVariableName = scope.getPointer(variableName, indentLevel=indentLevel)
 				instructions += instructionsTemp
 
 				for arrayIndex in range(0, len(item.init.exprs)):
