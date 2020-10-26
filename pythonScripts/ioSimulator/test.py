@@ -5,51 +5,11 @@ import sys
 import os
 import numpy as np
 from PIL import Image
+from pynput.keyboard import Listener, Key, KeyCode
+import time
+from collections import OrderedDict
+from keyboardArray import *
 
-'''
-rootPath = "/home/jose/Downloads/testImages"
-bmpFiles = os.listdir(rootPath)
-bmpFiles.sort()
-
-bmpPaths = []
-for fileName in bmpFiles:
-	bmpPaths.append(os.path.join(rootPath, fileName))
-
-fig = plt.figure()
-
-def animate(i):
-	imageIndex = i%len(bmpPaths)
-	#print(imageIndex)
-	img = mpimg.imread(bmpPaths[imageIndex])
-	plt.clf()
-	plt.axis('off')
-	imgplot = plt.imshow(img)
-
-
-	#plt.show()
-'''
-'''
-fig = plt.figure()
-pixelArray = np.zeros([100, 200, 3], dtype=np.uint8)
-imagePath = "createdImage.png"
-
-def animate(i):
-	#Update pixel array with values
-	if (i%2 == 0):
-		pixelArray[:,:100] = [255, 128, 0] #Orange left side
-		pixelArray[:,100:] = [0, 0, 255]   #Blue right side
-	else:
-		pixelArray[:,:100] = [0, 0, 255]  #Blue left side
-		pixelArray[:,100:] = [255, 128, 0]  #Orange right side
-
-	img = Image.fromarray(pixelArray)
-	img.save(imagePath)
-
-	#Display updated array
-	img = mpimg.imread(imagePath)
-	plt.clf()
-	plt.axis('off')
-	imgplot = plt.imshow(img)
 '''
 fig = plt.figure()
 displayHeight = 2
@@ -89,3 +49,35 @@ def animate(i):
 
 ani = animation.FuncAnimation(fig, animate, interval=50)
 plt.show()
+'''
+
+keyIndexes = OrderedDict()
+
+for index in range(0, len(keyArray), 1):
+	keyIndexes[keyArray[index]] = index
+
+print(keyIndexes)
+
+stateArrayLength = len(keyIndexes)
+if (len(keyIndexes)%4):
+	stateArrayLength += 4 - len(keyIndexes)%4
+keyboardStateArray = np.zeros(stateArrayLength, dtype=np.uint8)
+print(len(keyboardStateArray))
+
+def on_press(key):  # The function that's called when a key is pressed
+    print("Key pressed: {0}".format(key))
+    keyboardStateArray[keyIndexes[key]]= 1
+    print(keyboardStateArray)
+    #print(keyIndexes[key])
+    #print(key)
+    #print(type(KeyCode.from_char("a")))
+
+def on_release(key):  # The function that's called when a key is released
+    print("Key released: {0}".format(key))
+    keyboardStateArray[keyIndexes[key]] = 0
+    print(keyboardStateArray)
+
+#print(Key.A)
+
+with Listener(on_press=on_press, on_release=on_release) as listener:  # Create an instance of Listener
+    listener.join()  # Join the listener thread to the main thread to keep waiting for keys

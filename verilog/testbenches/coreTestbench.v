@@ -72,15 +72,12 @@ module RAM(
 
 		`ifdef FRAME_BUFFER_ENABLE
 		if (store) begin
-			//if ((addressIn > `frameBufferStart) && (addressIn < `frameBufferStart+`frameBufferSize)) begin
+			if ((addressIn > `frameBufferStart) && (addressIn < `frameBufferStart+`frameBufferSize)) begin
 				//We have written to the frame buffer. Update output binary file
 				frameBufferFile = $fopen("simulation/coreTestbench/frameBuffer.b","wb"); // open in binary mode
-				//$fwrite(frameBufferFile, "%u", memory[`frameBufferStart/4:(`frameBufferStart+`frameBufferSize)/4]);
 				$fwrite(frameBufferFile, "%u", frameBufferArray);
-				//$fwrite(frameBufferFile, "%u", memory[1]);
-				//$fwrite(frameBufferFile, "%u", 32'h4D424D42);
 				$fclose(frameBufferFile);
-			//end
+			end
 		end
 		`endif
 	end
