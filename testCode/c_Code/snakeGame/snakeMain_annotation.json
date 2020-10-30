@@ -1,0 +1,4445 @@
+{
+  "asmFileMap": {
+    "0": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 2
+    },
+    "4": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 3
+    },
+    "8": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 5
+    },
+    "12": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 6
+    },
+    "16": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 7
+    },
+    "20": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 8
+    },
+    "24": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 9
+    },
+    "28": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 10
+    },
+    "32": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 11
+    },
+    "36": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 12
+    },
+    "40": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 13
+    },
+    "44": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 14
+    },
+    "48": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 15
+    },
+    "52": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 16
+    },
+    "56": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 17
+    },
+    "60": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 18
+    },
+    "64": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 19
+    },
+    "68": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 20
+    },
+    "72": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 21
+    },
+    "76": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 22
+    },
+    "80": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 23
+    },
+    "84": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 24
+    },
+    "88": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 25
+    },
+    "92": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 26
+    },
+    "96": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 27
+    },
+    "100": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 29
+    },
+    "104": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 30
+    },
+    "108": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 31
+    },
+    "112": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 33
+    },
+    "116": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 34
+    },
+    "120": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 35
+    },
+    "124": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 36
+    },
+    "128": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 37
+    },
+    "132": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 38
+    },
+    "136": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 39
+    },
+    "140": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 40
+    },
+    "144": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 41
+    },
+    "148": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 42
+    },
+    "152": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 43
+    },
+    "156": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 44
+    },
+    "160": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 45
+    },
+    "164": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 46
+    },
+    "168": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 47
+    },
+    "172": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 48
+    },
+    "176": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 49
+    },
+    "180": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 50
+    },
+    "184": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 51
+    },
+    "188": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 52
+    },
+    "192": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 53
+    },
+    "196": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 55
+    },
+    "200": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 56
+    },
+    "204": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 57
+    },
+    "208": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 58
+    },
+    "212": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 59
+    },
+    "216": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 60
+    },
+    "220": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 63
+    },
+    "224": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 64
+    },
+    "228": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 65
+    },
+    "232": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 66
+    },
+    "236": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 67
+    },
+    "240": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 68
+    },
+    "244": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 69
+    },
+    "248": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 70
+    },
+    "252": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 71
+    },
+    "256": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 72
+    },
+    "260": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 73
+    },
+    "264": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 74
+    },
+    "268": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 75
+    },
+    "272": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 76
+    },
+    "276": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 77
+    },
+    "280": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 80
+    },
+    "284": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 81
+    },
+    "288": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 82
+    },
+    "292": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 83
+    },
+    "296": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 84
+    },
+    "300": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 85
+    },
+    "304": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 86
+    },
+    "308": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 87
+    },
+    "312": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 88
+    },
+    "316": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 89
+    },
+    "320": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 90
+    },
+    "324": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 92
+    },
+    "328": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 93
+    },
+    "332": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 94
+    },
+    "336": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 96
+    },
+    "340": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 97
+    },
+    "344": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 98
+    },
+    "348": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 99
+    },
+    "352": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 100
+    },
+    "356": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 101
+    },
+    "360": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 103
+    },
+    "364": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 104
+    },
+    "368": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 105
+    },
+    "372": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 107
+    },
+    "376": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 108
+    },
+    "380": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 109
+    },
+    "384": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 110
+    },
+    "388": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 111
+    },
+    "392": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 112
+    },
+    "396": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 113
+    },
+    "400": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 114
+    },
+    "404": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 115
+    },
+    "408": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 116
+    },
+    "412": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 117
+    },
+    "416": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 118
+    },
+    "420": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 119
+    },
+    "424": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 120
+    },
+    "428": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 122
+    },
+    "432": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 123
+    },
+    "436": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 124
+    },
+    "440": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 125
+    },
+    "444": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 126
+    },
+    "448": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 127
+    },
+    "452": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 129
+    },
+    "456": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 130
+    },
+    "460": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 131
+    },
+    "464": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 132
+    },
+    "468": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 133
+    },
+    "472": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 134
+    },
+    "476": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.asm",
+      "lineNum": 137
+    }
+  },
+  "cFileMap": {
+    "8": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 13
+    },
+    "12": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 13
+    },
+    "16": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 14
+    },
+    "20": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 14
+    },
+    "24": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 15
+    },
+    "28": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 15
+    },
+    "32": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 16
+    },
+    "36": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 16
+    },
+    "40": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 17
+    },
+    "44": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 17
+    },
+    "48": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 18
+    },
+    "52": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 18
+    },
+    "56": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 19
+    },
+    "60": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 19
+    },
+    "64": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 20
+    },
+    "68": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 20
+    },
+    "72": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 21
+    },
+    "76": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 24
+    },
+    "80": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 24
+    },
+    "84": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 24
+    },
+    "88": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 24
+    },
+    "92": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 24
+    },
+    "96": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 24
+    },
+    "100": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 24
+    },
+    "104": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 24
+    },
+    "108": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 24
+    },
+    "112": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 26
+    },
+    "116": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 26
+    },
+    "120": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 26
+    },
+    "124": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 26
+    },
+    "128": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 26
+    },
+    "132": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 26
+    },
+    "136": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 26
+    },
+    "140": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 26
+    },
+    "144": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 26
+    },
+    "148": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 26
+    },
+    "152": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 26
+    },
+    "156": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 26
+    },
+    "160": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 26
+    },
+    "164": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 26
+    },
+    "168": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 26
+    },
+    "172": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 26
+    },
+    "176": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 26
+    },
+    "180": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 26
+    },
+    "184": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 24
+    },
+    "188": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 24
+    },
+    "192": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 24
+    },
+    "196": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 29
+    },
+    "200": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 29
+    },
+    "204": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 29
+    },
+    "208": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 29
+    },
+    "212": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 29
+    },
+    "216": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/snakeMain.c",
+      "lineNum": 29
+    },
+    "220": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 7
+    },
+    "224": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 7
+    },
+    "228": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 7
+    },
+    "232": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 7
+    },
+    "236": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 7
+    },
+    "240": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 7
+    },
+    "244": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 7
+    },
+    "248": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 8
+    },
+    "252": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 8
+    },
+    "256": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 8
+    },
+    "260": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 8
+    },
+    "264": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 8
+    },
+    "268": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 8
+    },
+    "272": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 8
+    },
+    "276": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 8
+    },
+    "280": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 13
+    },
+    "284": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 13
+    },
+    "288": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 13
+    },
+    "292": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 13
+    },
+    "296": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 13
+    },
+    "300": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 15
+    },
+    "304": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 15
+    },
+    "308": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 15
+    },
+    "312": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 15
+    },
+    "316": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 15
+    },
+    "320": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 15
+    },
+    "324": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 15
+    },
+    "328": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 15
+    },
+    "332": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 15
+    },
+    "336": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 17
+    },
+    "340": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 17
+    },
+    "344": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 17
+    },
+    "348": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 17
+    },
+    "352": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 17
+    },
+    "356": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 17
+    },
+    "360": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 17
+    },
+    "364": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 17
+    },
+    "368": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 17
+    },
+    "372": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 19
+    },
+    "376": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 19
+    },
+    "380": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 19
+    },
+    "384": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 19
+    },
+    "388": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 19
+    },
+    "392": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 19
+    },
+    "396": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 20
+    },
+    "400": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 20
+    },
+    "404": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 20
+    },
+    "408": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 20
+    },
+    "412": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 20
+    },
+    "416": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 17
+    },
+    "420": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 17
+    },
+    "424": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 17
+    },
+    "428": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 17
+    },
+    "432": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 17
+    },
+    "436": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 17
+    },
+    "440": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 15
+    },
+    "444": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 15
+    },
+    "448": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 15
+    },
+    "452": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 15
+    },
+    "456": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 15
+    },
+    "460": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 15
+    },
+    "464": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 15
+    },
+    "468": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 15
+    },
+    "472": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/c_Code/snakeGame/display.c",
+      "lineNum": 15
+    }
+  },
+  "scopeStateMap": {
+    "8": {
+      "availableRegisters": [
+        "s0",
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "s10",
+        "s11",
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {}
+    },
+    "12": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s0",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "t0": "<PTR_0>_&colorArray"
+      }
+    },
+    "16": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s0",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "t0": "<PTR_0>_&colorArray",
+        "t1": "<TAG_2>_CONSTANT"
+      }
+    },
+    "20": -1,
+    "24": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s0",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "t0": "<PTR_0>_&colorArray",
+        "t1": "<TAG_4>_CONSTANT"
+      }
+    },
+    "28": -1,
+    "32": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s0",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "t0": "<PTR_0>_&colorArray",
+        "t1": "<TAG_6>_CONSTANT"
+      }
+    },
+    "36": -1,
+    "40": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s0",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "t0": "<PTR_0>_&colorArray",
+        "t1": "<TAG_8>_CONSTANT"
+      }
+    },
+    "44": -1,
+    "48": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s0",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "t0": "<PTR_0>_&colorArray",
+        "t1": "<TAG_10>_CONSTANT"
+      }
+    },
+    "52": -1,
+    "56": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s0",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "t0": "<PTR_0>_&colorArray",
+        "t1": "<TAG_12>_CONSTANT"
+      }
+    },
+    "60": -1,
+    "64": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s0",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "t0": "<PTR_0>_&colorArray",
+        "t1": "<TAG_14>_CONSTANT"
+      }
+    },
+    "68": -1,
+    "72": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s0",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "t0": "<PTR_0>_&colorArray",
+        "t1": "<TAG_15>_temp"
+      }
+    },
+    "76": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        },
+        {
+          "<SAVE>_s0": 4
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "s0": "<SAVE>_s0"
+      }
+    },
+    "80": -1,
+    "84": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        },
+        {
+          "<SAVE>_s0": 4
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "s0": "animateIter"
+      }
+    },
+    "88": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        },
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "animateIter": 4
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "s0": "animateIter"
+      }
+    },
+    "92": -1,
+    "96": -2,
+    "100": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        },
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "animateIter": 4
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "s0": "animateIter",
+        "t0": "<TAG_17>_CONSTANT"
+      }
+    },
+    "104": -1,
+    "108": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        },
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "animateIter": 4
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "s0": "animateIter"
+      }
+    },
+    "112": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        },
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "animateIter": 4
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "s0": "animateIter",
+        "t0": "<PTR_1>_&colorArray"
+      }
+    },
+    "116": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        },
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "animateIter": 4
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "s0": "animateIter",
+        "t0": "<PTR_1>_&colorArray",
+        "t1": "<TAG_19>_elementLength_dim0"
+      }
+    },
+    "120": -1,
+    "124": -2,
+    "128": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        },
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "animateIter": 4
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "a0": "<TAG_20>_arrayElement",
+        "s0": "animateIter",
+        "t0": "<PTR_1>_&colorArray"
+      }
+    },
+    "132": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        },
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "animateIter": 4
+        },
+        {
+          "<SAVE>_ra": 4
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "a0": "<TAG_20>_arrayElement",
+        "ra": "<SAVE>_ra",
+        "s0": "animateIter"
+      }
+    },
+    "136": -1,
+    "140": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        },
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "animateIter": 4
+        },
+        {
+          "<SAVE>_ra": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "a0": "<TAG_20>_arrayElement",
+        "ra": "<SAVE>_ra",
+        "s0": "animateIter",
+        "s1": "<SAVE>_s1"
+      }
+    },
+    "144": -1,
+    "148": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        },
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "animateIter": 4
+        },
+        {
+          "<SAVE>_ra": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "a0": "<TAG_20>_arrayElement",
+        "ra": "<SAVE>_ra",
+        "s0": "animateIter"
+      }
+    },
+    "152": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        },
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "animateIter": 4
+        },
+        {
+          "<SAVE>_ra": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "<SAVE>_s10": 4
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "ra": "<SAVE>_ra",
+        "s0": "animateIter",
+        "s1": "<TAG_20>_arrayElement",
+        "s10": "<SAVE>_s10"
+      }
+    },
+    "156": -1,
+    "160": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        },
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "animateIter": 4
+        },
+        {
+          "<SAVE>_ra": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "<SAVE>_s10": 4
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "ra": "<SAVE>_ra",
+        "s0": "animateIter",
+        "s1": "<TAG_20>_arrayElement"
+      }
+    },
+    "164": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "ra",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        },
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "animateIter": 4
+        },
+        {
+          "<SAVE>_ra": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "<SAVE>_s10": 4
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "s0": "animateIter",
+        "s1": "<TAG_20>_arrayElement",
+        "s10": "<SAVE>_ra"
+      }
+    },
+    "168": -1,
+    "172": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        },
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "animateIter": 4
+        },
+        {
+          "<SAVE>_ra": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "<SAVE>_s10": 4
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "ra": "<SAVE>_ra",
+        "s0": "animateIter",
+        "s1": "<TAG_23>_None"
+      }
+    },
+    "176": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        },
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "animateIter": 4
+        },
+        {
+          "<SAVE>_ra": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "<SAVE>_s10": 4
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "ra": "<SAVE>_ra",
+        "s0": "animateIter",
+        "s1": "<SAVE>_s1",
+        "s10": "<TAG_24>_None"
+      }
+    },
+    "180": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        },
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "animateIter": 4
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "s0": "animateIter"
+      }
+    },
+    "184": -1,
+    "188": -2,
+    "192": -3,
+    "196": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        },
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "animateIter": 4
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "s0": "animateIter"
+      }
+    },
+    "200": -1,
+    "204": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        },
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "animateIter": 4
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "s0": "<TAG_18>_None"
+      }
+    },
+    "208": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "colorArray": 32
+        },
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "animateIter": 4
+        }
+      ],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "s0": "<SAVE>_s0"
+      }
+    },
+    "212": {
+      "availableRegisters": [
+        "a0",
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [],
+      "scope": {
+        "name": "main"
+      },
+      "usedRegisters": {
+        "s0": "<SAVE>_s0"
+      }
+    },
+    "216": -1,
+    "220": {
+      "availableRegisters": [
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s0",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [],
+      "scope": {
+        "name": "updatePixel"
+      },
+      "usedRegisters": {
+        "a0": "column",
+        "a1": "row",
+        "a2": "colorValue",
+        "t0": "pixelPointer",
+        "t1": "<EXPR_RESULT>_0",
+        "t2": "<TAG_2>_CONSTANT"
+      }
+    },
+    "224": {
+      "availableRegisters": [
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s0",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t5",
+        "t6"
+      ],
+      "localStack": [],
+      "scope": {
+        "name": "updatePixel"
+      },
+      "usedRegisters": {
+        "a0": "column",
+        "a1": "row",
+        "a2": "colorValue",
+        "t0": "pixelPointer",
+        "t1": "<EXPR_RESULT>_0",
+        "t2": "<TAG_2>_CONSTANT",
+        "t3": "<EXPR_RESULT>_1",
+        "t4": "<TAG_4>_CONSTANT"
+      }
+    },
+    "228": -1,
+    "232": {
+      "availableRegisters": [
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s0",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [],
+      "scope": {
+        "name": "updatePixel"
+      },
+      "usedRegisters": {
+        "a0": "column",
+        "a1": "row",
+        "a2": "colorValue",
+        "t0": "pixelPointer",
+        "t1": "<EXPR_RESULT>_0",
+        "t2": "<TAG_2>_CONSTANT",
+        "t3": "<EXPR_RESULT>_1"
+      }
+    },
+    "236": {
+      "availableRegisters": [
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s0",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t2",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [],
+      "scope": {
+        "name": "updatePixel"
+      },
+      "usedRegisters": {
+        "a0": "column",
+        "a1": "row",
+        "a2": "colorValue",
+        "t0": "pixelPointer",
+        "t1": "<EXPR_RESULT>_0",
+        "t3": "<EXPR_RESULT>_1"
+      }
+    },
+    "240": {
+      "availableRegisters": [
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s0",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t2",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "pixelPointer": 4
+        }
+      ],
+      "scope": {
+        "name": "updatePixel"
+      },
+      "usedRegisters": {
+        "a0": "column",
+        "a1": "row",
+        "a2": "colorValue",
+        "t0": "pixelPointer",
+        "t1": "<EXPR_RESULT>_0",
+        "t3": "<EXPR_RESULT>_1"
+      }
+    },
+    "244": -1,
+    "248": {
+      "availableRegisters": [
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s0",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "pixelPointer": 4
+        }
+      ],
+      "scope": {
+        "name": "updatePixel"
+      },
+      "usedRegisters": {
+        "a0": "column",
+        "a1": "row",
+        "a2": "colorValue",
+        "t0": "pixelPointer",
+        "t1": "<EXPR_RESULT>_0",
+        "t2": "<TAG_5>_dereference",
+        "t3": "<EXPR_RESULT>_1"
+      }
+    },
+    "252": {
+      "availableRegisters": [
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s0",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "pixelPointer": 4
+        }
+      ],
+      "scope": {
+        "name": "updatePixel"
+      },
+      "usedRegisters": {
+        "a0": "column",
+        "a1": "row",
+        "a2": "colorValue",
+        "t0": "pixelPointer",
+        "t1": "<EXPR_RESULT>_0",
+        "t2": "<EXPR_RESULT>_2",
+        "t3": "<EXPR_RESULT>_1"
+      }
+    },
+    "256": -1,
+    "260": {
+      "availableRegisters": [
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s0",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<EXPR_RESULT>_2": 4
+        }
+      ],
+      "scope": {
+        "name": "updatePixel"
+      },
+      "usedRegisters": {
+        "a0": "column",
+        "a1": "row",
+        "a2": "colorValue",
+        "t0": "pixelPointer",
+        "t1": "<EXPR_RESULT>_0",
+        "t2": "<EXPR_RESULT>_2",
+        "t3": "<EXPR_RESULT>_1"
+      }
+    },
+    "264": -1,
+    "268": {
+      "availableRegisters": [
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s0",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t2",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<EXPR_RESULT>_2": 4
+        }
+      ],
+      "scope": {
+        "name": "updatePixel"
+      },
+      "usedRegisters": {
+        "a0": "column",
+        "a1": "row",
+        "a2": "colorValue",
+        "t0": "pixelPointer",
+        "t1": "<EXPR_RESULT>_0",
+        "t3": "<EXPR_RESULT>_1"
+      }
+    },
+    "272": {
+      "availableRegisters": [
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s0",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t2",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<EXPR_RESULT>_2": 4
+        }
+      ],
+      "scope": {
+        "name": "updatePixel"
+      },
+      "usedRegisters": {
+        "a0": "column",
+        "a1": "row",
+        "a2": "colorValue",
+        "t1": "<EXPR_RESULT>_0",
+        "t3": "<EXPR_RESULT>_1"
+      }
+    },
+    "276": {
+      "availableRegisters": [
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s0",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t2",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [],
+      "scope": {
+        "name": "updatePixel"
+      },
+      "usedRegisters": {
+        "a0": "column",
+        "a1": "row",
+        "a2": "colorValue",
+        "t1": "<EXPR_RESULT>_0",
+        "t3": "<EXPR_RESULT>_1"
+      }
+    },
+    "280": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "<SAVE>_s0"
+      }
+    },
+    "284": -1,
+    "288": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "pixelPointer"
+      }
+    },
+    "292": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s1",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "pixelPointer"
+      }
+    },
+    "296": -1,
+    "300": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "pixelPointer",
+        "s1": "<SAVE>_s1"
+      }
+    },
+    "304": -1,
+    "308": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "pixelPointer",
+        "s1": "r"
+      }
+    },
+    "312": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "pixelPointer",
+        "s1": "r"
+      }
+    },
+    "316": -1,
+    "320": -2,
+    "324": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "pixelPointer",
+        "s1": "r",
+        "t0": "<TAG_2>_CONSTANT"
+      }
+    },
+    "328": -1,
+    "332": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "pixelPointer",
+        "s1": "r"
+      }
+    },
+    "336": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        },
+        {
+          "<SAVE>_s10": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "pixelPointer",
+        "s1": "r",
+        "s10": "<SAVE>_s10"
+      }
+    },
+    "340": -1,
+    "344": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        },
+        {
+          "<SAVE>_s10": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "pixelPointer",
+        "s1": "r",
+        "s10": "c"
+      }
+    },
+    "348": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        },
+        {
+          "<SAVE>_s10": 4
+        },
+        {
+          "c": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "pixelPointer",
+        "s1": "r",
+        "s10": "c"
+      }
+    },
+    "352": -1,
+    "356": -2,
+    "360": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        },
+        {
+          "<SAVE>_s10": 4
+        },
+        {
+          "c": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "pixelPointer",
+        "s1": "r",
+        "s10": "c",
+        "t0": "<TAG_4>_CONSTANT"
+      }
+    },
+    "364": -1,
+    "368": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        },
+        {
+          "<SAVE>_s10": 4
+        },
+        {
+          "c": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "pixelPointer",
+        "s1": "r",
+        "s10": "c"
+      }
+    },
+    "372": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        },
+        {
+          "<SAVE>_s10": 4
+        },
+        {
+          "c": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "pixelPointer",
+        "s1": "r",
+        "s10": "c",
+        "t0": "<TAG_5>_dereference"
+      }
+    },
+    "376": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        },
+        {
+          "<SAVE>_s10": 4
+        },
+        {
+          "c": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "pixelPointer",
+        "s1": "r",
+        "s10": "c",
+        "t0": "<EXPR_RESULT>_0"
+      }
+    },
+    "380": -1,
+    "384": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        },
+        {
+          "<SAVE>_s10": 4
+        },
+        {
+          "c": 4
+        },
+        {
+          "<EXPR_RESULT>_0": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "pixelPointer",
+        "s1": "r",
+        "s10": "c",
+        "t0": "<EXPR_RESULT>_0"
+      }
+    },
+    "388": -1,
+    "392": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        },
+        {
+          "<SAVE>_s10": 4
+        },
+        {
+          "c": 4
+        },
+        {
+          "<EXPR_RESULT>_0": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "pixelPointer",
+        "s1": "r",
+        "s10": "c"
+      }
+    },
+    "396": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s0",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        },
+        {
+          "<SAVE>_s10": 4
+        },
+        {
+          "c": 4
+        },
+        {
+          "<EXPR_RESULT>_0": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s1": "r",
+        "s10": "c",
+        "t0": "<TAG_6>_CONSTANT"
+      }
+    },
+    "400": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        },
+        {
+          "<SAVE>_s10": 4
+        },
+        {
+          "c": 4
+        },
+        {
+          "<EXPR_RESULT>_0": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "<TAG_7>_None",
+        "s1": "r",
+        "s10": "c",
+        "t0": "<TAG_6>_CONSTANT"
+      }
+    },
+    "404": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        },
+        {
+          "<SAVE>_s10": 4
+        },
+        {
+          "c": 4
+        },
+        {
+          "<EXPR_RESULT>_0": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "pixelPointer",
+        "s1": "r",
+        "s10": "c",
+        "t0": "<TAG_6>_CONSTANT"
+      }
+    },
+    "408": -1,
+    "412": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        },
+        {
+          "<SAVE>_s10": 4
+        },
+        {
+          "c": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "pixelPointer",
+        "s1": "r",
+        "s10": "c"
+      }
+    },
+    "416": -1,
+    "420": -2,
+    "424": -3,
+    "428": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        },
+        {
+          "<SAVE>_s10": 4
+        },
+        {
+          "c": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "pixelPointer",
+        "s1": "r",
+        "s10": "c"
+      }
+    },
+    "432": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        },
+        {
+          "<SAVE>_s10": 4
+        },
+        {
+          "c": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "pixelPointer",
+        "s1": "r",
+        "s10": "<TAG_5>_None"
+      }
+    },
+    "436": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "pixelPointer",
+        "s1": "r"
+      }
+    },
+    "440": -1,
+    "444": -2,
+    "448": -3,
+    "452": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "pixelPointer",
+        "s1": "r"
+      }
+    },
+    "456": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "<TAG_3>_None",
+        "s1": "r"
+      }
+    },
+    "460": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "<SAVE>_s0",
+        "s1": "r"
+      }
+    },
+    "464": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "<SAVE>_s0",
+        "s1": "<TAG_4>_None"
+      }
+    },
+    "468": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [
+        {
+          "<SAVE>_s0": 4
+        },
+        {
+          "pixelPointer": 4
+        },
+        {
+          "<SAVE>_s1": 4
+        },
+        {
+          "r": 4
+        }
+      ],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "<SAVE>_s0",
+        "s1": "<SAVE>_s1"
+      }
+    },
+    "472": {
+      "availableRegisters": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "s10",
+        "s11",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "localStack": [],
+      "scope": {
+        "name": "clearScreen"
+      },
+      "usedRegisters": {
+        "a0": "colorValue",
+        "s0": "<SAVE>_s0",
+        "s1": "<SAVE>_s1"
+      }
+    }
+  }
+}

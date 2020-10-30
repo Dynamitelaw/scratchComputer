@@ -64,20 +64,32 @@ if (len(keyIndexes)%4):
 keyboardStateArray = np.zeros(stateArrayLength, dtype=np.uint8)
 print(len(keyboardStateArray))
 
-def on_press(key):  # The function that's called when a key is pressed
-    print("Key pressed: {0}".format(key))
-    keyboardStateArray[keyIndexes[key]]= 1
-    print(keyboardStateArray)
-    #print(keyIndexes[key])
-    #print(key)
-    #print(type(KeyCode.from_char("a")))
+def updateInputBufferFile(filepath, keyboardStateArray):
+	hexFile = open(filepath, "w")
 
-def on_release(key):  # The function that's called when a key is released
-    print("Key released: {0}".format(key))
-    keyboardStateArray[keyIndexes[key]] = 0
-    print(keyboardStateArray)
+	iterator = 0
+	for byte in keyboardStateArray:
+		if (iterator == 4):
+			hexFile.write("\n")
+			iterator = 0
+
+		hexFile.write("0{}".format(str(byte)))
+		iterator += 1
+
+	hexFile.close()
+
+def on_press(key):
+	print(key)
+	keyboardStateArray[keyIndexes[key]]= 1
+	updateInputBufferFile("temp.hex", keyboardStateArray)
+
+def on_release(key):
+	keyboardStateArray[keyIndexes[key]] = 0
+	updateInputBufferFile("temp.hex", keyboardStateArray)
 
 #print(Key.A)
 
-with Listener(on_press=on_press, on_release=on_release) as listener:  # Create an instance of Listener
-    listener.join()  # Join the listener thread to the main thread to keep waiting for keys
+listener = Listener(on_press=on_press, on_release=on_release)
+listener.start()  # Join the listener thread to the main thread to keep waiting for keys
+
+time.sleep(10)

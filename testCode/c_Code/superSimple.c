@@ -26,7 +26,8 @@ int main()
 		{
 			for (int c=0; c<columns; c++)
 			{
-				*pixelPointer = colorArray[(r*columns + c + animateIter)%8];
+				//*pixelPointer = colorArray[(r*columns + c + animateIter)%8];
+				*pixelPointer = *pixelPointer;
 				pixelPointer += 4;
 			}
 		}

@@ -191,7 +191,7 @@ class scopeController:
 		return instructions, variableName
 
 
-	def addVariable(self, variableName, register=None, varType=None, size=4, signed=None, volatileRegister=False, indentLevel=0):
+	def addVariable(self, variableName, register=None, varType=None, size=None, signed=None, volatileRegister=False, indentLevel=0):
 		'''
 		Declare a new variable in this scope.
 		If register keyword is included, the variable will be initialized the the value currently stored in specified register. 
@@ -205,7 +205,7 @@ class scopeController:
 
 		#Get size of variable
 		varSize = None
-		subElementSize = [size]
+		subElementSize = [4]
 		if (size):
 			varSize = size
 		elif (varType):
@@ -220,6 +220,9 @@ class scopeController:
 					raise Exception("Unsupported TypeDecl | {}\n{}".format(globals.cFileCoord, varType))
 			elif isinstance(varType, c_ast.ArrayDecl):
 				varSize, subElementSize = getArraySize(varType)
+			else:
+				#Other type. Set to default 4
+				varSize = 4
 		else:
 			varSize = 4
 

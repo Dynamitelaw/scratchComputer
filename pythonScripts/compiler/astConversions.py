@@ -219,7 +219,7 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 		instructionsTemp, pointerRegister, elementSize = getArrayElementPointer(operandItem, scope, indentLevel=indentLevel)
 		instructions += instructionsTemp
 		#Load element into operandReg
-		instructionsTemp, operandReg = scope.getFreeRegister(preferTemp=True, tag="arrayElement", indentLevel=indentLevel)
+		instructionsTemp, operandReg = scope.getFreeRegister(preferTemp=True, tag="arrayElement", regOverride=targetReg, indentLevel=indentLevel)
 		instructions += instructionsTemp
 
 		if (elementSize == 4):
@@ -236,7 +236,7 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 		instructions += instructionsTemp
 
 		#Load member into operandReg
-		instructionsTemp, operandReg = scope.getFreeRegister(preferTemp=True, tag="structMember", indentLevel=indentLevel)
+		instructionsTemp, operandReg = scope.getFreeRegister(preferTemp=True, tag="structMember", regOverride=targetReg, indentLevel=indentLevel)
 		instructions += instructionsTemp
 
 		if (memberSize == 4):
@@ -653,6 +653,10 @@ def convertFuncCallItem(item, scope, indentLevel=0):
 					tempSaveReg = argumentSaves[saveIndex]
 					instructions.append("{}mv a{}, {}".format(indentString, saveIndex, tempSaveReg))
 					scope.releaseRegister(tempSaveReg)
+		elif isinstance(argument, c_ast.ArrayRef):
+			#Function argument is a contant
+			instructionsTemp, operandReg = operandToRegister(argument, scope, targetReg=argumentRegister, indentLevel=indentLevel)
+			instructions += instructionsTemp
 
 		else:
 			raise Exception("UNSUPPORTED ITEM | convertFuncCallItem\n{}".format(item))
