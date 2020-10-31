@@ -67,7 +67,7 @@ module RAM(
 	`endif
 
 	`ifdef INPUT_BUFFER_ENABLE
-	reg [`DATA_WIDTH-1:0] inputBuffer [0:`inputBufferSize/4];
+	reg [`DATA_WIDTH-1:0] inputBuffer [0:(`inputBufferSize/4)-1];
 	`endif
 
 	always @(posedge clk) begin : ram_proc
@@ -75,7 +75,7 @@ module RAM(
 
 		`ifdef FRAME_BUFFER_ENABLE
 		if (store) begin
-			if ((addressIn >= `frameBufferStart) && (addressIn < `frameBufferStart+`frameBufferSize)) begin
+			if ((addressIn >= `frameBufferStart) && (addressIn <= `frameBufferStart+`frameBufferSize)) begin
 				//We have written to the frame buffer. Update output binary file
 				frameBufferFile = $fopen("simulation/coreTestbench/frameBuffer.b","wb"); // open in binary mode
 				$fwrite(frameBufferFile, "%u", frameBufferArray);
@@ -86,7 +86,7 @@ module RAM(
 
 		`ifdef INPUT_BUFFER_ENABLE
 		if (load) begin
-			if ((addressIn >= `inputBufferStart) && (addressIn < `inputBufferStart+`inputBufferSize)) begin
+			if ((addressIn >= `inputBufferStart) && (addressIn <= `inputBufferStart+`inputBufferSize)) begin
 				//We have accessed the GIO buffer. Update  binary file
 				$readmemh(`inputBufferPath, inputBuffer);
 				dataReadOut <= inputBuffer[(addressIn-`inputBufferStart)/4];

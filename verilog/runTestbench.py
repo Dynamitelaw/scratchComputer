@@ -18,6 +18,8 @@ global g_keyboardStateArray
 g_keyboardStateArray = None
 global g_keyIndexes
 g_keyIndexes = None
+global g_inputBufferPath
+g_inputBufferPath = None
 
 g_keyArray = [
 #lower case letters
@@ -39,8 +41,8 @@ g_keyArray = [
 	KeyCode.from_char("!"),	KeyCode.from_char("@"),	KeyCode.from_char("#"),	KeyCode.from_char("$"),	KeyCode.from_char("%"),	KeyCode.from_char("^"),
 	KeyCode.from_char("&"),	KeyCode.from_char("*"),	KeyCode.from_char("("),	KeyCode.from_char(")"),	KeyCode.from_char("-"),	KeyCode.from_char("_"),
 	KeyCode.from_char("+"),	KeyCode.from_char("="),	KeyCode.from_char("{"),	KeyCode.from_char("["),	KeyCode.from_char("}"),	KeyCode.from_char("]"),
-	KeyCode.from_char("|"),	KeyCode.from_char("\\"),	KeyCode.from_char(";"),	KeyCode.from_char(":"),	KeyCode.from_char("'"),	KeyCode.from_char("\""),
-	KeyCode.from_char("),"),	KeyCode.from_char("<"),	KeyCode.from_char("."),	KeyCode.from_char(">"),	KeyCode.from_char("/"),	KeyCode.from_char("?"),
+	KeyCode.from_char("|"),	KeyCode.from_char("\\"),KeyCode.from_char(";"),	KeyCode.from_char(":"),	KeyCode.from_char("'"),	KeyCode.from_char("\""),
+	KeyCode.from_char(","),	KeyCode.from_char("<"),	KeyCode.from_char("."),	KeyCode.from_char(">"),	KeyCode.from_char("/"),	KeyCode.from_char("?"),
 	KeyCode.from_char("`"),	KeyCode.from_char("~"),
 #function keys
 	Key.f1,	Key.f2,	Key.f3,	Key.f4,	Key.f5,	Key.f6,
@@ -114,17 +116,36 @@ def displayFrameBuffer(displayWidth, displayHeight, frameBufferPath, workDir):
 		plt.axis('off')
 		imgplot = plt.imshow(img)
 		
-		time.sleep(0.05)
+		#time.sleep(0.05)
 
-	ani = animation.FuncAnimation(fig, animate, interval=50)
+	ani = animation.FuncAnimation(fig, animate, interval=20)
 	plt.show()
 
 
 def updateInputBufferFile(filepath, keyboardStateArray):
+	hexFile = open(filepath, "r+")
+
+	iterator = 0
+
+	for byteIndex in range(0, len(g_keyboardStateArray)):
+		byte = g_keyboardStateArray[byteIndex]
+		# if (iterator == 4):
+		# 	hexFile.write("\n")
+		# 	iterator = 0
+
+		hexFile.seek(byteIndex*2+1+(byteIndex/4), 0)
+		hexFile.write("{}".format(str(byte)))
+		iterator += 1
+
+	hexFile.close()
+
+def initializeInputBufferFile(filepath, keyboardStateArray):
 	hexFile = open(filepath, "w")
 
 	iterator = 0
-	for byte in g_keyboardStateArray:
+
+	for byteIndex in range(0, len(g_keyboardStateArray)):
+		byte = g_keyboardStateArray[byteIndex]
 		if (iterator == 4):
 			hexFile.write("\n")
 			iterator = 0
@@ -137,12 +158,12 @@ def updateInputBufferFile(filepath, keyboardStateArray):
 
 def onKeyPress(key):
 	g_keyboardStateArray[g_keyIndexes[key]]= 1
-	updateInputBufferFile("temp.hex", g_keyboardStateArray)
+	updateInputBufferFile(g_inputBufferPath, g_keyboardStateArray)
 
 
 def onKeyRelease(key):
 	g_keyboardStateArray[g_keyIndexes[key]] = 0
-	updateInputBufferFile("temp.hex", g_keyboardStateArray)
+	updateInputBufferFile(g_inputBufferPath, g_keyboardStateArray)
 
 
 if __name__ == '__main__':
@@ -254,6 +275,7 @@ help yourself
 			if (inputBufferSizeString):
 				#Determine input buffer file path
 				inputBufferPath = "simulation/{}/inputBuffer.hex".format(testbenchName)
+				g_inputBufferPath = inputBufferPath
 
 				#Determine size of input buffer and inputBufferStart
 				inputBufferStart, inputBufferSize = [int(i) for i in inputBufferSizeString.replace(" ","").strip().rstrip().split(",")]
@@ -276,22 +298,25 @@ help yourself
 				stateArrayLength = len(g_keyIndexes)
 				if (len(g_keyIndexes)%4):
 					stateArrayLength += 4 - len(g_keyIndexes)%4
+				
 				g_keyboardStateArray = np.zeros(stateArrayLength, dtype=np.uint8)
+				initializeInputBufferFile(inputBufferPath, g_keyboardStateArray)
 
-				# g_keyboardStateArray[0] = 15
-				# g_keyboardStateArray[1] = 15
-				# g_keyboardStateArray[2] = 15
-				# g_keyboardStateArray[3] = 15
-				# g_keyboardStateArray[4] = 15
-				# g_keyboardStateArray[5] = 15
+				# g_keyboardStateArray[0] = 1
+				# g_keyboardStateArray[1] = 1
+				# g_keyboardStateArray[2] = 1
+				# g_keyboardStateArray[3] = 1
+				# g_keyboardStateArray[4] = 1
+				# g_keyboardStateArray[5] = 1
 
-				# g_keyboardStateArray[30] = 15
-				# g_keyboardStateArray[31] = 15
-				# g_keyboardStateArray[32] = 15
-				# g_keyboardStateArray[33] = 15
-				# g_keyboardStateArray[34] = 15
-				# g_keyboardStateArray[35] = 15
-				updateInputBufferFile(inputBufferPath, g_keyboardStateArray)
+				# g_keyboardStateArray[30] = 1
+				# g_keyboardStateArray[31] = 1
+				# g_keyboardStateArray[32] = 1
+				# g_keyboardStateArray[33] = 1
+				# g_keyboardStateArray[34] = 1
+				# g_keyboardStateArray[35] = 1
+				# updateInputBufferFile(inputBufferPath, g_keyboardStateArray)
+				#sys.exit()
 
 				#Initialize keyboard listener
 				listenerThread = Listener(on_press=onKeyPress, on_release=onKeyRelease)
@@ -333,8 +358,9 @@ help yourself
 			displayThread.terminate()
 
 		#Kill keyboard listener thread
-		if (listenerThread):
-			listenerThread.terminate()
+		#Not needed?
+		# if (listenerThread):
+		# 	listenerThread.close()
 
 	except Exception as e:
 		printColor(traceback.format_exc(), color=COLORS.ERROR)

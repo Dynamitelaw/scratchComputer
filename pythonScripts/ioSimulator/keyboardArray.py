@@ -91,7 +91,7 @@ keyArray = [
 	KeyCode.from_char(":"),
 	KeyCode.from_char("'"),
 	KeyCode.from_char("\""),
-	KeyCode.from_char("),"),
+	KeyCode.from_char(","),
 	KeyCode.from_char("<"),
 	KeyCode.from_char("."),
 	KeyCode.from_char(">"),

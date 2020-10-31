@@ -23,18 +23,32 @@ def getArrayElementPointer(arrayRef, scope, indentLevel=0):
 
 	subscript = arrayRef.subscript
 
+	# #Get pointer to start of array
+	# instructionsTemp, arrayPointerReg, pointerVariableName = scope.getPointer(arrayRootName, indentLevel=indentLevel)
+	# instructions += instructionsTemp
+
 	#Get pointer to start of array
-	instructionsTemp, arrayPointerReg, pointerVariableName = scope.getPointer(arrayRootName, indentLevel=indentLevel)
-	instructions += instructionsTemp
+	rootVariable = scope.getVariable(arrayRootName)
+	if (isinstance(rootVariable.type, c_ast.PtrDecl)):
+		instructions += scope.loadStack(arrayRootName, indentLevel=indentLevel)
+		currentPointerRegister = scope.getRegisterLocation(arrayRootName)  #we don't want to modify this, so we will copy to another register
+		instructionsTemp, arrayPointerReg = scope.getFreeRegister(preferTemp=True, tag="arrayPointerReg", indentLevel=indentLevel)
+		instructions += instructionsTemp
+		instructions.append("{}mv {}, {}".format(indentString, arrayPointerReg, currentPointerRegister))
+	else:
+		instructionsTemp, arrayPointerReg, pointerVariableName = scope.getPointer(arrayRootName, indentLevel=indentLevel)
+		instructions += instructionsTemp
 
 	#Determine element length and starting offset from pointer
-	rootVariable = scope.getVariable(arrayRootName)
 	subElementSize = None
 	elementLength = None  #Size of root element in array
 
 	if isinstance(rootVariable.type, c_ast.ArrayDecl):
 		subElementSize = rootVariable.subElementSize
-		elementLength = rootVariable.subElementSize[-1]	
+		elementLength = rootVariable.subElementSize[-1]
+	elif isinstance(rootVariable.type, c_ast.PtrDecl):
+		elementLength = globals.typeSizeDictionary[" ".join(rootVariable.type.type.type.names)]
+		subElementSize = [elementLength]
 	elif isinstance(rootVariable.type.type, c_ast.Struct):
 		structDefObject = globals.structDictionary[rootVariable.type.type.name]
 		#Get member name
@@ -112,8 +126,17 @@ def getStructMemberPointer(structRef, scope, indentLevel=0):
 		structName = structName.name
 
 	#Get pointer to start of struct
-	instructionsTemp, structPointerReg, pointerVariableName = scope.getPointer(structName, indentLevel=indentLevel)
-	instructions += instructionsTemp
+	structVariable = scope.getVariable(structName)
+	if (isinstance(structVariable.type, c_ast.PtrDecl)):
+		structVariable = structVariable.type
+		instructions += scope.loadStack(structName, indentLevel=indentLevel)
+		currentPointerRegister = scope.getRegisterLocation(structName)  #we don't want to modify this, so we will copy to another register
+		instructionsTemp, structPointerReg = scope.getFreeRegister(preferTemp=True, tag="structMemberPointerReg", indentLevel=indentLevel)
+		instructions += instructionsTemp
+		instructions.append("{}mv {}, {}".format(indentString, structPointerReg, currentPointerRegister))
+	else:
+		instructionsTemp, structPointerReg, pointerVariableName = scope.getPointer(structName, indentLevel=indentLevel)
+		instructions += instructionsTemp
 
 	#Get member name
 	tempRef = copy.deepcopy(structRef)
@@ -123,7 +146,6 @@ def getStructMemberPointer(structRef, scope, indentLevel=0):
 		memberName = tempRef.field.name + "." + memberName
 
 	#Get offset of member
-	structVariable = scope.getVariable(structName)
 	structDefObject = globals.structDictionary[structVariable.type.type.name]
 	offset = structDefObject.members[memberName].offset
 
@@ -175,7 +197,11 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 
 		#Get operand into temp register
 		if (value == 0):
-			operandReg = "zero"
+			if (targetReg):
+				operandReg = targetReg
+				instructions.append("{}mv {}, zero".format(indentString, operandReg))
+			else:
+				operandReg = "zero"
 		elif (value < 2048) and (value >= -2048):
 			#Value is small enough for addi
 			if (targetReg):
@@ -573,6 +599,10 @@ def convertIfItem(item, scope, indentLevel=0):
 	elif isinstance(conditionItem, c_ast.UnaryOp):
 		instructionsTemp, conditionVariableName = convertUnaryOpItem(conditionItem, scope, branch=onTrueLabel, indentLevel=indentLevel)
 		instructions += instructionsTemp
+	elif isinstance(conditionItem, c_ast.ArrayRef):
+		instructionsTemp, conditionValReg = operandToRegister(conditionItem, scope, indentLevel=indentLevel)
+		instructions += instructionsTemp
+		instructions.append("{}bne {}, zero, {}".format(indentString, conditionValReg, onTrueLabel))
 	else:
 		raise Exception("UNSUPPORTED CONDITION | convertIfItem\n{}".format(conditionItem))
 
@@ -654,6 +684,10 @@ def convertFuncCallItem(item, scope, indentLevel=0):
 					instructions.append("{}mv a{}, {}".format(indentString, saveIndex, tempSaveReg))
 					scope.releaseRegister(tempSaveReg)
 		elif isinstance(argument, c_ast.ArrayRef):
+			#Function argument is a contant
+			instructionsTemp, operandReg = operandToRegister(argument, scope, targetReg=argumentRegister, indentLevel=indentLevel)
+			instructions += instructionsTemp
+		elif isinstance(argument, c_ast.StructRef):
 			#Function argument is a contant
 			instructionsTemp, operandReg = operandToRegister(argument, scope, targetReg=argumentRegister, indentLevel=indentLevel)
 			instructions += instructionsTemp
@@ -1009,6 +1043,24 @@ def convertDeclItem(item, scope, indentLevel=0):
 
 			#Get pointer to array element
 			instructionsTemp, pointerRegister, size = getArrayElementPointer(item.init, scope, indentLevel=indentLevel)
+			instructions += instructionsTemp
+
+			#Load element into destination register
+			if (size == 4):
+				instructions.append("{}lw {}, 0({})".format(indentString, destinationRegister, pointerRegister)) #<TODO> handle unsigned values
+			elif (size == 2):
+				instructions.append("{}lh {}, 0({})".format(indentString, destinationRegister, pointerRegister))
+			elif (size == 1):
+				instructions.append("{}lb {}, 0({})".format(indentString, destinationRegister, pointerRegister))
+
+		elif isinstance(item.init, c_ast.StructRef):
+			#Get destination register
+			instructionsTemp, destinationRegister = scope.getFreeRegister(tag="declare", indentLevel=indentLevel)
+			instructions += instructionsTemp
+			instructions += scope.addVariable(variableName, register=destinationRegister, varType=item.type, signed=True, indentLevel=indentLevel)
+
+			#Get pointer to struct element
+			instructionsTemp, pointerRegister, size = getStructMemberPointer(item.init, scope, indentLevel=indentLevel)
 			instructions += instructionsTemp
 
 			#Load element into destination register

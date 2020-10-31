@@ -75,7 +75,7 @@ p, li { white-space: pre-wrap; }
 		yellow = "e7db74"
 
 		#C keywords
-		c_blueKeywords = ["int", "float", "char", "double", "long", "unisgned", "byte", "bool", "struct"]
+		c_blueKeywords = ["int", "float", "char", "double", "long", "unisgned", "byte", "bool", "struct", "void"]
 		c_redKeywords = ["return", "if", "else", "&&", "||", "!", "for", "while", "#include", "#define"]
 		c_constantKeywords = ["true", "false"]
 
@@ -483,12 +483,12 @@ class Ui_MainWindow(object):
 		sizePolicy.setVerticalStretch(0)
 		sizePolicy.setHeightForWidth(self.cCode_text.sizePolicy().hasHeightForWidth())
 		self.cCode_text.setSizePolicy(sizePolicy)
-		self.cCode_text.setMinimumSize(QtCore.QSize(0, 875))
+		self.cCode_text.setMinimumSize(QtCore.QSize(0, 1160))
 		self.cCode_text.setStyleSheet("background-color: rgb(50, 51, 45);\ncolor: rbg(255,255,255);")
 		self.cCode_text.setObjectName("cCode_text")
 		self.horizontalLayout_2.addWidget(self.cCode_text)
 		self.assembly_text = QtWidgets.QTextBrowser(self.centralwidget)
-		self.assembly_text.setMinimumSize(QtCore.QSize(0, 875))
+		self.assembly_text.setMinimumSize(QtCore.QSize(0, 1160))
 		self.assembly_text.setStyleSheet("background-color: rgb(50, 51, 45);\ncolor: rbg(255,255,255);")
 		self.assembly_text.setObjectName("assembly_text")
 		self.horizontalLayout_2.addWidget(self.assembly_text)
@@ -1535,7 +1535,7 @@ class Ui_MainWindow(object):
 		self.horizontalLayout_2.addLayout(self.horizontalLayout_8)
 		#self.stackView = QtWidgets.QListView(self.centralwidget)
 		self.stackView = QtWidgets.QListWidget(self.centralwidget)
-		self.stackView.setMinimumSize(QtCore.QSize(150, 875))
+		self.stackView.setMinimumSize(QtCore.QSize(150, 1160))
 		self.stackView.setMaximumSize(QtCore.QSize(150, 16777215))
 		self.stackView.setStyleSheet("background-color: rgb(50, 51, 45);\ncolor: rgb(255, 255, 255);")
 		self.stackView.setObjectName("stackView")

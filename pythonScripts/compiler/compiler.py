@@ -111,13 +111,13 @@ Currently only supports a subset of the C language
 	memorySize = None
 	if ("K" in memorySizeString):
 		memorySizeString = memorySizeString.replace("K", "")
-		memorySize = int(4 * int(int(memorySizeString) / 4)) * 2**10
+		memorySize = int(memorySizeString) * 2**10
 	elif ("M" in memorySizeString):
 		memorySizeString = memorySizeString.replace("M", "")
-		memorySize = int(4 * int(int(memorySizeString) / 4)) * 2**20
+		memorySize = int(memorySizeString) * 2**20
 	elif ("G" in memorySizeString):
 		memorySizeString = memorySizeString.replace("G", "")
-		memorySize = int(4 * int(int(memorySizeString) / 4)) * 2**30
+		memorySize = int(memorySizeString) * 2**30
 	else:
 		memorySize = int(4 * int(int(memorySizeString) / 4))
 

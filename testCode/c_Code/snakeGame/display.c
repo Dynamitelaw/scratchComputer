@@ -1,10 +1,21 @@
-#define COLUMNS 4 //64
-#define ROWS 3 //48
+//Screen size and memory location
+#define COLUMNS 8//64
+#define ROWS 4//48
 #define FRAME_BUFFER_ADDRESS 4096
+
+//Primary colors
+#define RED 16711680
+#define GREEN 65280
+#define BLUE 255
+#define YELLOW 16776960
+#define MAGENTA 16711935
+#define CYAN 65535
+#define GREY 13421772
+#define BLACK 0
 
 void updatePixel(int column, int row, int colorValue)
 {
-	int * pixelPointer = FRAME_BUFFER_ADDRESS + (row*COLUMNS) + column;
+	int * pixelPointer = FRAME_BUFFER_ADDRESS + 4*((row*COLUMNS) + column);
 	*pixelPointer = colorValue;
 }
 

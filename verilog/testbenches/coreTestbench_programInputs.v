@@ -1,7 +1,7 @@
-`define programLength 120
+`define programLength 266
 `define programFilename "../testCode/c_Code/snakeGame/snakeMain.hex"
-`define memorySize 5120
+`define memorySize 18432
 `define FRAME_BUFFER_ENABLE
 `define frameBufferPath "simulation/coreTestbench/frameBuffer.b"
-`define frameBufferSize 48
+`define frameBufferSize 128
 `define frameBufferStart 4096

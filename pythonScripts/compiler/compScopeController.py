@@ -134,7 +134,7 @@ class scopeController:
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
 		branchVariableDict = scopeBranch.variableDict
-		branchLocalStack = scopeBranch.localStack
+		branchLocalStack = copy.deepcopy(scopeBranch.localStack)
 		branchUsedRegisters = scopeBranch.usedRegisters
 		branchAvailableRegisters = scopeBranch.availableRegisters
 

@@ -51,11 +51,14 @@ ani = animation.FuncAnimation(fig, animate, interval=50)
 plt.show()
 '''
 
+
 keyIndexes = OrderedDict()
 
 for index in range(0, len(keyArray), 1):
+	headLine = "#define {}_OFFSET {}".format(keyArray[index], index)
+	print(headLine)
 	keyIndexes[keyArray[index]] = index
-
+'''
 print(keyIndexes)
 
 stateArrayLength = len(keyIndexes)
@@ -93,3 +96,25 @@ listener = Listener(on_press=on_press, on_release=on_release)
 listener.start()  # Join the listener thread to the main thread to keep waiting for keys
 
 time.sleep(10)
+'''
+
+'''
+xLocations = [4,8,12,16,20,24,28,32,36,40,44,48,52,56,60]
+yLocations = [4,8,12,16,20,24,28,32,36,40,44]
+
+xPos = 8
+yPos = 4
+
+
+def getNextPos(xPos, yPos, iterator):
+	xIndex = (xPos*3 + yPos*7 + iterator*5)%65
+	yIndex = (yPos*2 + xPos*11 + iterator*3)%49
+
+	return xIndex, yIndex
+
+
+seed = 1
+for i in range(20):
+	print(xPos, yPos)
+	xPos, yPos = getNextPos(xPos, yPos, i)
+'''
