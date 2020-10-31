@@ -64,6 +64,88 @@ main:
 			lw s2, 8(sp)
 			mv s2, t2
 			sw s2, 8(sp)
+			mv t0, s1
+			addi t3, zero, 106
+			addi t4, zero, 1
+			mul t4, t3, t4
+			add t0, t0, t4
+			lb t4, 0(t0)
+			bne t4, zero, true_0
+			j false_0
+			true_0:
+				addi t6, zero, 1
+				sub t5, s2, t6
+				addi t6, zero, 12
+				rem t0, t5, t6
+				addi t6, sp, 32
+				lw a0, 0(t6)
+				mv a0, t0
+				sw a0, 0(t6)
+			j ifElseExit_0
+			false_0:
+			ifElseExit_0:
+			mv t0, s1
+			addi t5, zero, 107
+			addi t6, zero, 1
+			mul t6, t5, t6
+			add t0, t0, t6
+			lb t6, 0(t0)
+			bne t6, zero, true_1
+			j false_1
+			true_1:
+				addi a1, zero, 1
+				add a0, s2, a1
+				addi a1, zero, 12
+				rem t0, a0, a1
+				addi a1, sp, 32
+				lw a2, 0(a1)
+				mv a2, t0
+				sw a2, 0(a1)
+			j ifElseExit_1
+			false_1:
+			ifElseExit_1:
+			mv t0, s1
+			addi a0, zero, 108
+			addi a1, zero, 1
+			mul a1, a0, a1
+			add t0, t0, a1
+			lb a1, 0(t0)
+			bne a1, zero, true_2
+			j false_2
+			true_2:
+				addi a3, zero, 1
+				sub a2, s11, a3
+				addi a3, zero, 16
+				rem t0, a2, a3
+				addi a3, sp, 32
+				addi a3, a3, 4
+				lw a4, 0(a3)
+				mv a4, t0
+				sw a4, 0(a3)
+			j ifElseExit_2
+			false_2:
+			ifElseExit_2:
+			mv t0, s1
+			addi a2, zero, 109
+			addi a3, zero, 1
+			mul a3, a2, a3
+			add t0, t0, a3
+			lb a3, 0(t0)
+			bne a3, zero, true_3
+			j false_3
+			true_3:
+				addi a5, zero, 1
+				add a4, s11, a5
+				addi a5, zero, 16
+				rem t0, a4, a5
+				addi a5, sp, 32
+				addi a5, a5, 4
+				lw a6, 0(a5)
+				mv a6, t0
+				sw a6, 0(a5)
+			j ifElseExit_3
+			false_3:
+			ifElseExit_3:
 			addi t0, sp, 32
 			addi t0, t0, 4
 			lw a0, 0(t0)
@@ -78,18 +160,21 @@ main:
 			mv s4, t2
 			addi sp, sp, -4
 			sw s5, 0(sp)
-			mv s5, a0
+			mv s5, t3
 			addi sp, sp, -4
 			sw s6, 0(sp)
-			mv s6, a1
+			mv s6, t4
 			addi sp, sp, -4
 			sw s7, 0(sp)
-			mv s7, a2
-			jal updatePixel
-			addi a0, zero, 400
+			mv s7, t5
 			addi sp, sp, -4
 			sw s8, 0(sp)
-			mv s8, a0
+			mv s8, t6
+			addi sp, sp, -4
+			sw s9, 0(sp)
+			mv s9, a3
+			jal updatePixel
+			addi a0, zero, 400
 			jal delay
 			mv a0, s11
 			mv a1, s2
@@ -97,16 +182,17 @@ main:
 			mv s11, a0
 			mv s2, a1
 			jal updatePixel
-		sw s11, 36(sp)
-		sw s2, 32(sp)
-		lw s2, 24(sp)
-		lw s3, 20(sp)
-		lw s4, 16(sp)
-		lw s5, 12(sp)
-		lw s6, 8(sp)
-		lw s7, 4(sp)
-		lw s8, 0(sp)
-		addi sp, sp, 28
+		sw s11, 40(sp)
+		sw s2, 36(sp)
+		lw s2, 28(sp)
+		lw s3, 24(sp)
+		lw s4, 20(sp)
+		lw s5, 16(sp)
+		lw s6, 12(sp)
+		lw s7, 8(sp)
+		lw s8, 4(sp)
+		lw s9, 0(sp)
+		addi sp, sp, 32
 		addi s10, s10, 1
 		sw s10, 0(sp)
 		j forLoopStart_3
@@ -124,7 +210,7 @@ main:
 updatePixel:
 	lw t1, data_int_4096
 	addi t3, zero, 4
-	addi t6, zero, 8
+	addi t6, zero, 16
 	mul t5, a1, t6
 	add t4, t5, a0
 	mul t2, t3, t4
@@ -153,7 +239,7 @@ clearScreen:
 	sw s1, 0(sp)
 	sw s1, 0(sp)
 	forLoopStart_0:
-		addi t0, zero, 4
+		addi t0, zero, 12
 		blt s1, t0, forLoopBody_0
 		j forLoopEnd_0
 		forLoopBody_0:
@@ -164,7 +250,7 @@ clearScreen:
 			sw s10, 0(sp)
 			sw s10, 0(sp)
 			forLoopStart_1:
-				addi t0, zero, 8
+				addi t0, zero, 16
 				blt s10, t0, forLoopBody_1
 				j forLoopEnd_1
 				forLoopBody_1:
@@ -251,7 +337,7 @@ iterateFoodPosition:
 	addi t6, zero, 5
 	mul t5, a1, t6
 	add t1, t2, t5
-	addi t6, zero, 8
+	addi t6, zero, 16
 	rem t0, t1, t6
 	addi sp, sp, -4
 	sw t0, 0(sp)
@@ -263,7 +349,7 @@ iterateFoodPosition:
 	addi a7, zero, 3
 	mul a6, a1, a7
 	add a2, a3, a6
-	addi a7, zero, 4
+	addi a7, zero, 12
 	rem t6, a2, a7
 	addi sp, sp, -4
 	sw t6, 0(sp)

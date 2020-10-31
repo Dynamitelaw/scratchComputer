@@ -129,11 +129,9 @@ def updateInputBufferFile(filepath, keyboardStateArray):
 
 	for byteIndex in range(0, len(g_keyboardStateArray)):
 		byte = g_keyboardStateArray[byteIndex]
-		# if (iterator == 4):
-		# 	hexFile.write("\n")
-		# 	iterator = 0
 
-		hexFile.seek(byteIndex*2+1+(byteIndex/4), 0)
+		fileAddress = 9*int((byteIndex/4)) + 7 - (2*(byteIndex%4))  #hex file is stored as big endian words, so we need to convert each byte index into the appropite file byte address
+		hexFile.seek(fileAddress, 0)
 		hexFile.write("{}".format(str(byte)))
 		iterator += 1
 

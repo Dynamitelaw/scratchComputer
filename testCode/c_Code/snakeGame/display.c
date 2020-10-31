@@ -1,6 +1,6 @@
 //Screen size and memory location
-#define COLUMNS 8//64
-#define ROWS 4//48
+#define COLUMNS 16 //64
+#define ROWS 12 //48
 #define FRAME_BUFFER_ADDRESS 4096
 
 //Primary colors

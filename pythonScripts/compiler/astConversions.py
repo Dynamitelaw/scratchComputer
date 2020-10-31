@@ -23,10 +23,6 @@ def getArrayElementPointer(arrayRef, scope, indentLevel=0):
 
 	subscript = arrayRef.subscript
 
-	# #Get pointer to start of array
-	# instructionsTemp, arrayPointerReg, pointerVariableName = scope.getPointer(arrayRootName, indentLevel=indentLevel)
-	# instructions += instructionsTemp
-
 	#Get pointer to start of array
 	rootVariable = scope.getVariable(arrayRootName)
 	if (isinstance(rootVariable.type, c_ast.PtrDecl)):
