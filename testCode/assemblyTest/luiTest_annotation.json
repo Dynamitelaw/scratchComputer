@@ -1,0 +1,12 @@
+{
+  "asmFileMap": {
+    "0": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/assemblyTest/luiTest.asm",
+      "lineNum": 2
+    },
+    "4": {
+      "file": "/home/jose/Documents/gitRepos/scratchComputer/testCode/assemblyTest/luiTest.asm",
+      "lineNum": 4
+    }
+  }
+}

@@ -63,7 +63,6 @@ module RAM(
 	wire [`frameBufferSize*8-1:0]frameBufferArray;
 	genvar i;
 	for (i=0; i<`frameBufferSize/4; i=i+1) assign frameBufferArray[32*i+31:32*i] = memory[`frameBufferStart/4 + i];
-	//for (i=0; i<`frameBufferSize/4; i=i+1) assign frameBufferArray[32*i+31:32*i] = addressIn;
 	`endif
 
 	`ifdef INPUT_BUFFER_ENABLE
@@ -87,7 +86,7 @@ module RAM(
 		`ifdef INPUT_BUFFER_ENABLE
 		if (load) begin
 			if ((addressIn >= `inputBufferStart) && (addressIn <= `inputBufferStart+`inputBufferSize)) begin
-				//We have accessed the GIO buffer. Update  binary file
+				//We have accessed the GIO buffer. Update memory from hex buffer file
 				$readmemh(`inputBufferPath, inputBuffer);
 				dataReadOut <= inputBuffer[(addressIn-`inputBufferStart)/4];
 			end

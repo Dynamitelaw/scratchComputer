@@ -57,6 +57,7 @@ class INST(Enum):
 	SW = 28
 	SH = 29
 	SB = 30
+	LUI = 31
 
 
 #Mapping of each register ABI name to their hardware address
@@ -207,6 +208,8 @@ def parseInstruction(asmLine):
 		instructionEnum = INST.SH
 	elif (instructionName == "sb"):
 		instructionEnum = INST.SB
+	elif (instructionName == "lui"):
+		instructionEnum = INST.LUI
 
 	if (instructionEnum == -1):
 		raise Exception("Unsupported instruction \"{}\"".format(instructionName))
@@ -285,6 +288,8 @@ def parseInstruction(asmLine):
 		raise Exception("Incorrect number of arguments for \"sh\"")
 	elif ((instructionEnum == INST.SB) and (totalArgs < 2)):
 		raise Exception("Incorrect number of arguments for \"sb\"")
+	elif ((instructionEnum == INST.LUI) and (totalArgs < 2)):
+		raise Exception("Incorrect number of arguments for \"lui\"")
 
 
 	for arg in instructionArgs:
@@ -381,7 +386,7 @@ def parseAssemblyFile(filepath):
 					instruction = parseInstruction(asmLine)
 					linedInstructions.append([lineNumber, instruction])
 				else:
-					raise Exception("ERROR: {} , line #{} | instruction defined in data section".format(filepath, lineNumber, e))
+					raise Exception("ERROR: {} , line #{} | instruction defined in data section".format(filepath, lineNumber))
 		except Exception as e:
 			raise Exception("ERROR: {} , line #{} | {}".format(filepath, lineNumber, e))
 
@@ -705,6 +710,11 @@ def instructionsToInts(instructionList):
 				instructionFields["rs1"] = args[2]
 				instructionFields["funct3"] = 0
 				instructionFields["opcode"] = 35
+			elif (instructionEnum == INST.LUI):
+				instructionFields["type"] = "U"
+				instructionFields["rd"] = args[0]
+				instructionFields["imm"] = args[1]
+				instructionFields["opcode"] = 55
 
 			#########
 			# Concatenate instruction fields into binary string
@@ -828,6 +838,19 @@ def instructionsToInts(instructionList):
 				opcode_string = format(instructionFields["opcode"], "07b")  #7bit value
 
 				binaryString = "{}{}{}{}{}{}".format(immString_11_5, rs2_string, rs1_string, funct3_string, immString_4_0, opcode_string)
+
+			#U-type instructions
+			elif (instructionFields["type"] == "U"):
+				imm_string = ""
+				if (instructionFields["imm"] < 0):
+					raise Exception("Negative immediate used in U type instruction | {}".format(instructionFields["imm"]))
+				else:
+					imm_string = format(instructionFields["imm"], "020b")  #20bit value
+
+				rd_string = format(instructionFields["rd"], "05b")  #5bit value
+				opcode_string = format(instructionFields["opcode"], "07b")  #7bit value
+
+				binaryString = "{}{}{}".format(imm_string, rd_string, opcode_string)
 
 			else:
 				raise Exception("Unsupported instruction type {}".format(instruction))

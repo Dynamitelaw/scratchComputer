@@ -47,92 +47,7 @@ void iterateFoodPosition(struct food * foodPosition, int iterator)
 
 
 int main()
-{
-	//Clear screen to black
-	//clearScreen(BLACK);
-
-	/*
-	//Initialize food
-	struct food foodPosition;
-	foodPosition.xPos = 8;
-	foodPosition.yPos = 4;
-	updatePixel(foodPosition.xPos, foodPosition.yPos, RED);
-
-	//Iterate food position 
-	int oldX;
-	int oldY;
-
-	for (int i=0; i<10; i++)
-	{
-		//Get current position
-		oldX = foodPosition.xPos;
-		oldY = foodPosition.yPos;
-
-		//Set color of new food position
-		iterateFoodPosition(&foodPosition, i);
-		updatePixel(foodPosition.xPos, foodPosition.yPos, RED);
-
-		delay(400);
-		
-		//Clear previous food position
-		updatePixel(oldX, oldY, BLACK);
-	}
-
-	return 42;
-	*/
-
-	/*
-	int colorArray[6] = {
-		16711680, //reg
-		65280, //green
-		255, //blue
-		16776960, //yellow
-		16711935, //magenta
-		65535 //cyan
-	};
-
-	bool * keyboard = INPUT_BUFFER_ADDRESS;
-	int colorIndex = 0;
-
-	for (int i=0; i<30; i++)
-	{
-		for (int keyIndex=0; keyIndex<INPUT_BUFFER_SIZE; keyIndex++)
-		{
-			if(keyboard[keyIndex])
-			{
-				//colorIndex = keyIndex%6;
-				updatePixel(keyIndex, 0, RED);
-			}
-			else
-			{
-				updatePixel(keyIndex, 0, BLACK);
-			}
-		}
-		delay(100);
-	}
-	*/
-	/*
-	bool * keyboard = INPUT_BUFFER_ADDRESS;
-	int colorIndex = 0;
-
-	for (int i=0; i<4; i++)
-	{
-		for (int keyIndex=0; keyIndex<INPUT_BUFFER_SIZE; keyIndex++)
-		{
-			if(keyboard[KEY_w_OFFSET])
-			{
-				//colorIndex = keyIndex%6;
-				updatePixel(keyIndex, 0, RED);
-			}
-			else
-			{
-				updatePixel(keyIndex, 0, BLACK);
-			}
-		}
-		//delay(100);
-	}
-	*/
-	
+{	
 	//Clear screen to black
 	//clearScreen(BLACK);
 
@@ -187,13 +102,10 @@ int main()
 
 		//Update snake position
 		snake.head.xPos = (snake.head.xPos + snake.xVelocity)%DISPLAY_WIDTH;
-		//snake.head.xPos = 8;
-		//if (snake.head.xPos < 0) snake.head.yPos = 10;
+		//if (snake.head.xPos < 0) snake.head.yPos = DISPLAY_WIDTH;
 		snake.head.yPos = (snake.head.yPos + snake.yVelocity)%DISPLAY_HEIGHT;
 		if (snake.head.yPos < 0) snake.head.yPos = DISPLAY_HEIGHT;
-		//snake.head.yPos = 10;
 		updatePixel(snake.tail.xPos, snake.tail.yPos, BLACK);
-		//delay(400);
 		updatePixel(snake.head.xPos, snake.head.yPos, GREEN);
 		snake.tail.xPos = snake.head.xPos;
 		snake.tail.yPos = snake.head.yPos;
