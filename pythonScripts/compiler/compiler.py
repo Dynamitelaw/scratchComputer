@@ -185,13 +185,34 @@ Currently only supports a subset of the C language
 			stackPointerStart = int(4 * int(int(memorySize) / 4))
 			if (stackPointerStart < 2048):
 				asmFile.write("addi sp, zero, {}\n".format(int(stackPointerStart)))
+				programCounter += 4
 			else:
-				globals.dataSegment["stackPointerStart"] = dataElement("stackPointerStart", value=stackPointerStart, size=4)
-				asmFile.write("lw sp, stackPointerStart\n")
-			programCounter += 4
+				upperValue = int(stackPointerStart/4096)
+				lowerValue = stackPointerStart%4096
+				if (int(lowerValue/2048) == 1):
+					# Sad :(
+					#Get lower val into register
+					asmFile.write("lui sp, 1 #Loading val {}\n".format(stackPointerStart))
+					asmFile.write("addi sp, sp, {}\n".format(lowerValue))
+					if (upperValue > 0):
+						#Get upper val into temp register t0
+						asmFile.write("lui t0, {}\n".format(upperValue))
+						#Combine them
+						asmFile.write("add sp, sp, t0\n")
 
-		asmFile.write("addi ra, zero, PROGRAM_END\n")  #initialize return address for main
-		programCounter += 4
+						programCounter += 16
+				else:
+					asmFile.write("lui sp, {} #Loading val {}\n".format(upperValue, stackPointerStart))
+					asmFile.write("addi sp, zero, {}\n".format(lowerValue))
+					programCounter += 8
+
+		#<TODO> don't do this. We should use auipc
+		asmFile.write("lui ra, 1\n")  #initialize return address for main
+		asmFile.write("addi ra, ra, PROGRAM_END\n")
+		programCounter += 8
+
+		#asmFile.write("addi ra, zero, PROGRAM_END\n")  #initialize return address for main
+		#programCounter += 4
 
 		#Write main first
 		instList = definedFunctions["main"].coord

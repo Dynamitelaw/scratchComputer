@@ -1,6 +1,8 @@
 .text
-lw sp, stackPointerStart
-addi ra, zero, PROGRAM_END
+lui sp, 1 #Loading val 3072
+addi sp, sp, 3072
+lui ra, 1
+addi ra, ra, PROGRAM_END
 main:
 	addi sp, sp, -8
 	addi t0, zero, 8
@@ -19,7 +21,8 @@ main:
 	lw a0, 0(t0)
 	addi t0, sp, 0
 	lw a1, 0(t0)
-	lw a2, data_int_16711680
+	lui a2, 4080 #Loading val 16711680
+	addi a2, a2, 0
 	addi sp, sp, -4
 	sw ra, 0(sp)
 	addi sp, sp, -4
@@ -35,7 +38,8 @@ main:
 	sw s11, 0(sp)
 	mv s11, ra
 	jal updatePixel
-	lw s0, data_int_3960
+	lui s0, 1  #Loading val 3960
+	addi s0, s0, 3960
 	addi sp, sp, -4
 	sw s0, 0(sp)
 	addi sp, sp, -20
@@ -82,7 +86,7 @@ main:
 	sw s10, 0(sp)
 	sw s10, 0(sp)
 	forLoopStart_3:
-		addi t0, zero, 6
+		addi t0, zero, 60
 		blt s10, t0, forLoopBody_3
 		j forLoopEnd_3
 		forLoopBody_3:
@@ -213,14 +217,30 @@ main:
 			lw s4, 0(a5)
 			mv s4, t0
 			sw s4, 0(a5)
-			addi a5, zero, 8
-			addi s4, sp, 28
-			addi s4, s4, 12
+			addi a5, sp, 28
+			addi a5, a5, 12
+			lw s4, 0(a5)
+			blt s4, zero, true_4
+			j false_4
+			true_4:
+				addi a5, zero, 16
+				addi sp, sp, -4
+				sw s5, 0(sp)
+				addi s5, sp, 32
+				addi s5, s5, 12
+				addi sp, sp, -4
+				sw s6, 0(sp)
+				lw s6, 0(s5)
+				mv s6, a5
+				sw s6, 0(s5)
+				lw s5, 4(sp)
+				lw s6, 0(sp)
+				addi sp, sp, 8
+			j ifElseExit_4
+			false_4:
+			ifElseExit_4:
 			addi sp, sp, -4
 			sw s5, 0(sp)
-			lw s5, 0(s4)
-			mv s5, a5
-			sw s5, 0(s4)
 			addi sp, sp, -4
 			sw s6, 0(sp)
 			addi s6, sp, 36
@@ -235,20 +255,20 @@ main:
 			lb s8, 0(s6)
 			add s5, s7, s8
 			addi s6, zero, 12
-			rem s4, s5, s6
+			rem a5, s5, s6
 			addi s6, sp, 44
 			addi s6, s6, 8
 			addi sp, sp, -4
 			sw s9, 0(sp)
 			lw s9, 0(s6)
-			mv s9, s4
+			mv s9, a5
 			sw s9, 0(s6)
 			addi s6, sp, 48
 			addi s6, s6, 8
 			lw s9, 0(s6)
-			blt s9, zero, true_4
-			j false_4
-			true_4:
+			blt s9, zero, true_5
+			j false_5
+			true_5:
 				addi s6, zero, 12
 				sw s11, 88(sp)
 				addi s11, sp, 48
@@ -259,9 +279,9 @@ main:
 				sw s0, 0(s11)
 				lw s11, 88(sp)
 				lw s0, 68(sp)
-			j ifElseExit_4
-			false_4:
-			ifElseExit_4:
+			j ifElseExit_5
+			false_5:
+			ifElseExit_5:
 			addi s6, sp, 48
 			addi s6, s6, 4
 			lw a0, 0(s6)
@@ -273,90 +293,94 @@ main:
 			sw t0, 0(sp)
 			addi sp, sp, -4
 			sw a4, 0(sp)
+			addi sp, sp, -4
+			sw a5, 0(sp)
 			jal updatePixel
-			addi t0, sp, 56
+			addi t0, sp, 60
 			addi t0, t0, 12
 			lw a0, 0(t0)
-			addi t0, sp, 56
+			addi t0, sp, 60
 			addi t0, t0, 8
 			lw a1, 0(t0)
-			lw a2, data_int_65280
+			lui a2, 1  #Loading val 65280
+			addi a2, a2, 3840
+			lui t0, 15
+			add a2, a2, t0
 			jal updatePixel
-			addi t0, sp, 56
+			addi t0, sp, 60
 			addi t0, t0, 12
 			lw t1, 0(t0)
-			addi t0, sp, 56
+			addi t0, sp, 60
 			addi t0, t0, 4
 			lw t2, 0(t0)
 			mv t2, t1
 			sw t2, 0(t0)
-			addi t0, sp, 56
+			addi t0, sp, 60
 			addi t0, t0, 8
 			lw t2, 0(t0)
-			addi t0, sp, 56
+			addi t0, sp, 60
 			lw t3, 0(t0)
 			mv t3, t2
 			sw t3, 0(t0)
-			addi t3, sp, 56
+			addi t3, sp, 60
 			addi t3, t3, 12
 			lw t4, 0(t3)
-			addi t3, sp, 100
+			addi t3, sp, 104
 			addi t3, t3, 4
 			lw t5, 0(t3)
 			slt t0, t4, t5
 			slt t3, t5, t4
 			add t0, t0, t3
 			slti t0, t0, 1
-			addi t6, sp, 56
+			addi t6, sp, 60
 			addi t6, t6, 8
 			lw a0, 0(t6)
-			addi t6, sp, 100
+			addi t6, sp, 104
 			lw a1, 0(t6)
 			slt t3, a0, a1
 			slt t6, a1, a0
 			add t3, t3, t6
 			slti t3, t3, 1
 			mul t6, t0, t3
-			bne t6, zero, true_5
-			j false_5
-			true_5:
-				addi a0, sp, 100
+			bne t6, zero, true_6
+			j false_6
+			true_6:
+				addi a0, sp, 104
 				mv a1, s10
 				mv s10, t1
 				addi sp, sp, -4
 				sw t0, 0(sp)
 				addi sp, sp, -4
 				sw t3, 0(sp)
-				sw a1, 48(sp)
+				sw a1, 52(sp)
 				jal iterateFoodPosition
 				addi s1, s1, 1
-				sw s1, 52(sp)
-				lw s10, 48(sp)
+				sw s1, 56(sp)
+				lw s10, 52(sp)
 				lw t0, 4(sp)
 				lw t3, 0(sp)
 				addi sp, sp, 8
-			j ifElseExit_5
-			false_5:
-			ifElseExit_5:
-			addi t6, sp, 100
+			j ifElseExit_6
+			false_6:
+			ifElseExit_6:
+			addi t6, sp, 104
 			addi t6, t6, 4
 			lw a0, 0(t6)
-			addi t6, sp, 100
+			addi t6, sp, 104
 			lw a1, 0(t6)
-			lw a2, data_int_16711680
+			lui a2, 4080 #Loading val 16711680
+			addi a2, a2, 0
 			addi sp, sp, -4
 			sw t0, 0(sp)
 			addi sp, sp, -4
 			sw t3, 0(sp)
 			jal updatePixel
-			addi a0, zero, 4
+			addi a0, zero, 400
 			jal delay
-		sw s2, 60(sp)
-		sw s3, 56(sp)
-		lw s2, 44(sp)
-		lw s3, 40(sp)
-		addi sp, sp, -4
-		sw s4, 0(sp)
+		sw s2, 64(sp)
+		sw s3, 60(sp)
+		lw s2, 48(sp)
+		lw s3, 44(sp)
 		lw s4, 40(sp)
 		addi sp, sp, -4
 		sw s5, 0(sp)
@@ -382,7 +406,8 @@ main:
 	jr ra
 
 updatePixel:
-	lw t1, data_int_4096
+	lui t1, 1 #Loading val 4096
+	addi t1, t1, 0
 	addi t3, zero, 4
 	addi t6, zero, 16
 	mul t5, a1, t6
@@ -403,7 +428,8 @@ updatePixel:
 clearScreen:
 	addi sp, sp, -4
 	sw s0, 0(sp)
-	lw s0, data_int_4096
+	lui s0, 1 #Loading val 4096
+	addi s0, s0, 0
 	addi sp, sp, -4
 	sw s0, 0(sp)
 	addi sp, sp, -4
@@ -549,8 +575,3 @@ iterateFoodPosition:
 PROGRAM_END:
 add zero, zero, zero
 .data
-data_int_4096: .word 4096
-data_int_16711680: .word 16711680
-data_int_3960: .word 3960
-data_int_65280: .word 65280
-stackPointerStart: .word 3072

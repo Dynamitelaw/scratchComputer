@@ -57,7 +57,7 @@ int main()
 	foodPosition.yPos = 4;
 	updatePixel(foodPosition.xPos, foodPosition.yPos, RED);
 
-	//Get pointer to moery mapped io (keyboard)
+	//Get pointer to memory mapped io (keyboard)
 	bool * keyboard = INPUT_BUFFER_ADDRESS;
 
 	//Instantiate snake
@@ -72,7 +72,7 @@ int main()
 	int foodCurrentX;
 	int foodCurrentY;
 	int foodIterator = 0;
-	for (int i=0; i<6; i++)
+	for (int i=0; i<60; i++)
 	{
 		//Get current food position
 		foodCurrentX = foodPosition.xPos;
@@ -102,7 +102,7 @@ int main()
 
 		//Update snake position
 		snake.head.xPos = (snake.head.xPos + snake.xVelocity)%DISPLAY_WIDTH;
-		//if (snake.head.xPos < 0) snake.head.yPos = DISPLAY_WIDTH;
+		if (snake.head.xPos < 0) snake.head.xPos = DISPLAY_WIDTH;
 		snake.head.yPos = (snake.head.yPos + snake.yVelocity)%DISPLAY_HEIGHT;
 		if (snake.head.yPos < 0) snake.head.yPos = DISPLAY_HEIGHT;
 		updatePixel(snake.tail.xPos, snake.tail.yPos, BLACK);
@@ -120,7 +120,7 @@ int main()
 		
 		updatePixel(foodPosition.xPos, foodPosition.yPos, RED);
 		
-		delay(4);
+		delay(400);
 		
 		//Clear previous food position
 		//updatePixel(oldX, oldY, BLACK);

@@ -208,15 +208,38 @@ def operandToRegister(operandItem, scope, targetReg=None, indentLevel=0):
 				instructions += instructionsTemp
 			instructions.append("{}addi {}, zero, {}".format(indentString, operandReg, value))
 		else:
-			#Too large for immediate. Must load value from memory.
-			#Add value to data segment
-			dataType = "int"
-			dataLabelName = "data_{}_{}".format(dataType, value)
-			globals.dataSegment[dataLabelName] = dataElement(dataLabelName, value=value, size=4)
+			#Too large for immediate. Build using LUI+ADDI
+			#<TODO> handle non-ints
+			upperValue = None
+			lowerValue = None
+			if (value > 0):
+				upperValue = int(value/4096)
+				lowerValue = value%4096
+			else:
+				negativePortion = -1*(2**32)
+				positivePortion = value - negativePortion
+				lowerValue = positivePortion%4096
+				upperValue = int(positivePortion/4096) + 2**20
 			#Load into register
 			instructionsTemp, operandReg = scope.getFreeRegister(preferTemp=True, tag="CONSTANT", indentLevel=indentLevel, regOverride=targetReg)
 			instructions += instructionsTemp
-			instructions.append("{}lw {}, {}".format(indentString, operandReg, dataLabelName))
+			if (int(lowerValue/2048) == 1):
+				# Sad :(  <TODO> don't do this awefulness when we have better instruction support
+				#Get lower val into register
+				instructions.append("{}lui {}, 1  #Loading val {}".format(indentString, operandReg, value))
+				instructions.append("{}addi {}, {}, {}".format(indentString, operandReg, operandReg, lowerValue))
+				if (upperValue > 0):
+					#Get upper val into temp register
+					instructionsTemp, tempRegister = scope.getFreeRegister(preferTemp=True, tag="largeValTemp", indentLevel=indentLevel)
+					instructions += instructionsTemp
+					instructions.append("{}lui {}, {}".format(indentString, tempRegister, upperValue))
+					#Combine them
+					instructions.append("{}add {}, {}, {}".format(indentString, operandReg, operandReg, tempRegister))
+
+					instructions += scope.releaseRegister(tempRegister, indentLevel=indentLevel)
+			else:
+				instructions.append("{}lui {}, {} #Loading val {}".format(indentString, operandReg, upperValue, value))
+				instructions.append("{}addi {}, {}, {}".format(indentString, operandReg, operandReg, lowerValue))
 
 	elif isinstance(operandItem, c_ast.BinaryOp):
 		#Operand is binary op
@@ -896,14 +919,33 @@ def convertReturnItem(item, scope, indentLevel=0):
 			scope.removeVariable(scope.getVariableName("a0"))
 			instructions.append("{}addi {}, zero, {}".format(indentString, "a0", value))
 		else:
-			#Must load value from memory
-			#Too large for immediate. Must load value from memory.
-			#Add value to data segment
-			dataType = "int"
-			dataLabelName = "data_{}_{}".format(dataType, value)
-			globals.dataSegment[dataLabelName] = dataElement(dataLabelName, value=value, size=4)
+			#Too large for immediate. Build using LUI+ADDI
+			#<TODO> handle non-ints
+			upperValue = None
+			lowerValue = None
+			if (value > 0):
+				upperValue = int(value/4096)
+				lowerValue = value%4096
+			else:
+				negativePortion = -1*(2**32)
+				positivePortion = value - negativePortion
+				lowerValue = positivePortion%4096
+				upperValue = int(positivePortion/4096) + 2**20
+
 			#Load into register
-			instructions.append("{}lw a0, {}".format(indentString, dataLabelName))
+			if (int(lowerValue/2048) == 1):
+				# Sad :(
+				#Get lower val into register
+				instructions.append("{}lui a0, 1 #Loading val {}".format(indentString, value))
+				instructions.append("{}addi a0, a0, {}".format(indentString, lowerValue))
+				if (upperValue > 0):
+					#Get upper val into temp register a2
+					instructions.append("{}lui a2, {}".format(indentString, upperValue))
+					#Combine them
+					instructions.append("{}add a0, a0, a2".format(indentString))
+			else:
+				instructions.append("{}lui a0, {} #Loading val {}".format(indentString, upperValue, value))
+				instructions.append("{}addi a0, a0, {}".format(indentString, lowerValue))
 
 		#Restore save variables, deallocate scope, then return
 		instructions += scope.restoreSaves(indentLevel=indentLevel)
@@ -961,13 +1003,37 @@ def convertDeclItem(item, scope, indentLevel=0):
 				#Value is small enough for addi
 				instructions.append("{}addi {}, zero, {}".format(indentString, destinationRegister, value))
 			else:
-				#Too large for immediate. Must load value from memory.
-				#Add value to data segment
-				dataType = "int"
-				dataLabelName = "data_{}_{}".format(dataType, value)
-				globals.dataSegment[dataLabelName] = dataElement(dataLabelName, value=value, size=4)
+				#Too large for immediate. Build using LUI+ADDI
+				#<TODO> handle non-ints
+				upperValue = None
+				lowerValue = None
+				if (value > 0):
+					upperValue = int(value/4096)
+					lowerValue = value%4096
+				else:
+					negativePortion = -1*(2**32)
+					positivePortion = value - negativePortion
+					lowerValue = positivePortion%4096
+					upperValue = int(positivePortion/4096) + 2**20
+				
 				#Load into register
-				instructions.append("{}lw {}, {}".format(indentString, destinationRegister, dataLabelName))
+				if (int(lowerValue/2048) == 1):
+					# Sad :(  <TODO> don't do this awefulness when we have better instruction support
+					#Get lower val into register
+					instructions.append("{}lui {}, 1  #Loading val {}".format(indentString, destinationRegister, value))
+					instructions.append("{}addi {}, {}, {}".format(indentString, destinationRegister, destinationRegister, lowerValue))
+					if (upperValue > 0):
+						#Get upper val into temp register
+						instructionsTemp, tempRegister = scope.getFreeRegister(preferTemp=True, tag="largeValTemp", indentLevel=indentLevel)
+						instructions += instructionsTemp
+						instructions.append("{}lui {}, {}".format(indentString, tempRegister, upperValue))
+						#Combine them
+						instructions.append("{}add {}, {}, {}".format(indentString, destinationRegister, destinationRegister, tempRegister))
+
+						instructions += scope.releaseRegister(tempRegister, indentLevel=indentLevel)
+				else:
+					instructions.append("{}lui {}, {} #Loading val {}".format(indentString, destinationRegister, upperValue, value))
+					instructions.append("{}addi {}, {}, {}".format(indentString, destinationRegister, destinationRegister, lowerValue))
 
 		elif isinstance(item.init, c_ast.ID):
 			#Initialized variable is set to another variable

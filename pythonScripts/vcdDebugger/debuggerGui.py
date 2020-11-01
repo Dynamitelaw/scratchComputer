@@ -83,7 +83,7 @@ p, li { white-space: pre-wrap; }
 		asm_blueKeywords = [
 			"addi", "add", "mv", "move", "sub", "mul", "div", "divu", "rem", "remu", "slti", "sltiu", "slt", "sltu",
 			"jal", "j", "jr", "jalr", "bne", "bltu", "blt", "bge", "bgeu", "beq",
-			"lh", "lhu", "lb", "lbu", "lw", "sw", "sh", "sb"
+			"lh", "lhu", "lb", "lbu", "lw", "sw", "sh", "sb", "lui"
 			]
 		asm_orangeKeywords = [
 			"s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11",
