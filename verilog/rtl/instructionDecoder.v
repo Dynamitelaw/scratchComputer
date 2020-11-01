@@ -78,6 +78,11 @@ module instructionDecoder (
 	assign imm_4_0 = instructionIn[11:7];
 	assign imm_11_5 = instructionIn[31:25];
 
+	//U-type parsing
+	wire [19:0] imm_31_12;
+
+	assign imm_31_12 = instructionIn[31:12];
+
 
 	//Hardcoded values of supported opcodes and functions
 	
@@ -89,6 +94,7 @@ module instructionDecoder (
 	`define OP_BRANCH 7'h63
 	`define OP_LOAD 7'h3
 	`define OP_STORE 7'h23
+	`define OP_LUI 7'h37
 
 	//funct3
 	`define ADDI_F3 3'h0
@@ -159,6 +165,7 @@ module instructionDecoder (
 	reg sb_flag;
 	reg sh_flag;
 	reg sw_flag;
+	reg lui_flag;
 
 	//Misc vars
 	reg bType_flag;
@@ -176,6 +183,7 @@ module instructionDecoder (
 	reg [`DATA_WIDTH-1:0] immediateVal_Btype;
 	reg [`DATA_WIDTH-1:0] immediateVal_Jtype;
 	reg [`DATA_WIDTH-1:0] immediateVal_Stype;
+	reg [`DATA_WIDTH-1:0] immediateVal_Utype;
 
 	always @(*) begin : instructionDecode
 		//Check for supported instructions and set decode flags
@@ -210,6 +218,7 @@ module instructionDecoder (
 		sb_flag = (opcode == `OP_STORE) && (funct3 == `SB_F3);
 		sh_flag = (opcode == `OP_STORE) && (funct3 == `SH_F3);
 		sw_flag = (opcode == `OP_STORE) && (funct3 == `SW_F3);
+		lui_flag = (opcode == `OP_LUI);
 
 		//Set branch flag
 		bType_flag = (opcode == `OP_BRANCH);
@@ -217,19 +226,22 @@ module instructionDecoder (
 		///////////////
 		//Determine output control signals
 		///////////////
-		a_location = rs1;
+		if (lui_flag) a_location = 0;
+		else a_location = rs1;
 		b_location = rs2;
 
 		//Determine immediateVal
-		immediateSelect = addi_flag || slti_flag || sltiu_flag || jal_flag || jalr_flag || bType_flag || load_flag || store_flag;
+		immediateSelect = addi_flag || slti_flag || sltiu_flag || jal_flag || jalr_flag || bType_flag || load_flag || store_flag || lui_flag;
 		immediateVal_Itype = { {`IMM_EXTEN_WIDTH_I{imm[`IMM_WIDTH-1]}}, imm[`IMM_WIDTH-1:0] };  //sign extend immediate value for I-type instructions
 		immediateVal_Btype = { {`IMM_EXTEN_WIDTH_B{imm_12}}, imm_12, immB_11, imm_10_5, imm_4_1, 1'b0 };  //contruct and sign extend immediate value for B-type instructions
 		immediateVal_Jtype = { {`IMM_EXTEN_WIDTH_J{imm_20}}, imm_20, imm_19_12, immJ_11, imm_10_1, 1'b0 };  //contruct and sign extend immediate value for J-type instructions
 		immediateVal_Stype = { {`IMM_EXTEN_WIDTH_S{imm_11_5[6]}}, imm_11_5, imm_4_0};  //contruct and sign extend immediate value for S-type instructions
+		immediateVal_Utype = { imm_31_12, {12{1'b0}}};  //contruct immediate value for U-type instructions
 
 		if (jal_flag) immediateVal = immediateVal_Jtype;
 		else if (bType_flag) immediateVal = immediateVal_Btype;
 		else if (store_flag) immediateVal = immediateVal_Stype;
+		else if (lui_flag) immediateVal = immediateVal_Utype;
 		else immediateVal = immediateVal_Itype;
 
 
@@ -239,7 +251,7 @@ module instructionDecoder (
 		writeEnable = ~(bType_flag || store_flag);
 
 		//result select encoder
-		resultEncoderInput = {1'b0, (slti_flag || sltiu_flag ||  slt_flag || sltu_flag), 1'b0, 1'b0, (remu_flag || rem_flag), (div_flag || divu_flag), mul_flag, (addi_flag || add_flag || sub_flag || bType_flag || jal_flag || jalr_flag || store_flag || load_flag)};
+		resultEncoderInput = {1'b0, (slti_flag || sltiu_flag ||  slt_flag || sltu_flag), 1'b0, 1'b0, (remu_flag || rem_flag), (div_flag || divu_flag), mul_flag, (addi_flag || add_flag || sub_flag || bType_flag || jal_flag || jalr_flag || store_flag || load_flag || lui_flag)};
 		case (resultEncoderInput)
 			8'b00000001 : resultSelect = 0;
 			8'b00000010 : resultSelect = 1;
