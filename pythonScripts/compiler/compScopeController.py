@@ -163,8 +163,8 @@ class scopeController:
 			
 			#Deallocate branch stack
 			deallocateLength = 0
-			branchStackList = list(branchLocalStack.items())
-			for index in range(len(self.localStack), len(branchLocalStack)):
+			branchStackList = list(scopeBranch.localStack.items())
+			for index in range(len(self.localStack), len(scopeBranch.localStack)):
 				deallocateLength += branchStackList[index][1]
 				
 			instructions.append("{}addi sp, sp, {}".format(indentString, deallocateLength))
@@ -546,6 +546,11 @@ class scopeController:
 		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
 
+		#Make sure return address register and global pointer did not end up on available reg list
+		if ("ra" in self.availableRegisters):
+			self.availableRegisters.remove("ra")
+		if ("gp" in self.availableRegisters):
+			self.availableRegisters.remove("gp")
 		self.availableRegisters.sort()
 
 		registerName = None

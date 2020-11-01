@@ -14,10 +14,12 @@ struct snakeNode
 	int yPos;
 };
 
-struct snake
+struct snakeStruct
 {
 	struct snakeNode head;
 	struct snakeNode tail;
+	char xVelocity;
+	char yVelocity;
 };
 
 int delay(int iterations)
@@ -36,8 +38,8 @@ void iterateFoodPosition(struct food * foodPosition, int iterator)
 	int currentX = foodPosition->xPos;
 	int currentY = foodPosition->yPos;
 
-	int nextX = (currentX*3 + currentY*7 + iterator*5)%COLUMNS;
-	int nextY = (currentX*2 + currentY*11 + iterator*3)%ROWS;
+	int nextX = (currentX*3 + currentY*7 + iterator*5)%DISPLAY_WIDTH;
+	int nextY = (currentX*2 + currentY*11 + iterator*3)%DISPLAY_HEIGHT;
 
 	foodPosition->xPos = nextX;
 	foodPosition->yPos = nextY;
@@ -132,7 +134,7 @@ int main()
 	*/
 	
 	//Clear screen to black
-	clearScreen(BLACK);
+	//clearScreen(BLACK);
 
 	//Initialize food
 	struct food foodPosition;
@@ -140,29 +142,76 @@ int main()
 	foodPosition.yPos = 4;
 	updatePixel(foodPosition.xPos, foodPosition.yPos, RED);
 
+	//Get pointer to moery mapped io (keyboard)
 	bool * keyboard = INPUT_BUFFER_ADDRESS;
-	int oldX;
-	int oldY;
 
-	for (int i=0; i<30; i++)
+	//Instantiate snake
+	struct snakeStruct snake;
+	snake.head.xPos = 2;
+	snake.head.yPos = 1;
+	snake.tail.xPos = 2;
+	snake.tail.yPos = 1;
+	snake.xVelocity = 0;
+	snake.yVelocity = 0;
+
+	int foodCurrentX;
+	int foodCurrentY;
+	int foodIterator = 0;
+	for (int i=0; i<6; i++)
 	{
-		//Get current position
-		oldX = foodPosition.xPos;
-		oldY = foodPosition.yPos;
+		//Get current food position
+		foodCurrentX = foodPosition.xPos;
+		foodCurrentY = foodPosition.yPos;
 
-		//Move food by checking for WASD key status
-		if (keyboard[KEY_UP_OFFSET]) foodPosition.yPos = (oldY-1)%ROWS;
-		if (keyboard[KEY_DOWN_OFFSET]) foodPosition.yPos = (oldY+1)%ROWS;
-		if (keyboard[KEY_LEFT_OFFSET]) foodPosition.xPos = (oldX-1)%COLUMNS;
-		if (keyboard[KEY_RIGHT_OFFSET]) foodPosition.xPos = (oldX+1)%COLUMNS;
+		//Update snake velocity by checking for arrow key status
+		if (keyboard[KEY_UP_OFFSET]) 
+		{
+			snake.xVelocity = 0;
+			snake.yVelocity = -1;
+		}
+		if (keyboard[KEY_DOWN_OFFSET])
+		{
+			snake.xVelocity = 0;
+			snake.yVelocity = 1;
+		}
+		if (keyboard[KEY_LEFT_OFFSET])
+		{
+			snake.xVelocity = -1;
+			snake.yVelocity = 0;
+		}
+		if (keyboard[KEY_RIGHT_OFFSET])
+		{
+			snake.xVelocity = 1;
+			snake.yVelocity = 0;
+		}
+
+		//Update snake position
+		snake.head.xPos = (snake.head.xPos + snake.xVelocity)%DISPLAY_WIDTH;
+		//snake.head.xPos = 8;
+		//if (snake.head.xPos < 0) snake.head.yPos = 10;
+		snake.head.yPos = (snake.head.yPos + snake.yVelocity)%DISPLAY_HEIGHT;
+		if (snake.head.yPos < 0) snake.head.yPos = DISPLAY_HEIGHT;
+		//snake.head.yPos = 10;
+		updatePixel(snake.tail.xPos, snake.tail.yPos, BLACK);
+		//delay(400);
+		updatePixel(snake.head.xPos, snake.head.yPos, GREEN);
+		snake.tail.xPos = snake.head.xPos;
+		snake.tail.yPos = snake.head.yPos;
 		
-		//Set color of new food position
+		
+		//Move food if snake has reached current food
+		if ((snake.head.xPos == foodPosition.xPos) && (snake.head.yPos == foodPosition.yPos))
+		{
+			iterateFoodPosition(&foodPosition, i);
+			foodIterator++;
+		}
+		
 		updatePixel(foodPosition.xPos, foodPosition.yPos, RED);
-
-		delay(400);
+		
+		delay(4);
 		
 		//Clear previous food position
-		updatePixel(oldX, oldY, BLACK);
+		//updatePixel(oldX, oldY, BLACK);
 	}
 	
 }

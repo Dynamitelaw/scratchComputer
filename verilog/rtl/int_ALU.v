@@ -64,6 +64,7 @@ module multipler (
 	output reg [`DATA_WIDTH-1:0] result
 	);
 
+	//<TODO> pipeline this when we start to improve performance. Should not do in one cycle
 	always @(*) begin : mul_proc
 		result = aOperand * bOperand;
 	end
@@ -125,6 +126,7 @@ module divider (
 		.result(remResult)
 		);
 
+	//<TODO> pipeline this when we start to improve performance. Should not do in one cycle
 	always @(*) begin : divider_proc
 		divuResult = aOp_abs / bOp_abs;
 		remuResult = aOp_abs % bOp_abs;
@@ -142,13 +144,26 @@ module comparator (
 	output reg [`DATA_WIDTH-1:0] equal,
 	output reg [`DATA_WIDTH-1:0] less
 	);
-	
-	//<TODO> properly handle the signs of the operands. Right now it only does unsigned comparisons
+
+	//Get sign of A
+	wire a_isNegative;
+	assign a_isNegative = aOperand[`DATA_WIDTH-1];
+
+	//Get sign of B
+	wire b_isNegative;
+	assign b_isNegative = bOperand[`DATA_WIDTH-1];
 
 	always @(*) begin : comparator_proc
-		greater = aOperand > bOperand;
 		equal = aOperand == bOperand;
-		less = aOperand < bOperand;
+
+		if (unsignedEn || (a_isNegative ~| b_isNegative)) begin
+			greater = aOperand > bOperand;
+			less = aOperand < bOperand;
+		end
+		else begin
+			greater = aOperand < bOperand;
+			less = aOperand > bOperand;
+		end
 	end
 
 endmodule

@@ -300,22 +300,6 @@ help yourself
 				g_keyboardStateArray = np.zeros(stateArrayLength, dtype=np.uint8)
 				initializeInputBufferFile(inputBufferPath, g_keyboardStateArray)
 
-				# g_keyboardStateArray[0] = 1
-				# g_keyboardStateArray[1] = 1
-				# g_keyboardStateArray[2] = 1
-				# g_keyboardStateArray[3] = 1
-				# g_keyboardStateArray[4] = 1
-				# g_keyboardStateArray[5] = 1
-
-				# g_keyboardStateArray[30] = 1
-				# g_keyboardStateArray[31] = 1
-				# g_keyboardStateArray[32] = 1
-				# g_keyboardStateArray[33] = 1
-				# g_keyboardStateArray[34] = 1
-				# g_keyboardStateArray[35] = 1
-				# updateInputBufferFile(inputBufferPath, g_keyboardStateArray)
-				#sys.exit()
-
 				#Initialize keyboard listener
 				listenerThread = Listener(on_press=onKeyPress, on_release=onKeyRelease)
 				listenerThread.start()
@@ -354,11 +338,6 @@ help yourself
 		if (displayThread):
 			time.sleep(2)
 			displayThread.terminate()
-
-		#Kill keyboard listener thread
-		#Not needed?
-		# if (listenerThread):
-		# 	listenerThread.close()
 
 	except Exception as e:
 		printColor(traceback.format_exc(), color=COLORS.ERROR)

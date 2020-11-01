@@ -1,6 +1,6 @@
 //Screen size and memory location
-#define COLUMNS 16 //64
-#define ROWS 12 //48
+#define DISPLAY_WIDTH 16 //64
+#define DISPLAY_HEIGHT 12 //48
 #define FRAME_BUFFER_ADDRESS 4096
 
 //Primary colors
@@ -15,7 +15,7 @@
 
 void updatePixel(int column, int row, int colorValue)
 {
-	int * pixelPointer = FRAME_BUFFER_ADDRESS + 4*((row*COLUMNS) + column);
+	int * pixelPointer = FRAME_BUFFER_ADDRESS + 4*((row*DISPLAY_WIDTH) + column);
 	*pixelPointer = colorValue;
 }
 
@@ -23,9 +23,9 @@ void clearScreen(int colorValue)
 {
 	int * pixelPointer = FRAME_BUFFER_ADDRESS;
 
-	for (int r=0; r<ROWS; r++)
+	for (int r=0; r<DISPLAY_HEIGHT; r++)
 	{
-		for (int c=0; c<COLUMNS; c++)
+		for (int c=0; c<DISPLAY_WIDTH; c++)
 		{
 			*pixelPointer = colorValue;
 			pixelPointer += 4;

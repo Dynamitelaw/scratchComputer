@@ -1,4 +1,4 @@
-`define programLength 340
+`define programLength 508
 `define programFilename "../testCode/c_Code/snakeGame/snakeMain.hex"
 `define memorySize 18432
 `define FRAME_BUFFER_ENABLE
