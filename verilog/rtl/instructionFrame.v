@@ -29,6 +29,7 @@ module instructionFrame(
 	input store_in,
 	input [1:0] memLength_in,
 	input [`DATA_WIDTH-1:0] storeData_in,
+	input auipc_in,
 
 	//Write enable inputs
 	input aOperand_we,
@@ -49,6 +50,7 @@ module instructionFrame(
 	input store_we,
 	input memLength_we,
 	input storeData_we,
+	input auipc_we,
 
 	//Data outputs
 	output reg [`DATA_WIDTH-1:0] aOperand_out,
@@ -72,7 +74,8 @@ module instructionFrame(
 	output reg loadUnsigned_out,
 	output reg store_out,
 	output reg [1:0] memLength_out,
-	output reg [`DATA_WIDTH-1:0] storeData_out
+	output reg [`DATA_WIDTH-1:0] storeData_out,
+	output reg auipc_out
 	);
 
 	always @(posedge clk) begin : instructionFrame_proc
@@ -99,6 +102,7 @@ module instructionFrame(
 			store_out <= 0;
 			memLength_out <= 0;
 			storeData_out <= 0;
+			auipc_out <= 0;
 		end else begin
 			if (aOperand_we) aOperand_out <= aOperand_in;
 			if (aLoc_we) aLoc_out <= aLoc_in;
@@ -122,6 +126,7 @@ module instructionFrame(
 			if (store_we) store_out <= store_in;
 			if (memLength_we) memLength_out <= memLength_in;
 			if (storeData_we) storeData_out <= storeData_in;
+			if (auipc_we) auipc_out <= auipc_in;
 		end
 	end
 

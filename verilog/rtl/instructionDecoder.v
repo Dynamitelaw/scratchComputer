@@ -23,7 +23,8 @@ module instructionDecoder (
 	output wire load,
 	output reg loadUnsigned,
 	output wire store,
-	output reg [1:0] memLength
+	output reg [1:0] memLength,
+	output wire auipcInst
 	);
 
 	//Wires to separate instruction fields
@@ -95,6 +96,7 @@ module instructionDecoder (
 	`define OP_LOAD 7'h3
 	`define OP_STORE 7'h23
 	`define OP_LUI 7'h37
+	`define OP_AUIPC 7'h17
 
 	//funct3
 	`define ADDI_F3 3'h0
@@ -166,6 +168,8 @@ module instructionDecoder (
 	reg sh_flag;
 	reg sw_flag;
 	reg lui_flag;
+	reg auipc_flag;
+	assign auipcInst = auipc_flag;
 
 	//Misc vars
 	reg bType_flag;
@@ -219,6 +223,7 @@ module instructionDecoder (
 		sh_flag = (opcode == `OP_STORE) && (funct3 == `SH_F3);
 		sw_flag = (opcode == `OP_STORE) && (funct3 == `SW_F3);
 		lui_flag = (opcode == `OP_LUI);
+		auipc_flag = (opcode == `OP_AUIPC);
 
 		//Set branch flag
 		bType_flag = (opcode == `OP_BRANCH);
@@ -231,7 +236,7 @@ module instructionDecoder (
 		b_location = rs2;
 
 		//Determine immediateVal
-		immediateSelect = addi_flag || slti_flag || sltiu_flag || jal_flag || jalr_flag || bType_flag || load_flag || store_flag || lui_flag;
+		immediateSelect = addi_flag || slti_flag || sltiu_flag || jal_flag || jalr_flag || bType_flag || load_flag || store_flag || lui_flag || auipc_flag;
 		immediateVal_Itype = { {`IMM_EXTEN_WIDTH_I{imm[`IMM_WIDTH-1]}}, imm[`IMM_WIDTH-1:0] };  //sign extend immediate value for I-type instructions
 		immediateVal_Btype = { {`IMM_EXTEN_WIDTH_B{imm_12}}, imm_12, immB_11, imm_10_5, imm_4_1, 1'b0 };  //contruct and sign extend immediate value for B-type instructions
 		immediateVal_Jtype = { {`IMM_EXTEN_WIDTH_J{imm_20}}, imm_20, imm_19_12, immJ_11, imm_10_1, 1'b0 };  //contruct and sign extend immediate value for J-type instructions
@@ -241,7 +246,7 @@ module instructionDecoder (
 		if (jal_flag) immediateVal = immediateVal_Jtype;
 		else if (bType_flag) immediateVal = immediateVal_Btype;
 		else if (store_flag) immediateVal = immediateVal_Stype;
-		else if (lui_flag) immediateVal = immediateVal_Utype;
+		else if (lui_flag || auipc_flag) immediateVal = immediateVal_Utype;
 		else immediateVal = immediateVal_Itype;
 
 
@@ -251,7 +256,7 @@ module instructionDecoder (
 		writeEnable = ~(bType_flag || store_flag);
 
 		//result select encoder
-		resultEncoderInput = {1'b0, (slti_flag || sltiu_flag ||  slt_flag || sltu_flag), 1'b0, 1'b0, (remu_flag || rem_flag), (div_flag || divu_flag), mul_flag, (addi_flag || add_flag || sub_flag || bType_flag || jal_flag || jalr_flag || store_flag || load_flag || lui_flag)};
+		resultEncoderInput = {1'b0, (slti_flag || sltiu_flag ||  slt_flag || sltu_flag), 1'b0, 1'b0, (remu_flag || rem_flag), (div_flag || divu_flag), mul_flag, (addi_flag || add_flag || sub_flag || bType_flag || jal_flag || jalr_flag || store_flag || load_flag || lui_flag || auipc_flag)};
 		case (resultEncoderInput)
 			8'b00000001 : resultSelect = 0;
 			8'b00000010 : resultSelect = 1;

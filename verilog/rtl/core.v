@@ -85,6 +85,7 @@ module core(
 	wire loadUnsigned_decode;
 	wire store_decode;
 	wire [1:0] memLength_decode;
+	wire auipcInst_decode;
 
 	instructionDecoder instructionDecoder(
 		.instructionIn(instructionOut_ifc),
@@ -106,7 +107,8 @@ module core(
 		.load(load_decode),
 		.loadUnsigned(loadUnsigned_decode),
 		.store(store_decode),
-		.memLength(memLength_decode)
+		.memLength(memLength_decode),
+		.auipcInst(auipcInst_decode)
 		);
 
 	/////////////////
@@ -159,6 +161,7 @@ module core(
 	wire store_we;
 	wire memLength_we;
 	wire storeData_we;
+	wire auipc_we;
 
 	frameWriteController frameWriteController(
 		.fetch_RequestState(fetch_RequestState),
@@ -189,7 +192,8 @@ module core(
 		.load_we(load_we),
 		.store_we(store_we),
 		.memLength_we(memLength_we),
-		.storeData_we(storeData_we)
+		.storeData_we(storeData_we),
+		.auipc_we(auipc_we)
 		);
 
 	/////////////////
@@ -229,6 +233,7 @@ module core(
 	wire [1:0] memLength_frameOut;
 	wire [`DATA_WIDTH-1:0] storeData_frameOut;
 	assign memoryDataWrite = storeData_frameOut;
+	wire auipc_frameOut;
 
 	instructionFrame instructionFrame(
 		.clk(clk),
@@ -255,6 +260,7 @@ module core(
 		.store_in(store_decode),
 		.memLength_in(memLength_decode),
 		.storeData_in(storeData_frameIn),
+		.auipc_in(auipcInst_decode),
 
 		.aOperand_we(aOperand_we),
 		.aLoc_we(aLoc_we),
@@ -274,6 +280,7 @@ module core(
 		.store_we(store_we),
 		.memLength_we(memLength_we),
 		.storeData_we(storeData_we),
+		.auipc_we(auipc_we),
 
 		.aOperand_out(aOperand_frameOut),
 		.aLoc_out(aLoc_frameOut),
@@ -296,7 +303,8 @@ module core(
 		.loadUnsigned_out(loadUnsigned_frameOut),
 		.store_out(store_frameOut),
 		.memLength_out(memLength_frameOut),
-		.storeData_out(storeData_frameOut)
+		.storeData_out(storeData_frameOut),
+		.auipc_out(auipc_frameOut)
 		);
 
 	/////////////////
@@ -333,7 +341,7 @@ module core(
 	assign aOperand_frameIn = aOperand_muxOut;
 
 	always @(*) begin : aOperandMux_proc
-		case (branchInst_frameOut || jumpLink_frameOut)
+		case (branchInst_frameOut || jumpLink_frameOut || auipc_frameOut)
 			0 : aOperand_muxOut = readA_regOut;
 			1 : aOperand_muxOut = programCounter;
 		endcase // branchInst_frameOut
