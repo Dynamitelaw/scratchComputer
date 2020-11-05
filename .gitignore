@@ -7,6 +7,7 @@
 *testCode/*.hex
 *testCode/assemblyTest/*.hex
 *testCode/assemblyTest/*.csv
+*testCode/assemblyTest/*.json
 *testCode/c_Code/*.hex
 *testCode/c_Code/*.asm
 *testCode/c_Code/*.csv
