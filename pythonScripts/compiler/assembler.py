@@ -35,29 +35,30 @@ class INST(Enum):
 	SLTIU = 10
 	SLT = 11
 	SLTU = 12
+	AUIPC = 13
 
 	#Control transfer instructions
-	JAL = 13
 	J = 14
 	JR = 15
 	JALR = 16
-	BNE = 17
+	JAL = 17
 	BLTU = 18
 	BLT = 19
 	BGE = 20
 	BGEU = 21
 	BEQ = 22
+	BNE = 23
 
 	#Load and store instructions
-	LH = 23
-	LHU = 24
-	LB = 25
-	LBU = 26
-	LW = 27
-	SW = 28
-	SH = 29
-	SB = 30
-	LUI = 31
+	LH = 24
+	LHU = 25
+	LB = 26
+	LBU = 27
+	LW = 28
+	SW = 29
+	SH = 30
+	SB = 31
+	LUI = 32
 
 
 #Mapping of each register ABI name to their hardware address
@@ -170,6 +171,8 @@ def parseInstruction(asmLine):
 		instructionEnum = INST.SLT
 	elif (instructionName == "sltu"):
 		instructionEnum = INST.SLTU
+	elif (instructionName == "auipc"):
+		instructionEnum = INST.AUIPC
 	#Control transfer instructions
 	elif (instructionName == "jal"):
 		instructionEnum = INST.JAL
@@ -249,6 +252,8 @@ def parseInstruction(asmLine):
 	elif ((instructionEnum == INST.SLT) and (totalArgs < 3)):
 		raise Exception("Incorrect number of arguments for \"slt\"")
 	elif ((instructionEnum == INST.SLTU) and (totalArgs < 3)):
+		raise Exception("Incorrect number of arguments for \"sltu\"")
+	elif ((instructionEnum == INST.AUIPC) and (totalArgs < 2)):
 		raise Exception("Incorrect number of arguments for \"sltu\"")
 	#Control transfer instructions
 	elif ((instructionEnum == INST.JAL) and (totalArgs < 1)):
@@ -556,6 +561,11 @@ def instructionsToInts(instructionList):
 				instructionFields["funct3"] = 3
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 51
+			elif (instructionEnum == INST.AUIPC):
+				instructionFields["type"] = "U"
+				instructionFields["rd"] = args[0]
+				instructionFields["imm"] = args[1]
+				instructionFields["opcode"] = 23
 			#Control transfer instructions
 			elif (instructionEnum == INST.JAL):
 				instructionFields["type"] = "J"
