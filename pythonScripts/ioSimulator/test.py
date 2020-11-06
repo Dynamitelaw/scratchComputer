@@ -51,13 +51,23 @@ ani = animation.FuncAnimation(fig, animate, interval=50)
 plt.show()
 '''
 
-
+'''
 keyIndexes = OrderedDict()
 
 for index in range(0, len(keyArray), 1):
 	headLine = "#define {}_OFFSET {}".format(keyArray[index], index)
 	print(headLine)
 	keyIndexes[keyArray[index]] = index
+'''
+#108869 = 11010100101000101 = 11010 100101000101 = 26 1 2373
+delta = 108869
+delta_31_12 = int(delta/4096)
+delta_11 = int((delta-(delta_31_12*4096))/2048)
+delta_11_0 = delta%4096
+
+print(delta_31_12)
+print(delta_11)
+print(delta_11_0)
 '''
 print(keyIndexes)
 

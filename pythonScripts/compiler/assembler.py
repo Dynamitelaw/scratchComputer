@@ -59,6 +59,7 @@ class INST(Enum):
 	SH = 30
 	SB = 31
 	LUI = 32
+	LA = 33
 
 
 #Mapping of each register ABI name to their hardware address
@@ -213,6 +214,8 @@ def parseInstruction(asmLine):
 		instructionEnum = INST.SB
 	elif (instructionName == "lui"):
 		instructionEnum = INST.LUI
+	elif (instructionName == "la"):
+		instructionEnum = INST.LA
 
 	if (instructionEnum == -1):
 		raise Exception("Unsupported instruction \"{}\"".format(instructionName))
@@ -295,6 +298,8 @@ def parseInstruction(asmLine):
 		raise Exception("Incorrect number of arguments for \"sb\"")
 	elif ((instructionEnum == INST.LUI) and (totalArgs < 2)):
 		raise Exception("Incorrect number of arguments for \"lui\"")
+	elif ((instructionEnum == INST.LA) and (totalArgs < 2)):
+		raise Exception("Incorrect number of arguments for \"la\"")
 
 
 	for arg in instructionArgs:
@@ -328,6 +333,10 @@ def parseAssemblyFile(filepath):
 	lineNumber = 0
 	inTextSection = False
 	inDataSection = False
+
+	offset = 0  #keep track of offset for multi-inst pseudoinstructions
+	multiPseudoInstructions = [INST.LA]
+
 	while (asmLine):
 		#Filter comments
 		commentIndex = asmLine.find("#")
@@ -355,7 +364,7 @@ def parseAssemblyFile(filepath):
 				if (inTextSection):
 					#line is a label. Add location index to labels dict
 					labelName = asmLine.split(":")[0]
-					labels[labelName] = len(linedInstructions)*4
+					labels[labelName] = (len(linedInstructions)+offset)*4
 				elif (inDataSection):
 					#line is data definition. Add to data segment
 					dataLabel, dataType, dataVal = asmLine.split(" ")
@@ -390,6 +399,9 @@ def parseAssemblyFile(filepath):
 				if (inTextSection):
 					instruction = parseInstruction(asmLine)
 					linedInstructions.append([lineNumber, instruction])
+					if (instruction[0] in multiPseudoInstructions):
+						print("YEHAW!")
+						offset += 1
 				else:
 					raise Exception("ERROR: {} , line #{} | instruction defined in data section".format(filepath, lineNumber))
 		except Exception as e:
@@ -445,9 +457,11 @@ def instructionsToInts(instructionList):
 	Refer to page 146 of risv-spec.pdf for instruction type specifications
 	'''
 	instructionValues = []
+	programCounter = 0
 
 	for index in range(0,len(instructionList)):
-		programCounter = index*4
+		subInstructionFields = []  #used to store sub instructions for multi-inst pseudoinstructions
+
 		instruction = instructionList[index]
 		instructionEnum = instruction[0]
 		args = instruction[1:]
@@ -456,17 +470,22 @@ def instructionsToInts(instructionList):
 			#########
 			# Determine instruction type and fields
 			#########
-			instructionFields = {}
 
 			#Integer computational instructions
 			if (instructionEnum == INST.ADDI):
+				instructionFields = {}
+
 				instructionFields["type"] = "I"
 				instructionFields["imm"] = args[2]
 				instructionFields["rs1"] = args[1]
 				instructionFields["funct3"] = 0
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 19
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.ADD):
+				instructionFields = {}
+
 				instructionFields["type"] = "R"
 				instructionFields["funct7"] = 0
 				instructionFields["rs2"] = args[2]
@@ -474,8 +493,12 @@ def instructionsToInts(instructionList):
 				instructionFields["funct3"] = 0
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 51
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.MOVE):
 				#pseudoinstruction | move rd,rs = add rd,zero,rs
+				instructionFields = {}
+
 				instructionFields["type"] = "R"
 				instructionFields["funct7"] = 0
 				instructionFields["rs2"] = 0
@@ -483,7 +506,11 @@ def instructionsToInts(instructionList):
 				instructionFields["funct3"] = 0
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 51
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.SUB):
+				instructionFields = {}
+
 				instructionFields["type"] = "R"
 				instructionFields["funct7"] = 32
 				instructionFields["rs2"] = args[2]
@@ -491,7 +518,11 @@ def instructionsToInts(instructionList):
 				instructionFields["funct3"] = 0
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 51
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.MUL):
+				instructionFields = {}
+
 				instructionFields["type"] = "R"
 				instructionFields["funct7"] = 1
 				instructionFields["rs2"] = args[2]
@@ -499,7 +530,11 @@ def instructionsToInts(instructionList):
 				instructionFields["funct3"] = 0
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 51
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.DIV):
+				instructionFields = {}
+
 				instructionFields["type"] = "R"
 				instructionFields["funct7"] = 1
 				instructionFields["rs2"] = args[2]
@@ -507,7 +542,11 @@ def instructionsToInts(instructionList):
 				instructionFields["funct3"] = 4
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 51
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.DIVU):
+				instructionFields = {}
+
 				instructionFields["type"] = "R"
 				instructionFields["funct7"] = 1
 				instructionFields["rs2"] = args[2]
@@ -515,7 +554,11 @@ def instructionsToInts(instructionList):
 				instructionFields["funct3"] = 5
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 51
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.REM):
+				instructionFields = {}
+
 				instructionFields["type"] = "R"
 				instructionFields["funct7"] = 1
 				instructionFields["rs2"] = args[2]
@@ -523,7 +566,11 @@ def instructionsToInts(instructionList):
 				instructionFields["funct3"] = 6
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 51
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.REMU):
+				instructionFields = {}
+
 				instructionFields["type"] = "R"
 				instructionFields["funct7"] = 1
 				instructionFields["rs2"] = args[2]
@@ -531,21 +578,33 @@ def instructionsToInts(instructionList):
 				instructionFields["funct3"] = 7
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 51
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.SLTI):
+				instructionFields = {}
+
 				instructionFields["type"] = "I"
 				instructionFields["imm"] = args[2]
 				instructionFields["rs1"] = args[1]
 				instructionFields["funct3"] = 2
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 19
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.SLTIU):
+				instructionFields = {}
+
 				instructionFields["type"] = "I"
 				instructionFields["imm"] = args[2]
 				instructionFields["rs1"] = args[1]
 				instructionFields["funct3"] = 3
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 19
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.SLT):
+				instructionFields = {}
+
 				instructionFields["type"] = "R"
 				instructionFields["funct7"] = 0
 				instructionFields["rs2"] = args[2]
@@ -553,7 +612,11 @@ def instructionsToInts(instructionList):
 				instructionFields["funct3"] = 2
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 51
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.SLTU):
+				instructionFields = {}
+
 				instructionFields["type"] = "R"
 				instructionFields["funct7"] = 0
 				instructionFields["rs2"] = args[2]
@@ -561,80 +624,128 @@ def instructionsToInts(instructionList):
 				instructionFields["funct3"] = 3
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 51
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.AUIPC):
+				instructionFields = {}
+
 				instructionFields["type"] = "U"
 				instructionFields["rd"] = args[0]
 				instructionFields["imm"] = args[1]
 				instructionFields["opcode"] = 23
+
+				subInstructionFields.append(instructionFields)
 			#Control transfer instructions
 			elif (instructionEnum == INST.JAL):
+				instructionFields = {}
+
 				instructionFields["type"] = "J"
 				instructionFields["imm"] = args[0] - programCounter
 				instructionFields["rd"] = 1
 				instructionFields["opcode"] = 111
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.J):
+				instructionFields = {}
+
 				instructionFields["type"] = "J"
 				instructionFields["imm"] = args[0] - programCounter
 				instructionFields["rd"] = 0
 				instructionFields["opcode"] = 111
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.JR):
+				instructionFields = {}
+
 				instructionFields["type"] = "I"
 				instructionFields["imm"] = 0
 				instructionFields["rs1"] = args[0]
 				instructionFields["funct3"] = 0
 				instructionFields["rd"] = 0
 				instructionFields["opcode"] = 103
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.JALR):
+				instructionFields = {}
+
 				instructionFields["type"] = "I"
 				instructionFields["imm"] = 0
 				instructionFields["rs1"] = args[0]
 				instructionFields["funct3"] = 0
 				instructionFields["rd"] = args[1]
 				instructionFields["opcode"] = 103
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.BEQ):
+				instructionFields = {}
+
 				instructionFields["type"] = "B"
 				instructionFields["imm"] = args[2] - programCounter
 				instructionFields["rs2"] = args[1]
 				instructionFields["rs1"] = args[0]
 				instructionFields["funct3"] = 0
 				instructionFields["opcode"] = 99
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.BNE):
+				instructionFields = {}
+
 				instructionFields["type"] = "B"
 				instructionFields["imm"] = args[2] - programCounter
 				instructionFields["rs2"] = args[1]
 				instructionFields["rs1"] = args[0]
 				instructionFields["funct3"] = 1
 				instructionFields["opcode"] = 99
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.BLT):
+				instructionFields = {}
+
 				instructionFields["type"] = "B"
 				instructionFields["imm"] = args[2] - programCounter
 				instructionFields["rs2"] = args[1]
 				instructionFields["rs1"] = args[0]
 				instructionFields["funct3"] = 4
 				instructionFields["opcode"] = 99
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.BGE):
+				instructionFields = {}
+
 				instructionFields["type"] = "B"
 				instructionFields["imm"] = args[2] - programCounter
 				instructionFields["rs2"] = args[1]
 				instructionFields["rs1"] = args[0]
 				instructionFields["funct3"] = 5
 				instructionFields["opcode"] = 99
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.BLTU):
+				instructionFields = {}
+
 				instructionFields["type"] = "B"
 				instructionFields["imm"] = args[2] - programCounter
 				instructionFields["rs2"] = args[1]
 				instructionFields["rs1"] = args[0]
 				instructionFields["funct3"] = 6
 				instructionFields["opcode"] = 99
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.BGEU):
+				instructionFields = {}
+
 				instructionFields["type"] = "B"
 				instructionFields["imm"] = args[2] - programCounter
 				instructionFields["rs2"] = args[1]
 				instructionFields["rs1"] = args[0]
 				instructionFields["funct3"] = 7
 				instructionFields["opcode"] = 99
+
+				subInstructionFields.append(instructionFields)
 			#Load and store instructions
 			elif (instructionEnum == INST.LW):
+				instructionFields = {}
+
 				instructionFields["type"] = "I"
 				if (len(args) == 3):
 					instructionFields["imm"] = args[1]
@@ -647,7 +758,11 @@ def instructionsToInts(instructionList):
 				instructionFields["funct3"] = 2
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 3
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.LH):
+				instructionFields = {}
+
 				instructionFields["type"] = "I"
 				if (len(args) == 3):
 					instructionFields["imm"] = args[1]
@@ -660,7 +775,11 @@ def instructionsToInts(instructionList):
 				instructionFields["funct3"] = 1
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 3
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.LHU):
+				instructionFields = {}
+
 				instructionFields["type"] = "I"
 				if (len(args) == 3):
 					instructionFields["imm"] = args[1]
@@ -673,7 +792,11 @@ def instructionsToInts(instructionList):
 				instructionFields["funct3"] = 5
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 3
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.LB):
+				instructionFields = {}
+
 				instructionFields["type"] = "I"
 				if (len(args) == 3):
 					instructionFields["imm"] = args[1]
@@ -686,7 +809,11 @@ def instructionsToInts(instructionList):
 				instructionFields["funct3"] = 0
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 3
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.LBU):
+				instructionFields = {}
+
 				instructionFields["type"] = "I"
 				if (len(args) == 3):
 					instructionFields["imm"] = args[1]
@@ -699,174 +826,227 @@ def instructionsToInts(instructionList):
 				instructionFields["funct3"] = 4
 				instructionFields["rd"] = args[0]
 				instructionFields["opcode"] = 3
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.SW):
+				instructionFields = {}
+
 				instructionFields["type"] = "S"
 				instructionFields["imm"] = args[1]
 				instructionFields["rs2"] = args[0]
 				instructionFields["rs1"] = args[2]
 				instructionFields["funct3"] = 2
 				instructionFields["opcode"] = 35
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.SH):
+				instructionFields = {}
+
 				instructionFields["type"] = "S"
 				instructionFields["imm"] = args[1]
 				instructionFields["rs2"] = args[0]
 				instructionFields["rs1"] = args[2]
 				instructionFields["funct3"] = 1
 				instructionFields["opcode"] = 35
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.SB):
+				instructionFields = {}
+
 				instructionFields["type"] = "S"
 				instructionFields["imm"] = args[1]
 				instructionFields["rs2"] = args[0]
 				instructionFields["rs1"] = args[2]
 				instructionFields["funct3"] = 0
 				instructionFields["opcode"] = 35
+
+				subInstructionFields.append(instructionFields)
 			elif (instructionEnum == INST.LUI):
+				instructionFields = {}
+
 				instructionFields["type"] = "U"
 				instructionFields["rd"] = args[0]
 				instructionFields["imm"] = args[1]
 				instructionFields["opcode"] = 55
 
+				subInstructionFields.append(instructionFields)
+			elif (instructionEnum == INST.LA):
+				#Pseudo instruction: la rd, SYMBOL = auipc rd, delta[31:12] + delta[11]; addi rd, rd, delta[11:0]
+				
+				#Determine delta segments (see page 139 of riscv-spec.pdf)
+				delta = args[1] - programCounter
+				delta_31_12 = int(delta/4096)
+				delta_11 = int((delta-(delta_31_12*4096))/2048)
+				delta_11_0 = delta%4096
+
+				upperValue = delta_31_12 + delta_11
+				lowerValue = delta_11_0
+
+				#Generate intruction field dicts
+				auipcFields = {}
+				auipcFields["type"] = "U"
+				auipcFields["rd"] = args[0]
+				auipcFields["imm"] = upperValue
+				auipcFields["opcode"] = 23
+
+				subInstructionFields.append(auipcFields)
+
+				addiFields = {}
+				addiFields["type"] = "I"
+				addiFields["imm"] = lowerValue
+				addiFields["rs1"] = args[0]
+				addiFields["funct3"] = 0
+				addiFields["rd"] = args[0]
+				addiFields["opcode"] = 19
+
+				subInstructionFields.append(addiFields)
+
 			#########
-			# Concatenate instruction fields into binary string
+			# Concatenate instruction fields into binary strings
 			#########
-			binaryString = ""
-			#R-type instructions
-			if (instructionFields["type"] == "R"):
-				funct7_string = format(instructionFields["funct7"], "07b")  #7bit value
-				rs2_string = format(instructionFields["rs2"], "05b")  #5bit value
-				rs1_string = format(instructionFields["rs1"], "05b")  #5bit value
-				funct3_string = format(instructionFields["funct3"], "03b")  #3bit value
-				rd_string = format(instructionFields["rd"], "05b")  #5bit value
-				opcode_string = format(instructionFields["opcode"], "07b")  #7bit value
 
-				binaryString = "{}{}{}{}{}{}".format(funct7_string, rs2_string, rs1_string, funct3_string, rd_string, opcode_string)
+			for instructionFieldDict in subInstructionFields:
+				binaryString = ""
+				#R-type instructions
+				if (instructionFieldDict["type"] == "R"):
+					funct7_string = format(instructionFieldDict["funct7"], "07b")  #7bit value
+					rs2_string = format(instructionFieldDict["rs2"], "05b")  #5bit value
+					rs1_string = format(instructionFieldDict["rs1"], "05b")  #5bit value
+					funct3_string = format(instructionFieldDict["funct3"], "03b")  #3bit value
+					rd_string = format(instructionFieldDict["rd"], "05b")  #5bit value
+					opcode_string = format(instructionFieldDict["opcode"], "07b")  #7bit value
 
-			#I-type instructions
-			elif (instructionFields["type"] == "I"):
-				imm_string = ""
-				if (instructionFields["imm"] < 0):
-					#handle negative immediate arguments
-					absVal = instructionFields["imm"] * -1
-					absBinString = format(absVal, "012b")  #get binary string of abs value 
+					binaryString = "{}{}{}{}{}{}".format(funct7_string, rs2_string, rs1_string, funct3_string, rd_string, opcode_string)
 
-					#Convert to 2s compliment negative number
-					flippedBitsString = absBinString.replace("0","z").replace("1","0").replace("z","1")  #Flip all bits
-					unsignedVal = int(flippedBitsString, 2)
-					twoCompInt = unsignedVal + 1
+				#I-type instructions
+				elif (instructionFieldDict["type"] == "I"):
+					imm_string = ""
+					if (instructionFieldDict["imm"] < 0):
+						#handle negative immediate arguments
+						absVal = instructionFieldDict["imm"] * -1
+						absBinString = format(absVal, "012b")  #get binary string of abs value 
 
-					imm_string = format(twoCompInt, "012b")
+						#Convert to 2s compliment negative number
+						flippedBitsString = absBinString.replace("0","z").replace("1","0").replace("z","1")  #Flip all bits
+						unsignedVal = int(flippedBitsString, 2)
+						twoCompInt = unsignedVal + 1
+
+						imm_string = format(twoCompInt, "012b")
+					else:
+						imm_string = format(instructionFieldDict["imm"], "012b")  #12bit value
+
+					rs1_string = format(instructionFieldDict["rs1"], "05b")  #5bit value
+					funct3_string = format(instructionFieldDict["funct3"], "03b")  #3bit value
+					rd_string = format(instructionFieldDict["rd"], "05b")  #5bit value
+					opcode_string = format(instructionFieldDict["opcode"], "07b")  #7bit value
+
+					binaryString = "{}{}{}{}{}".format(imm_string, rs1_string, funct3_string, rd_string, opcode_string)
+
+				#J-type instructions
+				elif (instructionFieldDict["type"] == "J"):
+					imm_string = ""
+					if (instructionFieldDict["imm"] < 0):
+						#handle negative immediate arguments
+						absVal = instructionFieldDict["imm"] * -1
+						absBinString = format(absVal, "021b")  #get binary string of abs value 
+
+						#Convert to 2s compliment negative number
+						flippedBitsString = absBinString.replace("0","z").replace("1","0").replace("z","1")  #Flip all bits
+						unsignedVal = int(flippedBitsString, 2)
+						twoCompInt = unsignedVal + 1
+
+						imm_string = format(twoCompInt, "021b")
+					else:
+						imm_string = format(instructionFieldDict["imm"], "021b")  #12bit value
+
+					
+					imm_stringReordered = "{}{}{}{}".format(imm_string[-21], imm_string[-11:-1], imm_string[-12], imm_string[-20:-12])  #Rearrange imm_stringOrdered to fit J-type bit index format [20|10:1|11|19:12]
+					rd_string = format(instructionFieldDict["rd"], "05b")  #5bit value
+					opcode_string = format(instructionFieldDict["opcode"], "07b")  #7bit value
+
+					binaryString = "{}{}{}".format(imm_stringReordered, rd_string, opcode_string)
+
+				#B-type instructions
+				elif (instructionFieldDict["type"] == "B"):
+					imm_string = ""
+					if (instructionFieldDict["imm"] < 0):
+						#handle negative immediate arguments
+						absVal = instructionFieldDict["imm"] * -1
+						absBinString = format(absVal, "013b")  #get binary string of abs value 
+
+						#Convert to 2s compliment negative number
+						flippedBitsString = absBinString.replace("0","z").replace("1","0").replace("z","1")  #Flip all bits
+						unsignedVal = int(flippedBitsString, 2)
+						twoCompInt = unsignedVal + 1
+
+						imm_string = format(twoCompInt, "013b")
+					else:
+						imm_string = format(instructionFieldDict["imm"], "013b")  #12bit value
+
+					
+					#Split imm_string into required parts for B-type
+					immString_12 = imm_string[-13]
+					immString_10_5 = imm_string[-11:-5]
+					immString_4_1 = imm_string[-5:-1]
+					immString_11 = imm_string[-12]
+
+					rs2_string = format(instructionFieldDict["rs2"], "05b")  #5bit value
+					rs1_string = format(instructionFieldDict["rs1"], "05b")  #5bit value
+					funct3_string = format(instructionFieldDict["funct3"], "03b")  #3bit value
+					opcode_string = format(instructionFieldDict["opcode"], "07b")  #7bit value
+
+					binaryString = "{}{}{}{}{}{}{}{}".format(immString_12, immString_10_5, rs2_string, rs1_string, funct3_string, immString_4_1, immString_11, opcode_string)
+
+				#S-type instructions
+				elif (instructionFieldDict["type"] == "S"):
+					imm_string = ""
+					if (instructionFieldDict["imm"] < 0):
+						#handle negative immediate arguments
+						absVal = instructionFieldDict["imm"] * -1
+						absBinString = format(absVal, "013b")  #get binary string of abs value 
+
+						#Convert to 2s compliment negative number
+						flippedBitsString = absBinString.replace("0","z").replace("1","0").replace("z","1")  #Flip all bits
+						unsignedVal = int(flippedBitsString, 2)
+						twoCompInt = unsignedVal + 1
+
+						imm_string = format(twoCompInt, "013b")
+					else:
+						imm_string = format(instructionFieldDict["imm"], "013b")  #12bit value
+
+					
+					#Split imm_string into required parts for S-type
+					immString_11_5 = imm_string[-12:-5]
+					immString_4_0 = imm_string[-5:]
+
+					rs2_string = format(instructionFieldDict["rs2"], "05b")  #5bit value
+					rs1_string = format(instructionFieldDict["rs1"], "05b")  #5bit value
+					funct3_string = format(instructionFieldDict["funct3"], "03b")  #3bit value
+					opcode_string = format(instructionFieldDict["opcode"], "07b")  #7bit value
+
+					binaryString = "{}{}{}{}{}{}".format(immString_11_5, rs2_string, rs1_string, funct3_string, immString_4_0, opcode_string)
+
+				#U-type instructions
+				elif (instructionFieldDict["type"] == "U"):
+					imm_string = ""
+					if (instructionFieldDict["imm"] < 0):
+						raise Exception("Negative immediate used in U type instruction | {}".format(instructionFieldDict["imm"]))
+					else:
+						imm_string = format(instructionFieldDict["imm"], "020b")  #20bit value
+
+					rd_string = format(instructionFieldDict["rd"], "05b")  #5bit value
+					opcode_string = format(instructionFieldDict["opcode"], "07b")  #7bit value
+
+					binaryString = "{}{}{}".format(imm_string, rd_string, opcode_string)
+
 				else:
-					imm_string = format(instructionFields["imm"], "012b")  #12bit value
+					raise Exception("Unsupported instruction type {}".format(instruction))
 
-				rs1_string = format(instructionFields["rs1"], "05b")  #5bit value
-				funct3_string = format(instructionFields["funct3"], "03b")  #3bit value
-				rd_string = format(instructionFields["rd"], "05b")  #5bit value
-				opcode_string = format(instructionFields["opcode"], "07b")  #7bit value
+				#Convert binary instruction string to int and store in list
+				instructionValues.append(int(binaryString, 2))
 
-				binaryString = "{}{}{}{}{}".format(imm_string, rs1_string, funct3_string, rd_string, opcode_string)
-
-			#J-type instructions
-			elif (instructionFields["type"] == "J"):
-				imm_string = ""
-				if (instructionFields["imm"] < 0):
-					#handle negative immediate arguments
-					absVal = instructionFields["imm"] * -1
-					absBinString = format(absVal, "021b")  #get binary string of abs value 
-
-					#Convert to 2s compliment negative number
-					flippedBitsString = absBinString.replace("0","z").replace("1","0").replace("z","1")  #Flip all bits
-					unsignedVal = int(flippedBitsString, 2)
-					twoCompInt = unsignedVal + 1
-
-					imm_string = format(twoCompInt, "021b")
-				else:
-					imm_string = format(instructionFields["imm"], "021b")  #12bit value
-
-				
-				imm_stringReordered = "{}{}{}{}".format(imm_string[-21], imm_string[-11:-1], imm_string[-12], imm_string[-20:-12])  #Rearrange imm_stringOrdered to fit J-type bit index format [20|10:1|11|19:12]
-				rd_string = format(instructionFields["rd"], "05b")  #5bit value
-				opcode_string = format(instructionFields["opcode"], "07b")  #7bit value
-
-				binaryString = "{}{}{}".format(imm_stringReordered, rd_string, opcode_string)
-
-			#B-type instructions
-			elif (instructionFields["type"] == "B"):
-				imm_string = ""
-				if (instructionFields["imm"] < 0):
-					#handle negative immediate arguments
-					absVal = instructionFields["imm"] * -1
-					absBinString = format(absVal, "013b")  #get binary string of abs value 
-
-					#Convert to 2s compliment negative number
-					flippedBitsString = absBinString.replace("0","z").replace("1","0").replace("z","1")  #Flip all bits
-					unsignedVal = int(flippedBitsString, 2)
-					twoCompInt = unsignedVal + 1
-
-					imm_string = format(twoCompInt, "013b")
-				else:
-					imm_string = format(instructionFields["imm"], "013b")  #12bit value
-
-				
-				#Split imm_string into required parts for B-type
-				immString_12 = imm_string[-13]
-				immString_10_5 = imm_string[-11:-5]
-				immString_4_1 = imm_string[-5:-1]
-				immString_11 = imm_string[-12]
-
-				rs2_string = format(instructionFields["rs2"], "05b")  #5bit value
-				rs1_string = format(instructionFields["rs1"], "05b")  #5bit value
-				funct3_string = format(instructionFields["funct3"], "03b")  #3bit value
-				opcode_string = format(instructionFields["opcode"], "07b")  #7bit value
-
-				binaryString = "{}{}{}{}{}{}{}{}".format(immString_12, immString_10_5, rs2_string, rs1_string, funct3_string, immString_4_1, immString_11, opcode_string)
-
-			#S-type instructions
-			elif (instructionFields["type"] == "S"):
-				imm_string = ""
-				if (instructionFields["imm"] < 0):
-					#handle negative immediate arguments
-					absVal = instructionFields["imm"] * -1
-					absBinString = format(absVal, "013b")  #get binary string of abs value 
-
-					#Convert to 2s compliment negative number
-					flippedBitsString = absBinString.replace("0","z").replace("1","0").replace("z","1")  #Flip all bits
-					unsignedVal = int(flippedBitsString, 2)
-					twoCompInt = unsignedVal + 1
-
-					imm_string = format(twoCompInt, "013b")
-				else:
-					imm_string = format(instructionFields["imm"], "013b")  #12bit value
-
-				
-				#Split imm_string into required parts for S-type
-				immString_11_5 = imm_string[-12:-5]
-				immString_4_0 = imm_string[-5:]
-
-				rs2_string = format(instructionFields["rs2"], "05b")  #5bit value
-				rs1_string = format(instructionFields["rs1"], "05b")  #5bit value
-				funct3_string = format(instructionFields["funct3"], "03b")  #3bit value
-				opcode_string = format(instructionFields["opcode"], "07b")  #7bit value
-
-				binaryString = "{}{}{}{}{}{}".format(immString_11_5, rs2_string, rs1_string, funct3_string, immString_4_0, opcode_string)
-
-			#U-type instructions
-			elif (instructionFields["type"] == "U"):
-				imm_string = ""
-				if (instructionFields["imm"] < 0):
-					raise Exception("Negative immediate used in U type instruction | {}".format(instructionFields["imm"]))
-				else:
-					imm_string = format(instructionFields["imm"], "020b")  #20bit value
-
-				rd_string = format(instructionFields["rd"], "05b")  #5bit value
-				opcode_string = format(instructionFields["opcode"], "07b")  #7bit value
-
-				binaryString = "{}{}{}".format(imm_string, rd_string, opcode_string)
-
-			else:
-				raise Exception("Unsupported instruction type {}".format(instruction))
-
-			#Convert binary instruction string to int and store in list
-			instructionValues.append(int(binaryString, 2))
+				#Iterate programCounter
+				programCounter += 4
 
 		except Exception as e:
 			errorMessage = ""
@@ -960,11 +1140,18 @@ def main(asmPath, hexPathArg, indexPath, logisim, debuggerAnnotations):
 
 		#Add assembly annotations to debuugerAnnotations dict
 		debuggerAnnotations["asmFileMap"] = {} 
-		programCounter = 0
-		for address in range(0, len(linedInstructions)):
-			debuggerAnnotations["asmFileMap"][address*4] = {}
-			debuggerAnnotations["asmFileMap"][address*4]["lineNum"] = linedInstructions[address][0]
-			debuggerAnnotations["asmFileMap"][address*4]["file"] = os.path.abspath(asmPath)
+		offset = 0  #keep track of offset for multi-inst pseudoinstructions
+		multiPseudoInstructions = [INST.LA]
+
+		for index in range(0, len(linedInstructions)):
+			#instruction tuple = [<lineNumber>, [<instruction_enum>,<arg1>,<arg2>,...]]
+			programCounter = (index+offset)*4
+			debuggerAnnotations["asmFileMap"][programCounter] = {}
+			debuggerAnnotations["asmFileMap"][programCounter]["lineNum"] = linedInstructions[index][0]
+			debuggerAnnotations["asmFileMap"][programCounter]["file"] = os.path.abspath(asmPath)
+
+			if (linedInstructions[index][1][0] in multiPseudoInstructions):
+					offset += 1
 			
 		annotationFile = open("{}_annotation.json".format(asmPath.replace(".asm", "")), "w")
 		annotationFile.write(utils.dictToJson(debuggerAnnotations))
@@ -972,7 +1159,7 @@ def main(asmPath, hexPathArg, indexPath, logisim, debuggerAnnotations):
 
 		#Print finished message
 		printColor("\nDone!", color=COLORS.OKGREEN)
-		print("{} total instructions".format(len(instructions)))
+		print("{} total instructions".format(len(programIntValues)-1))
 		addressBits = math.log(len(programIntValues),2)
 		if (logisim and (addressBits > 24)):
 			printColor ("WARNING: Program too large to run in Logisim", color=COLORS.WARNING)

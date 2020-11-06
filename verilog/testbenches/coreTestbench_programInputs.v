@@ -1,3 +1,3 @@
-`define programLength 5
-`define programFilename "../testCode/assemblyTest/luiTest.hex"
+`define programLength 13
+`define programFilename "../testCode/assemblyTest/laTest.hex"
 `define memorySize 4096
