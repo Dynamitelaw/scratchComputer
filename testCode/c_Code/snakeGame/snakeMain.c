@@ -1,6 +1,9 @@
 //Import header
+#include "../standardLibrary/stdlib.h"
+
 #include "display.c"
 #include "keyboard.c"
+
 
 struct food
 {
@@ -12,14 +15,8 @@ struct snakeNode
 {
 	int xPos;
 	int yPos;
-};
-
-struct snakeStruct
-{
-	struct snakeNode head;
-	struct snakeNode tail;
-	char xVelocity;
-	char yVelocity;
+	int * previousNode;
+	int * nextNode;
 };
 
 int delay(int iterations)
@@ -61,61 +58,64 @@ int main()
 	bool * keyboard = INPUT_BUFFER_ADDRESS;
 
 	//Instantiate snake
-	struct snakeStruct snake;
-	snake.head.xPos = 2;
-	snake.head.yPos = 1;
-	snake.tail.xPos = 2;
-	snake.tail.yPos = 1;
-	snake.xVelocity = 0;
-	snake.yVelocity = 0;
+	struct snakeNode snakeHead;
+	struct snakeNode snakeTail;
 
-	int foodCurrentX;
-	int foodCurrentY;
-	int foodIterator = 0;
+	snakeHead.xPos = 2;
+	snakeHead.yPos = 1;
+	snakeHead.previousNode = 0;
+	snakeHead.nextNode = &snakeTail;
+
+	snakeTail.xPos = 2;
+	snakeTail.yPos = 1;
+	snakeTail.previousNode = &snakeHead;
+	snakeTail.nextNode = 0;
+
+	int snake_xVelocity = 0;
+	int snake_yVelocity = 0;
+
+	//Main game loop
 	for (int i=0; i<60; i++)
 	{
-		//Get current food position
-		foodCurrentX = foodPosition.xPos;
-		foodCurrentY = foodPosition.yPos;
-
 		//Update snake velocity by checking for arrow key status
 		if (keyboard[KEY_UP_OFFSET]) 
 		{
-			snake.xVelocity = 0;
-			snake.yVelocity = -1;
+			snake_xVelocity = 0;
+			snake_yVelocity = -1;
 		}
 		if (keyboard[KEY_DOWN_OFFSET])
 		{
-			snake.xVelocity = 0;
-			snake.yVelocity = 1;
+			snake_xVelocity = 0;
+			snake_yVelocity = 1;
 		}
 		if (keyboard[KEY_LEFT_OFFSET])
 		{
-			snake.xVelocity = -1;
-			snake.yVelocity = 0;
+			snake_xVelocity = -1;
+			snake_yVelocity = 0;
 		}
 		if (keyboard[KEY_RIGHT_OFFSET])
 		{
-			snake.xVelocity = 1;
-			snake.yVelocity = 0;
+			snake_xVelocity = 1;
+			snake_yVelocity = 0;
 		}
 
 		//Update snake position
-		snake.head.xPos = (snake.head.xPos + snake.xVelocity)%DISPLAY_WIDTH;
-		if (snake.head.xPos < 0) snake.head.xPos = DISPLAY_WIDTH;
-		snake.head.yPos = (snake.head.yPos + snake.yVelocity)%DISPLAY_HEIGHT;
-		if (snake.head.yPos < 0) snake.head.yPos = DISPLAY_HEIGHT;
-		updatePixel(snake.tail.xPos, snake.tail.yPos, BLACK);
-		updatePixel(snake.head.xPos, snake.head.yPos, GREEN);
-		snake.tail.xPos = snake.head.xPos;
-		snake.tail.yPos = snake.head.yPos;
+		snakeHead.xPos = (snakeHead.xPos + snake_xVelocity)%DISPLAY_WIDTH;
+		if (snakeHead.xPos < 0) snakeHead.xPos = DISPLAY_WIDTH;
+
+		snakeHead.yPos = (snakeHead.yPos + snake_yVelocity)%DISPLAY_HEIGHT;
+		if (snakeHead.yPos < 0) snakeHead.yPos = DISPLAY_HEIGHT;
+
+		updatePixel(snakeTail.xPos, snakeTail.yPos, BLACK);
+		updatePixel(snakeHead.xPos, snakeHead.yPos, GREEN);
+		snakeTail.xPos = snakeHead.xPos;
+		snakeTail.yPos = snakeHead.yPos;
 		
 		
 		//Move food if snake has reached current food
-		if ((snake.head.xPos == foodPosition.xPos) && (snake.head.yPos == foodPosition.yPos))
+		if ((snakeHead.xPos == foodPosition.xPos) && (snakeHead.yPos == foodPosition.yPos))
 		{
 			iterateFoodPosition(&foodPosition, i);
-			foodIterator++;
 		}
 		
 		updatePixel(foodPosition.xPos, foodPosition.yPos, RED);

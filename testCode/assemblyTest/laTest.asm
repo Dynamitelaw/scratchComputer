@@ -12,5 +12,6 @@ addi t0, t0, 1
 addi t0, t0, 1
 addi t0, t0, 1
 
+rem 
 exit:  
 addi zero, zero, 0

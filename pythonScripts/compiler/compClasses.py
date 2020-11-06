@@ -101,6 +101,13 @@ class structDef:
 				membersTemp.append((size, name))
 
 				self.members[name] = self.structMember(name, size)
+			elif isinstance(declItem.type, c_ast.PtrDecl):
+				name = declItem.name
+				varType = "int"
+				size = globals.typeSizeDictionary[varType]
+				membersTemp.append((size, name))
+
+				self.members[name] = self.structMember(name, size)
 			elif isinstance(declItem.type.type, c_ast.Struct):
 				name = declItem.name
 				structType = declItem.type.type.name

@@ -1,8 +1,8 @@
 .text
 lui sp, 1 #Loading val 3072
 addi sp, sp, 3072
-lui ra, 1
-addi ra, ra, PROGRAM_END
+la ra, PROGRAM_END
+la gp, HEAP_START
 main:
 	addi sp, sp, -8
 	addi t0, zero, 8
@@ -42,300 +42,273 @@ main:
 	addi s0, s0, 3960
 	addi sp, sp, -4
 	sw s0, 0(sp)
-	addi sp, sp, -20
+	addi sp, sp, -16
+	addi sp, sp, -16
 	addi t0, zero, 2
-	addi t1, sp, 0
-	addi t1, t1, 12
-	lw t2, 0(t1)
-	mv t2, t0
-	sw t2, 0(t1)
-	addi t0, zero, 1
-	addi t1, sp, 0
-	addi t1, t1, 8
-	lw t2, 0(t1)
-	mv t2, t0
-	sw t2, 0(t1)
-	addi t0, zero, 2
-	addi t1, sp, 0
+	addi t1, sp, 16
 	addi t1, t1, 4
 	lw t2, 0(t1)
 	mv t2, t0
 	sw t2, 0(t1)
 	addi t0, zero, 1
-	addi t1, sp, 0
+	addi t1, sp, 16
 	lw t2, 0(t1)
 	mv t2, t0
 	sw t2, 0(t1)
-	addi t0, sp, 0
-	addi t0, t0, 17
-	lb t1, 0(t0)
+	addi t0, sp, 16
+	addi t0, t0, 8
+	lw t1, 0(t0)
 	mv t1, zero
-	sb t1, 0(t0)
+	sw t1, 0(t0)
 	addi t0, sp, 0
-	addi t0, t0, 16
-	lb t1, 0(t0)
-	mv t1, zero
-	sb t1, 0(t0)
-	addi sp, sp, -4
-	addi sp, sp, -4
+	addi t1, sp, 16
+	addi t1, t1, 12
+	lw t2, 0(t1)
+	mv t2, t0
+	sw t2, 0(t1)
+	addi t1, zero, 2
+	addi t2, sp, 0
+	addi t2, t2, 4
+	lw t3, 0(t2)
+	mv t3, t1
+	sw t3, 0(t2)
+	addi t1, zero, 1
+	addi t2, sp, 0
+	lw t3, 0(t2)
+	mv t3, t1
+	sw t3, 0(t2)
+	addi t1, sp, 16
+	addi t2, sp, 0
+	addi t2, t2, 8
+	lw t3, 0(t2)
+	mv t3, t1
+	sw t3, 0(t2)
+	addi t2, sp, 0
+	addi t2, t2, 12
+	lw t3, 0(t2)
+	mv t3, zero
+	sw t3, 0(t2)
 	addi s1, zero, 0
 	addi sp, sp, -4
 	sw s1, 0(sp)
 	addi s10, zero, 0
 	addi sp, sp, -4
 	sw s10, 0(sp)
-	sw s10, 0(sp)
+	addi sp, sp, -4
+	sw s2, 0(sp)
+	addi s2, zero, 0
+	addi sp, sp, -4
+	sw s2, 0(sp)
+	addi sp, sp, -4
+	sw s3, 0(sp)
+	addi s3, zero, 0
+	addi sp, sp, -4
+	sw s3, 0(sp)
+	sw s3, 0(sp)
 	forLoopStart_3:
-		addi t0, zero, 60
-		blt s10, t0, forLoopBody_3
+		addi t2, zero, 60
+		blt s3, t2, forLoopBody_3
 		j forLoopEnd_3
 		forLoopBody_3:
-			addi t0, sp, 60
-			addi t0, t0, 4
-			lw t1, 0(t0)
-			addi sp, sp, -4
-			sw s2, 0(sp)
-			lw s2, 16(sp)
-			mv s2, t1
-			sw s2, 16(sp)
-			addi t0, sp, 64
-			lw t2, 0(t0)
-			addi sp, sp, -4
-			sw s3, 0(sp)
-			lw s3, 16(sp)
-			mv s3, t2
-			sw s3, 16(sp)
-			mv t0, s0
+			mv t2, s0
 			addi t3, zero, 106
 			addi t4, zero, 1
 			mul t4, t3, t4
-			add t0, t0, t4
-			lb t4, 0(t0)
+			add t2, t2, t4
+			lb t4, 0(t2)
 			bne t4, zero, true_0
 			j false_0
 			true_0:
-				addi t0, sp, 24
-				addi t0, t0, 17
-				lb t5, 0(t0)
-				mv t5, zero
-				sb t5, 0(t0)
-				addi t0, zero, 1
+				mv s1, zero
+				sw s1, 20(sp)
+				addi t2, zero, 1
 				addi t6, zero, -1
-				mul t5, t0, t6
-				addi t6, sp, 24
-				addi t6, t6, 16
-				lb a0, 0(t6)
-				mv a0, t5
-				sb a0, 0(t6)
+				mul t5, t2, t6
+				mv s10, t5
+				sw s10, 16(sp)
 			j ifElseExit_0
 			false_0:
 			ifElseExit_0:
-			mv t0, s0
+			mv t2, s0
 			addi t5, zero, 107
 			addi t6, zero, 1
 			mul t6, t5, t6
-			add t0, t0, t6
-			lb t6, 0(t0)
+			add t2, t2, t6
+			lb t6, 0(t2)
 			bne t6, zero, true_1
 			j false_1
 			true_1:
-				addi t0, sp, 24
-				addi t0, t0, 17
-				lb a0, 0(t0)
-				mv a0, zero
-				sb a0, 0(t0)
-				addi t0, zero, 1
-				addi a0, sp, 24
-				addi a0, a0, 16
-				lb a1, 0(a0)
-				mv a1, t0
-				sb a1, 0(a0)
+				mv s1, zero
+				sw s1, 20(sp)
+				addi t2, zero, 1
+				mv s10, t2
+				sw s10, 16(sp)
 			j ifElseExit_1
 			false_1:
 			ifElseExit_1:
-			mv t0, s0
+			mv t2, s0
 			addi a0, zero, 108
 			addi a1, zero, 1
 			mul a1, a0, a1
-			add t0, t0, a1
-			lb a1, 0(t0)
+			add t2, t2, a1
+			lb a1, 0(t2)
 			bne a1, zero, true_2
 			j false_2
 			true_2:
-				addi t0, zero, 1
+				addi t2, zero, 1
 				addi a3, zero, -1
-				mul a2, t0, a3
-				addi a3, sp, 24
-				addi a3, a3, 17
-				lb a4, 0(a3)
-				mv a4, a2
-				sb a4, 0(a3)
-				addi a3, sp, 24
-				addi a3, a3, 16
-				lb a4, 0(a3)
-				mv a4, zero
-				sb a4, 0(a3)
+				mul a2, t2, a3
+				mv s1, a2
+				sw s1, 20(sp)
+				mv s10, zero
+				sw s10, 16(sp)
 			j ifElseExit_2
 			false_2:
 			ifElseExit_2:
-			mv t0, s0
+			mv t2, s0
 			addi a2, zero, 109
 			addi a3, zero, 1
 			mul a3, a2, a3
-			add t0, t0, a3
-			lb a3, 0(t0)
+			add t2, t2, a3
+			lb a3, 0(t2)
 			bne a3, zero, true_3
 			j false_3
 			true_3:
-				addi t0, zero, 1
-				addi a4, sp, 24
-				addi a4, a4, 17
-				lb a5, 0(a4)
-				mv a5, t0
-				sb a5, 0(a4)
-				addi a4, sp, 24
-				addi a4, a4, 16
-				lb a5, 0(a4)
-				mv a5, zero
-				sb a5, 0(a4)
+				addi t2, zero, 1
+				mv s1, t2
+				sw s1, 20(sp)
+				mv s10, zero
+				sw s10, 16(sp)
 			j ifElseExit_3
 			false_3:
 			ifElseExit_3:
-			addi a5, sp, 24
-			addi a5, a5, 12
+			addi a5, sp, 40
+			addi a5, a5, 4
 			lw a6, 0(a5)
-			addi a5, sp, 24
-			addi a5, a5, 17
-			lb a7, 0(a5)
-			add a4, a6, a7
+			add a4, a6, s1
 			addi a5, zero, 16
-			rem t0, a4, a5
-			addi a5, sp, 24
-			addi a5, a5, 12
-			addi sp, sp, -4
-			sw s4, 0(sp)
-			lw s4, 0(a5)
-			mv s4, t0
-			sw s4, 0(a5)
-			addi a5, sp, 28
-			addi a5, a5, 12
-			lw s4, 0(a5)
-			blt s4, zero, true_4
+			rem t2, a4, a5
+			addi a5, sp, 40
+			addi a5, a5, 4
+			lw a7, 0(a5)
+			mv a7, t2
+			sw a7, 0(a5)
+			addi a5, sp, 40
+			addi a5, a5, 4
+			lw a7, 0(a5)
+			blt a7, zero, true_4
 			j false_4
 			true_4:
 				addi a5, zero, 16
 				addi sp, sp, -4
-				sw s5, 0(sp)
-				addi s5, sp, 32
-				addi s5, s5, 12
+				sw s4, 0(sp)
+				addi s4, sp, 44
+				addi s4, s4, 4
 				addi sp, sp, -4
-				sw s6, 0(sp)
-				lw s6, 0(s5)
-				mv s6, a5
-				sw s6, 0(s5)
-				lw s5, 4(sp)
-				lw s6, 0(sp)
+				sw s5, 0(sp)
+				lw s5, 0(s4)
+				mv s5, a5
+				sw s5, 0(s4)
+				lw s4, 4(sp)
+				lw s5, 0(sp)
 				addi sp, sp, 8
 			j ifElseExit_4
 			false_4:
 			ifElseExit_4:
 			addi sp, sp, -4
+			sw s4, 0(sp)
+			addi sp, sp, -4
 			sw s5, 0(sp)
+			addi s5, sp, 48
 			addi sp, sp, -4
 			sw s6, 0(sp)
-			addi s6, sp, 36
-			addi s6, s6, 8
+			lw s6, 0(s5)
+			add s4, s6, s10
+			addi s5, zero, 12
+			rem a5, s4, s5
+			addi s5, sp, 52
 			addi sp, sp, -4
 			sw s7, 0(sp)
-			lw s7, 0(s6)
-			addi s6, sp, 40
-			addi s6, s6, 16
-			addi sp, sp, -4
-			sw s8, 0(sp)
-			lb s8, 0(s6)
-			add s5, s7, s8
-			addi s6, zero, 12
-			rem a5, s5, s6
-			addi s6, sp, 44
-			addi s6, s6, 8
-			addi sp, sp, -4
-			sw s9, 0(sp)
-			lw s9, 0(s6)
-			mv s9, a5
-			sw s9, 0(s6)
-			addi s6, sp, 48
-			addi s6, s6, 8
-			lw s9, 0(s6)
-			blt s9, zero, true_5
+			lw s7, 0(s5)
+			mv s7, a5
+			sw s7, 0(s5)
+			addi s5, sp, 56
+			lw s7, 0(s5)
+			blt s7, zero, true_5
 			j false_5
 			true_5:
-				addi s6, zero, 12
-				sw s11, 88(sp)
-				addi s11, sp, 48
-				addi s11, s11, 8
-				sw s0, 68(sp)
-				lw s0, 0(s11)
-				mv s0, s6
-				sw s0, 0(s11)
-				lw s11, 88(sp)
-				lw s0, 68(sp)
+				addi s5, zero, 12
+				addi sp, sp, -4
+				sw s8, 0(sp)
+				addi s8, sp, 60
+				addi sp, sp, -4
+				sw s9, 0(sp)
+				lw s9, 0(s8)
+				mv s9, s5
+				sw s9, 0(s8)
+				lw s8, 4(sp)
+				lw s9, 0(sp)
+				addi sp, sp, 8
 			j ifElseExit_5
 			false_5:
 			ifElseExit_5:
-			addi s6, sp, 48
-			addi s6, s6, 4
-			lw a0, 0(s6)
-			addi s6, sp, 48
-			lw a1, 0(s6)
+			addi s5, sp, 40
+			addi s5, s5, 4
+			lw a0, 0(s5)
+			addi s5, sp, 40
+			lw a1, 0(s5)
 			mv a2, zero
-			mv s6, t1
+			mv s5, t0
 			addi sp, sp, -4
-			sw t0, 0(sp)
+			sw s8, 0(sp)
+			mv s8, t1
+			addi sp, sp, -4
+			sw s9, 0(sp)
+			mv s9, t3
+			addi sp, sp, -4
+			sw t2, 0(sp)
 			addi sp, sp, -4
 			sw a4, 0(sp)
 			addi sp, sp, -4
 			sw a5, 0(sp)
 			jal updatePixel
-			addi t0, sp, 60
-			addi t0, t0, 12
+			addi t0, sp, 76
+			addi t0, t0, 4
 			lw a0, 0(t0)
-			addi t0, sp, 60
-			addi t0, t0, 8
+			addi t0, sp, 76
 			lw a1, 0(t0)
 			lui a2, 1  #Loading val 65280
 			addi a2, a2, 3840
 			lui t0, 15
 			add a2, a2, t0
 			jal updatePixel
-			addi t0, sp, 60
-			addi t0, t0, 12
+			addi t0, sp, 76
+			addi t0, t0, 4
 			lw t1, 0(t0)
 			addi t0, sp, 60
 			addi t0, t0, 4
 			lw t2, 0(t0)
 			mv t2, t1
 			sw t2, 0(t0)
-			addi t0, sp, 60
-			addi t0, t0, 8
+			addi t0, sp, 76
 			lw t2, 0(t0)
 			addi t0, sp, 60
 			lw t3, 0(t0)
 			mv t3, t2
 			sw t3, 0(t0)
-			addi t3, sp, 60
-			addi t3, t3, 12
+			addi t3, sp, 76
+			addi t3, t3, 4
 			lw t4, 0(t3)
-			addi t3, sp, 104
+			addi t3, sp, 116
 			addi t3, t3, 4
 			lw t5, 0(t3)
 			slt t0, t4, t5
 			slt t3, t5, t4
 			add t0, t0, t3
 			slti t0, t0, 1
-			addi t6, sp, 60
-			addi t6, t6, 8
+			addi t6, sp, 76
 			lw a0, 0(t6)
-			addi t6, sp, 104
+			addi t6, sp, 116
 			lw a1, 0(t6)
 			slt t3, a0, a1
 			slt t6, a1, a0
@@ -345,28 +318,28 @@ main:
 			bne t6, zero, true_6
 			j false_6
 			true_6:
-				addi a0, sp, 104
-				mv a1, s10
-				mv s10, t1
+				addi a0, sp, 116
+				mv a1, s3
+				mv s3, t1
 				addi sp, sp, -4
 				sw t0, 0(sp)
 				addi sp, sp, -4
 				sw t3, 0(sp)
-				sw a1, 52(sp)
+				sw a1, 44(sp)
 				jal iterateFoodPosition
-				addi s1, s1, 1
-				sw s1, 56(sp)
-				lw s10, 52(sp)
+				addi s2, s2, 1
+				sw s2, 52(sp)
+				lw s3, 44(sp)
 				lw t0, 4(sp)
 				lw t3, 0(sp)
 				addi sp, sp, 8
 			j ifElseExit_6
 			false_6:
 			ifElseExit_6:
-			addi t6, sp, 104
+			addi t6, sp, 116
 			addi t6, t6, 4
 			lw a0, 0(t6)
-			addi t6, sp, 104
+			addi t6, sp, 116
 			lw a1, 0(t6)
 			lui a2, 4080 #Loading val 16711680
 			addi a2, a2, 0
@@ -377,32 +350,52 @@ main:
 			jal updatePixel
 			addi a0, zero, 400
 			jal delay
-		sw s2, 64(sp)
-		sw s3, 60(sp)
-		lw s2, 48(sp)
-		lw s3, 44(sp)
-		lw s4, 40(sp)
+		mv t0, s5
+		mv t1, s8
 		addi sp, sp, -4
-		sw s5, 0(sp)
+		sw s4, 0(sp)
+		lw s4, 44(sp)
 		lw s5, 40(sp)
 		lw s6, 36(sp)
 		lw s7, 32(sp)
 		lw s8, 28(sp)
 		lw s9, 24(sp)
-		addi sp, sp, 56
-		addi s10, s10, 1
-		sw s10, 0(sp)
+		addi sp, sp, 48
+		addi s3, s3, 1
+		sw s3, 0(sp)
 		j forLoopStart_3
 	forLoopEnd_3:
 	mv ra, s11
-	sw s0, 36(sp)
-	lw s0, 52(sp)
-	sw s1, 4(sp)
-	lw s1, 48(sp)
-	sw s10, 0(sp)
-	lw s10, 44(sp)
-	lw s11, 40(sp)
-	addi sp, sp, 68
+	sw s0, 56(sp)
+	lw s0, 72(sp)
+	sw s1, 20(sp)
+	lw s1, 68(sp)
+	sw s10, 16(sp)
+	lw s10, 64(sp)
+	lw s11, 60(sp)
+	sw s2, 8(sp)
+	lw s2, 12(sp)
+	sw s3, 0(sp)
+	lw s3, 4(sp)
+	addi sp, sp, 88
+	jr ra
+
+malloc:
+	addi t5, zero, 5
+	bge a0, t5, ALIGN_WORD
+	ALIGN_SUBWORD:
+	rem t0, gp, a0
+	add gp, gp, t0
+	j INCREMENT_GP
+	ALIGN_WORD:
+	addi t4, zero, 4
+	rem t0, gp, t4
+	add gp, gp, t0
+	INCREMENT_GP:
+	mv t0, gp
+	add gp, gp, a0
+	mv a0, t0
+	jr ra
 	jr ra
 
 updatePixel:
@@ -575,3 +568,4 @@ iterateFoodPosition:
 PROGRAM_END:
 add zero, zero, zero
 .data
+HEAP_START: .word 0

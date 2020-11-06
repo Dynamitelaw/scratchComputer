@@ -173,13 +173,13 @@ class scopeController:
 		return instructions
 	
 
-	def createExpressionResult(self, register=None,varType=None, size=4, signed=True, indentLevel=0):
+	def createExpressionResult(self, register=None, varType=None, size=4, signed=True, indentLevel=0):
 		'''
 		Will create an variable to represent the implicit variable of an expression result.
 		Returns the variable name to caller
 
 		returnType:
-			<str> variableName
+			<tuple> ( <str> variableName , <str> variableName )
 		'''
 		instructions = instructionList(self)
 		indentString = "".join(["\t" for i in range(indentLevel)])
