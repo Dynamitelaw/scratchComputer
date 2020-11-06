@@ -400,7 +400,6 @@ def parseAssemblyFile(filepath):
 					instruction = parseInstruction(asmLine)
 					linedInstructions.append([lineNumber, instruction])
 					if (instruction[0] in multiPseudoInstructions):
-						print("YEHAW!")
 						offset += 1
 				else:
 					raise Exception("ERROR: {} , line #{} | instruction defined in data section".format(filepath, lineNumber))

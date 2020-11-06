@@ -109,17 +109,18 @@ Currently only supports a subset of the C language
 
 	memorySizeString = arguments.memorySize
 	memorySize = None
-	if ("K" in memorySizeString):
-		memorySizeString = memorySizeString.replace("K", "")
-		memorySize = int(memorySizeString) * 2**10
-	elif ("M" in memorySizeString):
-		memorySizeString = memorySizeString.replace("M", "")
-		memorySize = int(memorySizeString) * 2**20
-	elif ("G" in memorySizeString):
-		memorySizeString = memorySizeString.replace("G", "")
-		memorySize = int(memorySizeString) * 2**30
-	else:
-		memorySize = int(4 * int(int(memorySizeString) / 4))
+	if (memorySizeString):
+		if ("K" in memorySizeString):
+			memorySizeString = memorySizeString.replace("K", "")
+			memorySize = int(memorySizeString) * 2**10
+		elif ("M" in memorySizeString):
+			memorySizeString = memorySizeString.replace("M", "")
+			memorySize = int(memorySizeString) * 2**20
+		elif ("G" in memorySizeString):
+			memorySizeString = memorySizeString.replace("G", "")
+			memorySize = int(memorySizeString) * 2**30
+		else:
+			memorySize = int(4 * int(int(memorySizeString) / 4))
 
 	keepasm = arguments.keepasm
 	logisim = arguments.logisim
@@ -206,13 +207,11 @@ Currently only supports a subset of the C language
 					asmFile.write("addi sp, zero, {}\n".format(lowerValue))
 					programCounter += 8
 
-		#<TODO> don't do this. We should use auipc
-		asmFile.write("lui ra, 1\n")  #initialize return address for main
-		asmFile.write("addi ra, ra, PROGRAM_END\n")
+		asmFile.write("la ra, PROGRAM_END\n")  #initialize return address for main
 		programCounter += 8
 
-		#asmFile.write("addi ra, zero, PROGRAM_END\n")  #initialize return address for main
-		#programCounter += 4
+		asmFile.write("la gp, HEAP_START\n")  #initialize address for global pointer
+		programCounter += 8
 
 		#Write main first
 		instList = definedFunctions["main"].coord
@@ -283,6 +282,8 @@ Currently only supports a subset of the C language
 
 			dataDef = "{}: {} {}\n".format(dataLabel, typeStr, valueStr)
 			asmFile.write(dataDef)
+
+		asmFile.write("HEAP_START: .word 0\n")  #Heap start
 
 		asmFile.close()
 

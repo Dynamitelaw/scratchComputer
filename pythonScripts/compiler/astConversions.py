@@ -658,6 +658,14 @@ def convertFuncCallItem(item, scope, indentLevel=0):
 
 	functionName = item.name.name
 
+	#Check for inline assembly
+	if (functionName == "asm") or ((functionName == "_asm_")):
+		inlineAssembly = item.args.exprs[0].value
+		inlineAssembly = inlineAssembly.replace("\"","")
+		instructions.append("{}{}".format(indentString, inlineAssembly))
+
+		return instructions
+
 	#Sets up function parameters into argument registers
 	argIndex = 0
 	for argument in item.args.exprs:
