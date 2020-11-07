@@ -1,7 +1,7 @@
 //Screen size and memory location
-#define DISPLAY_WIDTH 16 //64
-#define DISPLAY_HEIGHT 12 //48
-#define FRAME_BUFFER_ADDRESS 4096
+#define DISPLAY_WIDTH 32 //64
+#define DISPLAY_HEIGHT 24 //48
+#define FRAME_BUFFER_ADDRESS 6144
 
 //Primary colors
 #define RED 16711680

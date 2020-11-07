@@ -1054,8 +1054,14 @@ def convertDeclItem(item, scope, indentLevel=0):
 
 		elif isinstance(item.init, c_ast.ID):
 			#Initialized variable is set to another variable
-			#<TODO>
-			raise Exception("TODO, add support for variable inits\n{}".format(item))
+			instructionsTemp, destinationRegister = scope.getFreeRegister(tag="declare", indentLevel=indentLevel)
+			instructions += instructionsTemp
+			instructions += scope.addVariable(variableName, register=destinationRegister, varType=item.type, signed=True, indentLevel=indentLevel)
+
+			instructionsTemp, valueReg = operandToRegister(item.init, scope, indentLevel=indentLevel)
+			instructions += instructionsTemp
+
+			instructions.append("{}mv {}, {}".format(indentString, destinationRegister, valueReg))
 
 		elif isinstance(item.init, c_ast.BinaryOp):
 			#Initialized variable is result of binary expression
@@ -1254,9 +1260,25 @@ def convertWhileItem(item, scope, indentLevel=0):
 		instructionsTemp, conditionVariableName = convertBinaryOpItem(conditionItem, scope, branch=bodyLabel, indentLevel=indentLevel+1)
 		instructions += instructionsTemp
 		instructions.append("{}\tj {}".format(indentString, endLabel))
+	if isinstance(conditionItem, c_ast.Constant):
+		if (int(conditionItem.value) == 0):
+			#Condition is 0. Loop will never run. Return empty instructions
+			instructions = instructionList(scope)
+			return instructions
+		else:
+			#Infinite loop
+			instructions.append("{}\tj {}".format(indentString, bodyLabel))
+	elif isinstance(conditionItem, c_ast.ID):
+		#Get condition value into register
+		instructionsTemp, conditionReg = operandToRegister(conditionItem, scope, indentLevel=indentLevel)
+		instructions += instructionsTemp
+
+		#Continue if value != 0
+		instructions.append("{}bne {}, zero, {}".format(indentString, conditionReg, bodyLabel))
+		instructions.append("{}\tj {}".format(indentString, endLabel))
 
 	else:
-		raise Exception("UNSUPPORTED CONDITION | convertForItem\n{}".format(conditionItem))
+		raise Exception("UNSUPPORTED CONDITION | convertWhileItem\n{}".format(conditionItem))
 
 
 	#While loop body

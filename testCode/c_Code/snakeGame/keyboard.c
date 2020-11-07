@@ -1,5 +1,5 @@
 //Screen size and memory location
-#define INPUT_BUFFER_ADDRESS 3960
+#define INPUT_BUFFER_ADDRESS 6008
 #define INPUT_BUFFER_SIZE 132
 
 //Key offsets colors

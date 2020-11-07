@@ -188,6 +188,17 @@ Currently only supports a subset of the C language
 				asmFile.write("addi sp, zero, {}\n".format(int(stackPointerStart)))
 				programCounter += 4
 			else:
+				stackPointerStart_31_12 = int(stackPointerStart/4096)
+				stackPointerStart_11 = int((stackPointerStart-(stackPointerStart_31_12*4096))/2048)
+				stackPointerStart_11_0 = stackPointerStart%4096
+
+				upperValue = stackPointerStart_31_12 + stackPointerStart_11
+				lowerValue = stackPointerStart_11_0
+
+				asmFile.write("lui sp, {} #Loading val {}\n".format(upperValue, stackPointerStart))
+				asmFile.write("addi sp, sp, {}\n".format(lowerValue))
+				programCounter += 8
+				'''
 				upperValue = int(stackPointerStart/4096)
 				lowerValue = stackPointerStart%4096
 				if (int(lowerValue/2048) == 1):
@@ -206,6 +217,7 @@ Currently only supports a subset of the C language
 					asmFile.write("lui sp, {} #Loading val {}\n".format(upperValue, stackPointerStart))
 					asmFile.write("addi sp, zero, {}\n".format(lowerValue))
 					programCounter += 8
+				'''
 
 		asmFile.write("la ra, PROGRAM_END\n")  #initialize return address for main
 		programCounter += 8
