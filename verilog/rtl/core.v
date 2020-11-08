@@ -118,9 +118,11 @@ module core(
 
 	wire fetch_RequestState;
 	wire fetch_ReceiveState;
+	assign cir_writeEnable = fetch_ReceiveState;
 	wire decodeState;
 	wire setupState;
 	wire executeState;
+	assign pc_writeEnable = executeState;
 	wire memReadState;
 	wire writebackState;
 
@@ -136,64 +138,6 @@ module core(
 		.executeState(executeState),
 		.memReadState(memReadState),
 		.writebackState(writebackState)
-		);
-
-	/////////////////
-	//Write controller
-	/////////////////
-
-	wire aOperand_we;
-	wire aLoc_we;
-	wire bOperand_we;
-	wire bLoc_we;
-	wire imm_we;
-	wire immSlct_we;
-	wire unsigned_we;
-	wire subEnable_we;
-	wire resultSlct_we;
-	wire writeSlct_we;
-	wire writeEnable_we;
-	wire result_we;
-	wire branchInst_we;
-	wire branchType_we;
-	wire jumpInstruction_we;
-	wire load_we;
-	wire store_we;
-	wire memLength_we;
-	wire storeData_we;
-	wire auipc_we;
-
-	frameWriteController frameWriteController(
-		.fetch_RequestState(fetch_RequestState),
-		.fetch_ReceiveState(fetch_ReceiveState),
-		.decodeState(decodeState),
-		.setupState(setupState),
-		.executeState(executeState),
-		.memReadState(memReadState),
-		.writebackState(writebackState),
-
-		.aOperand_we(aOperand_we),
-		.aLoc_we(aLoc_we),
-		.bOperand_we(bOperand_we),
-		.bLoc_we(bLoc_we),
-		.imm_we(imm_we),
-		.immSlct_we(immSlct_we),
-		.unsigned_we(unsigned_we),
-		.subEnable_we(subEnable_we),
-		.resultSlct_we(resultSlct_we),
-		.writeSlct_we(writeSlct_we),
-		.writeEnable_we(writeEnable_we),
-		.result_we(result_we),
-		.cir_writeEnable(cir_writeEnable),
-		.pc_writeEnable(pc_writeEnable),
-		.branchInst_we(branchInst_we),
-		.branchType_we(branchType_we),
-		.jumpInstruction_we(jumpInstruction_we),
-		.load_we(load_we),
-		.store_we(store_we),
-		.memLength_we(memLength_we),
-		.storeData_we(storeData_we),
-		.auipc_we(auipc_we)
 		);
 
 	/////////////////
@@ -262,25 +206,13 @@ module core(
 		.storeData_in(storeData_frameIn),
 		.auipc_in(auipcInst_decode),
 
-		.aOperand_we(aOperand_we),
-		.aLoc_we(aLoc_we),
-		.bOperand_we(bOperand_we),
-		.bLoc_we(bLoc_we),
-		.imm_we(imm_we),
-		.immSlct_we(immSlct_we),
-		.unsigned_we(unsigned_we),
-		.subEnable_we(subEnable_we),
-		.resultSlct_we(resultSlct_we),
-		.writeSlct_we(writeSlct_we),
-		.writeEnable_we(writeEnable_we),
-		.branchInst_we(branchInst_we),
-		.branchType_we(branchType_we),
-		.jumpInstruction_we(jumpInstruction_we),
-		.load_we(load_we),
-		.store_we(store_we),
-		.memLength_we(memLength_we),
-		.storeData_we(storeData_we),
-		.auipc_we(auipc_we),
+		.fetch_RequestState(fetch_RequestState),
+		.fetch_ReceiveState(fetch_ReceiveState),
+		.decodeState(decodeState),
+		.setupState(setupState),
+		.executeState(executeState),
+		.memReadState(memReadState),
+		.writebackState(writebackState),
 
 		.aOperand_out(aOperand_frameOut),
 		.aLoc_out(aLoc_frameOut),
@@ -317,7 +249,7 @@ module core(
 	assign storeData_frameIn = readB_regOut;
 
 	wire writeEnable_reg;
-	assign writeEnable_reg = result_we && writeEnable_frameOut;
+	assign writeEnable_reg = (executeState || memReadState) && writeEnable_frameOut;
 
 	registers registers(
 		.clk(clk),

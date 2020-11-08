@@ -31,26 +31,14 @@ module instructionFrame(
 	input [`DATA_WIDTH-1:0] storeData_in,
 	input auipc_in,
 
-	//Write enable inputs
-	input aOperand_we,
-	input aLoc_we,
-	input bOperand_we,
-	input bLoc_we,
-	input imm_we,
-	input immSlct_we,
-	input unsigned_we,
-	input subEnable_we,
-	input resultSlct_we,
-	input writeSlct_we,
-	input writeEnable_we,
-	input branchInst_we,
-	input branchType_we,
-	input jumpInstruction_we,
-	input load_we,
-	input store_we,
-	input memLength_we,
-	input storeData_we,
-	input auipc_we,
+	//Pipeline state inputs
+	input fetch_RequestState,
+	input fetch_ReceiveState,
+	input decodeState,
+	input setupState,
+	input executeState,
+	input memReadState,
+	input writebackState,
 
 	//Data outputs
 	output reg [`DATA_WIDTH-1:0] aOperand_out,
@@ -104,29 +92,29 @@ module instructionFrame(
 			storeData_out <= 0;
 			auipc_out <= 0;
 		end else begin
-			if (aOperand_we) aOperand_out <= aOperand_in;
-			if (aLoc_we) aLoc_out <= aLoc_in;
-			if (bOperand_we) bOperand_out <= bOperand_in;
-			if (bLoc_we) bLoc_out <= bLoc_in;
-			if (imm_we) immediateVal_out <= immediateVal_in;
-			if (immSlct_we) immediateSelect_out <= immediateSelect_in;
-			if (unsigned_we) unsignedSelect_out <= unsignedSelect_in;
-			if (subEnable_we) subtractEnable_out <= subtractEnable_in;
-			if (resultSlct_we) resultSelect_out <= resultSelect_in;
-			if (writeSlct_we) writeSelect_out <= writeSelect_in;
-			if (writeEnable_we) writeEnable_out <= writeEnable_in;
-			if (branchInst_we) branchInst_out <= branchInst_in;
-			if (branchType_we) branchType_out <= branchType_in;
-			if (jumpInstruction_we) jumpLink_out <= jumpLink_in;
-			if (jumpInstruction_we) jumpRegister_out <= jumpRegister_in;
-			if (aOperand_we) aOpCompare_out <= aOpCompare_in;
-			if (bOperand_we) bOpCompare_out <= bOpCompare_in;
-			if (load_we) load_out <= load_in;
-			if (load_we) loadUnsigned_out <= loadUnsigned_in;
-			if (store_we) store_out <= store_in;
-			if (memLength_we) memLength_out <= memLength_in;
-			if (storeData_we) storeData_out <= storeData_in;
-			if (auipc_we) auipc_out <= auipc_in;
+			if (setupState) aOperand_out <= aOperand_in;
+			if (decodeState) aLoc_out <= aLoc_in;
+			if (setupState) bOperand_out <= bOperand_in;
+			if (decodeState) bLoc_out <= bLoc_in;
+			if (decodeState) immediateVal_out <= immediateVal_in;
+			if (decodeState) immediateSelect_out <= immediateSelect_in;
+			if (decodeState) unsignedSelect_out <= unsignedSelect_in;
+			if (decodeState) subtractEnable_out <= subtractEnable_in;
+			if (decodeState) resultSelect_out <= resultSelect_in;
+			if (decodeState) writeSelect_out <= writeSelect_in;
+			if (decodeState) writeEnable_out <= writeEnable_in;
+			if (decodeState) branchInst_out <= branchInst_in;
+			if (decodeState) branchType_out <= branchType_in;
+			if (decodeState) jumpLink_out <= jumpLink_in;
+			if (decodeState) jumpRegister_out <= jumpRegister_in;
+			if (setupState) aOpCompare_out <= aOpCompare_in;
+			if (setupState) bOpCompare_out <= bOpCompare_in;
+			if (decodeState) load_out <= load_in;
+			if (decodeState) loadUnsigned_out <= loadUnsigned_in;
+			if (decodeState) store_out <= store_in;
+			if (decodeState) memLength_out <= memLength_in;
+			if (setupState) storeData_out <= storeData_in;
+			if (decodeState) auipc_out <= auipc_in;
 		end
 	end
 
