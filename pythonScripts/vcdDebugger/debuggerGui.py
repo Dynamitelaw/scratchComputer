@@ -247,7 +247,7 @@ def getCycleMap(vcdFilePath, configPath):
 
 
 	#Construct cycle value map for filtered data
-	cycleCountLabel = "coreTestbench.cycleCount[31:0]"
+	cycleCountLabel = "socTestbench.cycleCount[31:0]"
 	cycleMap = {}
 	timeCycleMap = {}
 

@@ -1,8 +1,7 @@
 //Include dependencies
 `include "globalVariables.v"
-`include "core.v"
-`include "memoryController.v"
-`include "coreTestbench_programInputs.v"
+`include "socTop.v"
+`include "socTestbench_programInputs.v"
 
 
 module RAM(
@@ -17,8 +16,7 @@ module RAM(
 	input load,
 
 	//Ouptuts
-	output reg [`DATA_WIDTH-1:0] dataReadOut,
-	output reg addressOutOfRange
+	output reg [`DATA_WIDTH-1:0] dataReadOut
 	);
 
 	reg [`DATA_WIDTH-1:0] memory [0:`memorySize/4];
@@ -76,7 +74,7 @@ module RAM(
 		if (store) begin
 			if ((addressIn >= `frameBufferStart) && (addressIn <= `frameBufferStart+`frameBufferSize)) begin
 				//We have written to the frame buffer. Update output binary file
-				frameBufferFile = $fopen("simulation/coreTestbench/frameBuffer.b","wb"); // open in binary mode
+				frameBufferFile = $fopen(`frameBufferPath,"wb"); // open in binary mode
 				$fwrite(frameBufferFile, "%u", frameBufferArray);
 				$fclose(frameBufferFile);
 			end
@@ -113,10 +111,6 @@ module RAM(
 		else memoryIn_byte3 = memDataCurrent_byte3;
 	end
 
-	always @(*) begin : proc_ 
-		addressOutOfRange = (addressIn >= `memorySize) && (store || load);
-	end
-
 	initial begin
 		$display("Loading program into memory");
 		$readmemh(`programFilename, memory);
@@ -125,80 +119,49 @@ module RAM(
 endmodule //RAM
 
 
-module coreTestbench;
+module socTestbench;
 	int cycleCount;
-
-	//Instantiate core
 	reg clk;
 	reg reset;
-	wire [`DATA_WIDTH-1:0] memoryDataRead_core;
 
-	wire [`DATA_WIDTH-1:0] programCounter;
-	wire [`DATA_WIDTH-1:0] memoryAddress_core;
-	wire [`DATA_WIDTH-1:0] memoryDataWrite_core;
-	wire [1:0] memoryLength_core;
-	wire store_core;
-	wire load_core;
-	wire loadUnsigned_core;
-
-	core core (
-		.clk(clk),
-		.reset(reset),
-		.memoryDataRead(memoryDataRead_core),
-
-		.programCounter_out(programCounter),
-		.memoryAddress(memoryAddress_core),
-		.memoryDataWrite(memoryDataWrite_core),
-		.memoryLength(memoryLength_core),
-		.store(store_core),
-		.load(load_core),
-		.loadUnsigned(loadUnsigned_core)
-		);
-
-	//Instantiate memory controller
-	wire [`DATA_WIDTH-1:0] dataReadOut_memControl;
-	assign memoryDataRead_core = dataReadOut_memControl;
-
+	//Instantiate soc
 	wire [`DATA_WIDTH-1:0] ramDataRead;
-	wire [`DATA_WIDTH-1:0] addressOut_memControl;
+	wire [`DATA_WIDTH-1:0] ramAddress;
 	wire [`DATA_WIDTH-1:0] ramDataWrite;
-	wire [3:0] byteSelect;
+	wire [3:0] ramByteSelect;
 	wire ramStore;
 	wire ramLoad;
 
-	memoryController memoryController(
+	wire [`DATA_WIDTH-1:0] programCounter;
+
+	soc soc(
 		.clk(clk),
 		.reset(reset),
-		.addressIn(memoryAddress_core),
-		.dataWriteIn(memoryDataWrite_core),
-		.length(memoryLength_core),
-		.storeIn(store_core),
-		.loadIn(load_core),
-		.loadUnsigned(loadUnsigned_core),
-		.dataReadOut(dataReadOut_memControl),
 
-		.ramDataRead(ramDataRead),
-		.addressOut(addressOut_memControl),
-		.ramDataWrite(ramDataWrite),
-		.byteSelect(byteSelect),
-		.ramStore(ramStore),
-		.ramLoad(ramLoad)
+		//Main memory interface
+		.memDataRead(ramDataRead),
+		.memAddress(ramAddress),
+		.memDataWrite(ramDataWrite),
+		.memByteSelect(ramByteSelect),
+		.memStore(ramStore),
+		.memLoad(ramLoad),
+
+		//Test bench probes
+		.programCounter(programCounter)
 		);
 
-	//Instantiate main memory
-	wire addressOutOfRange;
 
+	//Instantiate main memory
 	RAM RAM(
 		.clk(clk),
 		.reset(reset),
-		.addressIn(addressOut_memControl),
+		.addressIn(ramAddress),
 		.dataWriteIn(ramDataWrite),
-		.byteSelect(byteSelect),
+		.byteSelect(ramByteSelect),
 		.store(ramStore),
 		.load(ramLoad),
 
-		.dataReadOut(ramDataRead),
-		.addressOutOfRange(addressOutOfRange)
+		.dataReadOut(ramDataRead)
 		);
 
 
@@ -240,7 +203,6 @@ module coreTestbench;
 			while (programCounter <= (`programLength)*4) begin
 				//$display("PC=%d", programCounter);
 				#2
-				reset <= 0;  //dummy write to appease iverilog
 				cycleCount <= cycleCount + 1;
 			end
 		`endif

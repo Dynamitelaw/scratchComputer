@@ -1,7 +1,6 @@
 //Include dependencies
 `include "globalVariables.v"
 `include "instructionDecoder.v"
-`include "frameWriteController.v"
 `include "instructionFrame.v"
 `include "pipelineStateController.v"
 `include "registers.v"
@@ -9,7 +8,7 @@
 `include "instructionFetchController.v"
 
 
-module core(
+module pipeline(
 	//Inputs
 	input clk,
 	input reset,
