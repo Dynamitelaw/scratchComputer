@@ -75,7 +75,8 @@ int main()
 
 	/*
 	Find out if x and y are prime
-	*/ bool fakeVariable;
+	*/ 
+	bool fakeVariable;
 	bool isPrime_x;
 	isPrime_x = isPrime(x);
 
@@ -88,7 +89,7 @@ int main()
 	{
 		if (!(isPrime_y))
 		{
-			if (addThreeInts(-4020, 4040, addThreeInts(5, 2, 15)) == 42) return 42;  //<TODO> fix this
+			if (addThreeInts(-4020, 4040, addThreeInts(5, 2, 15)) == 42) return (21*2);  //<TODO> fix this
 			//return 42;
 		}
 	}

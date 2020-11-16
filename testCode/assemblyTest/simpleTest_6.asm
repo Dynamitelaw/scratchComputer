@@ -3,6 +3,7 @@
 # If test passes, a0 register should store 42
 ######
 
+.text
 begin:
 #Store values into a0,a1
 addi a0, zero, 21	# a0 = 21
@@ -10,7 +11,8 @@ addi a1, zero, 2	# a1 = 2
 
 #Set stack pointer to starting value
 addi sp, zero, 256
-mul sp, sp, sp
+addi t4, zero, 4
+mul sp, sp, t4
 
 
 #Allocate 8 bytes for the 2 integers

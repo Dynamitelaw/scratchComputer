@@ -167,6 +167,4 @@ module memoryController(
 		else readOut_byte3 = byte0_extended;
 	end
 
-
-
 endmodule //memoryController

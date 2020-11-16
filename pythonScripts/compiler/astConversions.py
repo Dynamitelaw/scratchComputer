@@ -975,7 +975,7 @@ def convertReturnItem(item, scope, indentLevel=0):
 
 		#Restore save variables, deallocate scope, then return
 		instructions += scope.restoreSaves(indentLevel=indentLevel)
-		instructions += scope.deallocateScope(indentLevel=1)
+		instructions += scope.deallocateScope(indentLevel=indentLevel)
 		instructions.append("{}jr ra".format(indentString))
 	elif isinstance(item.expr, c_ast.UnaryOp):
 		instructionsTemp, resultVariableName = convertUnaryOpItem(item.expr, scope, targetReg="a0", indentLevel=indentLevel)
