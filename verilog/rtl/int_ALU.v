@@ -154,9 +154,9 @@ module comparator (
 	assign b_isNegative = bOperand[`DATA_WIDTH-1];
 
 	always @(*) begin : comparator_proc
-		equal = aOperand == bOperand;
+		equal = (aOperand == bOperand);
 
-		if (unsignedEn || (a_isNegative ~| b_isNegative)) begin
+		if (unsignedEn || (~(a_isNegative | b_isNegative)) ) begin
 			greater = aOperand > bOperand;
 			less = aOperand < bOperand;
 		end

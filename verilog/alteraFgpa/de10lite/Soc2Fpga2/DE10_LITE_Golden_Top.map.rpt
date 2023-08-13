@@ -1,0 +1,511 @@
+Analysis & Synthesis report for DE10_LITE_Golden_Top
+Sat Jul 29 21:46:21 2023
+Quartus Prime Version 19.1.0 Build 670 09/22/2019 SJ Lite Edition
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Analysis & Synthesis Summary
+  3. Analysis & Synthesis Settings
+  4. Parallel Compilation
+  5. Analysis & Synthesis Source Files Read
+  6. Analysis & Synthesis Resource Usage Summary
+  7. Analysis & Synthesis Resource Utilization by Entity
+  8. General Register Statistics
+  9. Post-Synthesis Netlist Statistics for Top Partition
+ 10. Elapsed Time Per Partition
+ 11. Analysis & Synthesis Messages
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 2019  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and any partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel FPGA IP License Agreement, or other applicable license
+agreement, including, without limitation, that your use is for
+the sole purpose of programming logic devices manufactured by
+Intel and sold by Intel or its authorized distributors.  Please
+refer to the applicable agreement for further details, at
+https://fpgasoftware.intel.com/eula.
+
+
+
++-------------------------------------------------------------------------------+
+; Analysis & Synthesis Summary                                                  ;
++---------------------------------+---------------------------------------------+
+; Analysis & Synthesis Status     ; Successful - Sat Jul 29 21:46:21 2023       ;
+; Quartus Prime Version           ; 19.1.0 Build 670 09/22/2019 SJ Lite Edition ;
+; Revision Name                   ; DE10_LITE_Golden_Top                        ;
+; Top-level Entity Name           ; DE10_LITE_Golden_Top                        ;
+; Family                          ; Cyclone V                                   ;
+; Logic utilization (in ALMs)     ; N/A                                         ;
+; Total registers                 ; 0                                           ;
+; Total pins                      ; 185                                         ;
+; Total virtual pins              ; 0                                           ;
+; Total block memory bits         ; 0                                           ;
+; Total DSP Blocks                ; 0                                           ;
+; Total HSSI RX PCSs              ; 0                                           ;
+; Total HSSI PMA RX Deserializers ; 0                                           ;
+; Total HSSI TX PCSs              ; 0                                           ;
+; Total HSSI PMA TX Serializers   ; 0                                           ;
+; Total PLLs                      ; 0                                           ;
+; Total DLLs                      ; 0                                           ;
++---------------------------------+---------------------------------------------+
+
+
++-------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Settings                                                                                                 ;
++---------------------------------------------------------------------------------+----------------------+----------------------+
+; Option                                                                          ; Setting              ; Default Value        ;
++---------------------------------------------------------------------------------+----------------------+----------------------+
+; Device                                                                          ; 5CGXFC7C7F23C8       ;                      ;
+; Top-level entity name                                                           ; DE10_LITE_Golden_Top ; DE10_LITE_Golden_Top ;
+; Family name                                                                     ; Cyclone V            ; Cyclone V            ;
+; Use smart compilation                                                           ; Off                  ; Off                  ;
+; Enable parallel Assembler and Timing Analyzer during compilation                ; On                   ; On                   ;
+; Enable compact report table                                                     ; Off                  ; Off                  ;
+; Restructure Multiplexers                                                        ; Auto                 ; Auto                 ;
+; MLAB Add Timing Constraints For Mixed-Port Feed-Through Mode Setting Don't Care ; Off                  ; Off                  ;
+; Create Debugging Nodes for IP Cores                                             ; Off                  ; Off                  ;
+; Preserve fewer node names                                                       ; On                   ; On                   ;
+; Intel FPGA IP Evaluation Mode                                                   ; Enable               ; Enable               ;
+; Verilog Version                                                                 ; Verilog_2001         ; Verilog_2001         ;
+; VHDL Version                                                                    ; VHDL_1993            ; VHDL_1993            ;
+; State Machine Processing                                                        ; Auto                 ; Auto                 ;
+; Safe State Machine                                                              ; Off                  ; Off                  ;
+; Extract Verilog State Machines                                                  ; On                   ; On                   ;
+; Extract VHDL State Machines                                                     ; On                   ; On                   ;
+; Ignore Verilog initial constructs                                               ; Off                  ; Off                  ;
+; Iteration limit for constant Verilog loops                                      ; 5000                 ; 5000                 ;
+; Iteration limit for non-constant Verilog loops                                  ; 250                  ; 250                  ;
+; Add Pass-Through Logic to Inferred RAMs                                         ; On                   ; On                   ;
+; Infer RAMs from Raw Logic                                                       ; On                   ; On                   ;
+; Parallel Synthesis                                                              ; On                   ; On                   ;
+; DSP Block Balancing                                                             ; Auto                 ; Auto                 ;
+; NOT Gate Push-Back                                                              ; On                   ; On                   ;
+; Power-Up Don't Care                                                             ; On                   ; On                   ;
+; Remove Redundant Logic Cells                                                    ; Off                  ; Off                  ;
+; Remove Duplicate Registers                                                      ; On                   ; On                   ;
+; Ignore CARRY Buffers                                                            ; Off                  ; Off                  ;
+; Ignore CASCADE Buffers                                                          ; Off                  ; Off                  ;
+; Ignore GLOBAL Buffers                                                           ; Off                  ; Off                  ;
+; Ignore ROW GLOBAL Buffers                                                       ; Off                  ; Off                  ;
+; Ignore LCELL Buffers                                                            ; Off                  ; Off                  ;
+; Ignore SOFT Buffers                                                             ; On                   ; On                   ;
+; Limit AHDL Integers to 32 Bits                                                  ; Off                  ; Off                  ;
+; Optimization Technique                                                          ; Balanced             ; Balanced             ;
+; Carry Chain Length                                                              ; 70                   ; 70                   ;
+; Auto Carry Chains                                                               ; On                   ; On                   ;
+; Auto Open-Drain Pins                                                            ; On                   ; On                   ;
+; Perform WYSIWYG Primitive Resynthesis                                           ; Off                  ; Off                  ;
+; Auto ROM Replacement                                                            ; On                   ; On                   ;
+; Auto RAM Replacement                                                            ; On                   ; On                   ;
+; Auto DSP Block Replacement                                                      ; On                   ; On                   ;
+; Auto Shift Register Replacement                                                 ; Auto                 ; Auto                 ;
+; Allow Shift Register Merging across Hierarchies                                 ; Auto                 ; Auto                 ;
+; Auto Clock Enable Replacement                                                   ; On                   ; On                   ;
+; Strict RAM Replacement                                                          ; Off                  ; Off                  ;
+; Allow Synchronous Control Signals                                               ; On                   ; On                   ;
+; Force Use of Synchronous Clear Signals                                          ; Off                  ; Off                  ;
+; Auto Resource Sharing                                                           ; Off                  ; Off                  ;
+; Allow Any RAM Size For Recognition                                              ; Off                  ; Off                  ;
+; Allow Any ROM Size For Recognition                                              ; Off                  ; Off                  ;
+; Allow Any Shift Register Size For Recognition                                   ; Off                  ; Off                  ;
+; Use LogicLock Constraints during Resource Balancing                             ; On                   ; On                   ;
+; Ignore translate_off and synthesis_off directives                               ; Off                  ; Off                  ;
+; Timing-Driven Synthesis                                                         ; On                   ; On                   ;
+; Report Parameter Settings                                                       ; On                   ; On                   ;
+; Report Source Assignments                                                       ; On                   ; On                   ;
+; Report Connectivity Checks                                                      ; On                   ; On                   ;
+; Ignore Maximum Fan-Out Assignments                                              ; Off                  ; Off                  ;
+; Synchronization Register Chain Length                                           ; 3                    ; 3                    ;
+; Power Optimization During Synthesis                                             ; Normal compilation   ; Normal compilation   ;
+; HDL message level                                                               ; Level2               ; Level2               ;
+; Suppress Register Optimization Related Messages                                 ; Off                  ; Off                  ;
+; Number of Removed Registers Reported in Synthesis Report                        ; 5000                 ; 5000                 ;
+; Number of Swept Nodes Reported in Synthesis Report                              ; 5000                 ; 5000                 ;
+; Number of Inverted Registers Reported in Synthesis Report                       ; 100                  ; 100                  ;
+; Clock MUX Protection                                                            ; On                   ; On                   ;
+; Auto Gated Clock Conversion                                                     ; Off                  ; Off                  ;
+; Block Design Naming                                                             ; Auto                 ; Auto                 ;
+; SDC constraint protection                                                       ; Off                  ; Off                  ;
+; Synthesis Effort                                                                ; Auto                 ; Auto                 ;
+; Shift Register Replacement - Allow Asynchronous Clear Signal                    ; On                   ; On                   ;
+; Pre-Mapping Resynthesis Optimization                                            ; Off                  ; Off                  ;
+; Analysis & Synthesis Message Level                                              ; Medium               ; Medium               ;
+; Disable Register Merging Across Hierarchies                                     ; Auto                 ; Auto                 ;
+; Resource Aware Inference For Block RAM                                          ; On                   ; On                   ;
+; Automatic Parallel Synthesis                                                    ; On                   ; On                   ;
+; Partial Reconfiguration Bitstream ID                                            ; Off                  ; Off                  ;
++---------------------------------------------------------------------------------+----------------------+----------------------+
+
+
++------------------------------------------+
+; Parallel Compilation                     ;
++----------------------------+-------------+
+; Processors                 ; Number      ;
++----------------------------+-------------+
+; Number detected on machine ; 16          ;
+; Maximum allowed            ; 8           ;
+;                            ;             ;
+; Average used               ; 1.00        ;
+; Maximum used               ; 1           ;
+;                            ;             ;
+; Usage by Processor         ; % Time Used ;
+;     Processor 1            ; 100.0%      ;
++----------------------------+-------------+
+
+
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Source Files Read                                                                                                                                                                                                                    ;
++-------------------------------------------------------------------------------+-----------------+------------------------------+----------------------------------------------------------------------------------------------------------------+---------+
+; File Name with User-Entered Path                                              ; Used in Netlist ; File Type                    ; File Name with Absolute Path                                                                                   ; Library ;
++-------------------------------------------------------------------------------+-----------------+------------------------------+----------------------------------------------------------------------------------------------------------------+---------+
+; de10_lite_golden_top.v                                                        ; yes             ; Auto-Found Verilog HDL File  ; C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v ;         ;
+; ../../../rtl/instructionDecoder.v                                             ; yes             ; Auto-Found Verilog HDL File  ; C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/instructionDecoder.v                             ;         ;
+; ../../../rtl/instructionFrame.v                                               ; yes             ; Auto-Found Verilog HDL File  ; C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/instructionFrame.v                               ;         ;
+; ../../../rtl/pipelineStateController.v                                        ; yes             ; Auto-Found Verilog HDL File  ; C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/pipelineStateController.v                        ;         ;
+; ../../../rtl/registers.v                                                      ; yes             ; Auto-Found Verilog HDL File  ; C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/registers.v                                      ;         ;
+; ../../../rtl/int_ALU.v                                                        ; yes             ; Auto-Found Verilog HDL File  ; C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/int_ALU.v                                        ;         ;
+; ../../../rtl/instructionFetchController.v                                     ; yes             ; Auto-Found Verilog HDL File  ; C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/instructionFetchController.v                     ;         ;
+; ../../../rtl/pipeline.v                                                       ; yes             ; Auto-Found Verilog HDL File  ; C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/pipeline.v                                       ;         ;
+; ../../../rtl/memoryController.v                                               ; yes             ; Auto-Found Verilog HDL File  ; C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/memoryController.v                               ;         ;
+; ../../../rtl/socTop.v                                                         ; yes             ; Auto-Found Verilog HDL File  ; C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/socTop.v                                         ;         ;
+; /users/joeru/documents/gitrepos/scratchcomputer/verilog/rtl/globalvariables.v ; yes             ; Auto-Found Verilog HDL File  ; /users/joeru/documents/gitrepos/scratchcomputer/verilog/rtl/globalvariables.v                                  ;         ;
++-------------------------------------------------------------------------------+-----------------+------------------------------+----------------------------------------------------------------------------------------------------------------+---------+
+
+
++-----------------------------------------------------------------+
+; Analysis & Synthesis Resource Usage Summary                     ;
++---------------------------------------------+-------------------+
+; Resource                                    ; Usage             ;
++---------------------------------------------+-------------------+
+; Estimate of Logic utilization (ALMs needed) ; 0                 ;
+;                                             ;                   ;
+; Combinational ALUT usage for logic          ; 0                 ;
+;     -- 7 input functions                    ; 0                 ;
+;     -- 6 input functions                    ; 0                 ;
+;     -- 5 input functions                    ; 0                 ;
+;     -- 4 input functions                    ; 0                 ;
+;     -- <=3 input functions                  ; 0                 ;
+;                                             ;                   ;
+; Dedicated logic registers                   ; 0                 ;
+;                                             ;                   ;
+; I/O pins                                    ; 185               ;
+;                                             ;                   ;
+; Total DSP Blocks                            ; 0                 ;
+;                                             ;                   ;
+; Maximum fan-out node                        ; DRAM_DQ[0]~output ;
+; Maximum fan-out                             ; 1                 ;
+; Total fan-out                               ; 256               ;
+; Average fan-out                             ; 0.58              ;
++---------------------------------------------+-------------------+
+
+
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Resource Utilization by Entity                                                                                                                                               ;
++----------------------------+---------------------+---------------------------+-------------------+------------+------+--------------+-----------------------+----------------------+--------------+
+; Compilation Hierarchy Node ; Combinational ALUTs ; Dedicated Logic Registers ; Block Memory Bits ; DSP Blocks ; Pins ; Virtual Pins ; Full Hierarchy Name   ; Entity Name          ; Library Name ;
++----------------------------+---------------------+---------------------------+-------------------+------------+------+--------------+-----------------------+----------------------+--------------+
+; |DE10_LITE_Golden_Top      ; 0 (0)               ; 0 (0)                     ; 0                 ; 0          ; 185  ; 0            ; |DE10_LITE_Golden_Top ; DE10_LITE_Golden_Top ; work         ;
++----------------------------+---------------------+---------------------------+-------------------+------------+------+--------------+-----------------------+----------------------+--------------+
+Note: For table entries with two numbers listed, the numbers in parentheses indicate the number of resources of the given type used by the specific entity alone. The numbers listed outside of parentheses indicate the total resources of the given type used by the specific entity and all of its sub-entities in the hierarchy.
+
+
++------------------------------------------------------+
+; General Register Statistics                          ;
++----------------------------------------------+-------+
+; Statistic                                    ; Value ;
++----------------------------------------------+-------+
+; Total registers                              ; 0     ;
+; Number of registers using Synchronous Clear  ; 0     ;
+; Number of registers using Synchronous Load   ; 0     ;
+; Number of registers using Asynchronous Clear ; 0     ;
+; Number of registers using Asynchronous Load  ; 0     ;
+; Number of registers using Clock Enable       ; 0     ;
+; Number of registers using Preset             ; 0     ;
++----------------------------------------------+-------+
+
+
++-----------------------------------------------------+
+; Post-Synthesis Netlist Statistics for Top Partition ;
++-----------------------+-----------------------------+
+; Type                  ; Count                       ;
++-----------------------+-----------------------------+
+; arriav_io_obuf        ; 71                          ;
+; arriav_lcell_comb     ; 2                           ;
+;     normal            ; 2                           ;
+;         0 data inputs ; 2                           ;
+; boundary_port         ; 185                         ;
+;                       ;                             ;
+; Max LUT depth         ; 0.00                        ;
+; Average LUT depth     ; 0.00                        ;
++-----------------------+-----------------------------+
+
+
++-------------------------------+
+; Elapsed Time Per Partition    ;
++----------------+--------------+
+; Partition Name ; Elapsed Time ;
++----------------+--------------+
+; Top            ; 00:00:00     ;
++----------------+--------------+
+
+
++-------------------------------+
+; Analysis & Synthesis Messages ;
++-------------------------------+
+Info: *******************************************************************
+Info: Running Quartus Prime Analysis & Synthesis
+    Info: Version 19.1.0 Build 670 09/22/2019 SJ Lite Edition
+    Info: Processing started: Sat Jul 29 21:46:13 2023
+Info: Command: quartus_map --read_settings_files=on --write_settings_files=off DE10_LITE_Golden_Top -c DE10_LITE_Golden_Top
+Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
+Info (20030): Parallel compilation is enabled and will use 8 of the 8 processors detected
+Warning (12125): Using design file de10_lite_golden_top.v, which is not specified as a design file for the current project, but contains definitions for 15 design units and 15 entities in project
+    Info (12023): Found entity 1: instructionDecoder File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/instructionDecoder.v Line: 4
+    Info (12023): Found entity 2: instructionFrame File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/instructionFrame.v Line: 5
+    Info (12023): Found entity 3: pipelineStateController File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/pipelineStateController.v Line: 3
+    Info (12023): Found entity 4: registers File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/registers.v Line: 5
+    Info (12023): Found entity 5: flipSign File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/int_ALU.v Line: 5
+    Info (12023): Found entity 6: absoluteValue File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/int_ALU.v Line: 22
+    Info (12023): Found entity 7: adder File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/int_ALU.v Line: 44
+    Info (12023): Found entity 8: multipler File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/int_ALU.v Line: 60
+    Info (12023): Found entity 9: divider File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/int_ALU.v Line: 75
+    Info (12023): Found entity 10: comparator File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/int_ALU.v Line: 138
+    Info (12023): Found entity 11: instructionFetchController File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/instructionFetchController.v Line: 5
+    Info (12023): Found entity 12: pipeline File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/pipeline.v Line: 11
+    Info (12023): Found entity 13: memoryController File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/memoryController.v Line: 5
+    Info (12023): Found entity 14: soc File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/socTop.v Line: 7
+    Info (12023): Found entity 15: DE10_LITE_Golden_Top File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 27
+Warning (10236): Verilog HDL Implicit Net warning at socTop.v(39): created implicit net for "dataReadValid_memControl" File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/rtl/socTop.v Line: 39
+Info (12127): Elaborating entity "DE10_LITE_Golden_Top" for the top level hierarchy
+Warning (10034): Output port "DRAM_ADDR" at de10_lite_golden_top.v(35) has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 35
+Warning (10034): Output port "DRAM_BA" at de10_lite_golden_top.v(36) has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 36
+Warning (10034): Output port "LEDR" at de10_lite_golden_top.v(59) has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 59
+Warning (10034): Output port "VGA_B" at de10_lite_golden_top.v(65) has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 65
+Warning (10034): Output port "VGA_G" at de10_lite_golden_top.v(66) has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 66
+Warning (10034): Output port "VGA_R" at de10_lite_golden_top.v(68) has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 68
+Warning (10034): Output port "DRAM_CAS_N" at de10_lite_golden_top.v(37) has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 37
+Warning (10034): Output port "DRAM_CKE" at de10_lite_golden_top.v(38) has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 38
+Warning (10034): Output port "DRAM_CLK" at de10_lite_golden_top.v(39) has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 39
+Warning (10034): Output port "DRAM_CS_N" at de10_lite_golden_top.v(40) has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 40
+Warning (10034): Output port "DRAM_LDQM" at de10_lite_golden_top.v(42) has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 42
+Warning (10034): Output port "DRAM_RAS_N" at de10_lite_golden_top.v(43) has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 43
+Warning (10034): Output port "DRAM_UDQM" at de10_lite_golden_top.v(44) has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 44
+Warning (10034): Output port "DRAM_WE_N" at de10_lite_golden_top.v(45) has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 45
+Warning (10034): Output port "VGA_HS" at de10_lite_golden_top.v(67) has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 67
+Warning (10034): Output port "VGA_VS" at de10_lite_golden_top.v(69) has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 69
+Warning (10034): Output port "GSENSOR_CS_N" at de10_lite_golden_top.v(72) has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 72
+Warning (10034): Output port "GSENSOR_SCLK" at de10_lite_golden_top.v(74) has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 74
+Warning (13039): The following bidirectional pins have no drivers
+    Warning (13040): bidirectional pin "DRAM_DQ[0]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 41
+    Warning (13040): bidirectional pin "DRAM_DQ[1]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 41
+    Warning (13040): bidirectional pin "DRAM_DQ[2]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 41
+    Warning (13040): bidirectional pin "DRAM_DQ[3]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 41
+    Warning (13040): bidirectional pin "DRAM_DQ[4]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 41
+    Warning (13040): bidirectional pin "DRAM_DQ[5]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 41
+    Warning (13040): bidirectional pin "DRAM_DQ[6]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 41
+    Warning (13040): bidirectional pin "DRAM_DQ[7]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 41
+    Warning (13040): bidirectional pin "DRAM_DQ[8]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 41
+    Warning (13040): bidirectional pin "DRAM_DQ[9]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 41
+    Warning (13040): bidirectional pin "DRAM_DQ[10]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 41
+    Warning (13040): bidirectional pin "DRAM_DQ[11]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 41
+    Warning (13040): bidirectional pin "DRAM_DQ[12]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 41
+    Warning (13040): bidirectional pin "DRAM_DQ[13]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 41
+    Warning (13040): bidirectional pin "DRAM_DQ[14]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 41
+    Warning (13040): bidirectional pin "DRAM_DQ[15]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 41
+    Warning (13040): bidirectional pin "GSENSOR_SDI" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 75
+    Warning (13040): bidirectional pin "GSENSOR_SDO" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 76
+    Warning (13040): bidirectional pin "ARDUINO_IO[0]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 79
+    Warning (13040): bidirectional pin "ARDUINO_IO[1]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 79
+    Warning (13040): bidirectional pin "ARDUINO_IO[2]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 79
+    Warning (13040): bidirectional pin "ARDUINO_IO[3]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 79
+    Warning (13040): bidirectional pin "ARDUINO_IO[4]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 79
+    Warning (13040): bidirectional pin "ARDUINO_IO[5]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 79
+    Warning (13040): bidirectional pin "ARDUINO_IO[6]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 79
+    Warning (13040): bidirectional pin "ARDUINO_IO[7]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 79
+    Warning (13040): bidirectional pin "ARDUINO_IO[8]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 79
+    Warning (13040): bidirectional pin "ARDUINO_IO[9]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 79
+    Warning (13040): bidirectional pin "ARDUINO_IO[10]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 79
+    Warning (13040): bidirectional pin "ARDUINO_IO[11]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 79
+    Warning (13040): bidirectional pin "ARDUINO_IO[12]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 79
+    Warning (13040): bidirectional pin "ARDUINO_IO[13]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 79
+    Warning (13040): bidirectional pin "ARDUINO_IO[14]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 79
+    Warning (13040): bidirectional pin "ARDUINO_IO[15]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 79
+    Warning (13040): bidirectional pin "ARDUINO_RESET_N" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 80
+    Warning (13040): bidirectional pin "GPIO[0]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[1]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[2]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[3]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[4]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[5]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[6]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[7]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[8]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[9]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[10]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[11]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[12]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[13]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[14]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[15]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[16]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[17]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[18]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[19]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[20]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[21]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[22]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[23]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[24]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[25]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[26]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[27]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[28]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[29]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[30]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[31]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[32]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[33]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[34]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+    Warning (13040): bidirectional pin "GPIO[35]" has no driver File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 84
+Warning (13024): Output pins are stuck at VCC or GND
+    Warning (13410): Pin "DRAM_ADDR[0]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 35
+    Warning (13410): Pin "DRAM_ADDR[1]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 35
+    Warning (13410): Pin "DRAM_ADDR[2]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 35
+    Warning (13410): Pin "DRAM_ADDR[3]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 35
+    Warning (13410): Pin "DRAM_ADDR[4]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 35
+    Warning (13410): Pin "DRAM_ADDR[5]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 35
+    Warning (13410): Pin "DRAM_ADDR[6]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 35
+    Warning (13410): Pin "DRAM_ADDR[7]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 35
+    Warning (13410): Pin "DRAM_ADDR[8]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 35
+    Warning (13410): Pin "DRAM_ADDR[9]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 35
+    Warning (13410): Pin "DRAM_ADDR[10]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 35
+    Warning (13410): Pin "DRAM_ADDR[11]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 35
+    Warning (13410): Pin "DRAM_ADDR[12]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 35
+    Warning (13410): Pin "DRAM_BA[0]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 36
+    Warning (13410): Pin "DRAM_BA[1]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 36
+    Warning (13410): Pin "DRAM_CAS_N" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 37
+    Warning (13410): Pin "DRAM_CKE" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 38
+    Warning (13410): Pin "DRAM_CLK" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 39
+    Warning (13410): Pin "DRAM_CS_N" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 40
+    Warning (13410): Pin "DRAM_LDQM" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 42
+    Warning (13410): Pin "DRAM_RAS_N" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 43
+    Warning (13410): Pin "DRAM_UDQM" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 44
+    Warning (13410): Pin "DRAM_WE_N" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 45
+    Warning (13410): Pin "HEX0[0]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 48
+    Warning (13410): Pin "HEX0[1]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 48
+    Warning (13410): Pin "HEX0[2]" is stuck at VCC File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 48
+    Warning (13410): Pin "HEX0[3]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 48
+    Warning (13410): Pin "HEX0[4]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 48
+    Warning (13410): Pin "HEX0[5]" is stuck at VCC File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 48
+    Warning (13410): Pin "HEX0[6]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 48
+    Warning (13410): Pin "HEX0[7]" is stuck at VCC File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 48
+    Warning (13410): Pin "HEX1[0]" is stuck at VCC File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 49
+    Warning (13410): Pin "HEX1[1]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 49
+    Warning (13410): Pin "HEX1[2]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 49
+    Warning (13410): Pin "HEX1[3]" is stuck at VCC File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 49
+    Warning (13410): Pin "HEX1[4]" is stuck at VCC File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 49
+    Warning (13410): Pin "HEX1[5]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 49
+    Warning (13410): Pin "HEX1[6]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 49
+    Warning (13410): Pin "HEX1[7]" is stuck at VCC File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 49
+    Warning (13410): Pin "HEX2[0]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 50
+    Warning (13410): Pin "HEX2[1]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 50
+    Warning (13410): Pin "HEX2[2]" is stuck at VCC File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 50
+    Warning (13410): Pin "HEX2[3]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 50
+    Warning (13410): Pin "HEX2[4]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 50
+    Warning (13410): Pin "HEX2[5]" is stuck at VCC File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 50
+    Warning (13410): Pin "HEX2[6]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 50
+    Warning (13410): Pin "HEX2[7]" is stuck at VCC File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 50
+    Warning (13410): Pin "HEX3[0]" is stuck at VCC File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 51
+    Warning (13410): Pin "HEX3[1]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 51
+    Warning (13410): Pin "HEX3[2]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 51
+    Warning (13410): Pin "HEX3[3]" is stuck at VCC File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 51
+    Warning (13410): Pin "HEX3[4]" is stuck at VCC File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 51
+    Warning (13410): Pin "HEX3[5]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 51
+    Warning (13410): Pin "HEX3[6]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 51
+    Warning (13410): Pin "HEX3[7]" is stuck at VCC File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 51
+    Warning (13410): Pin "HEX4[0]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 52
+    Warning (13410): Pin "HEX4[1]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 52
+    Warning (13410): Pin "HEX4[2]" is stuck at VCC File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 52
+    Warning (13410): Pin "HEX4[3]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 52
+    Warning (13410): Pin "HEX4[4]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 52
+    Warning (13410): Pin "HEX4[5]" is stuck at VCC File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 52
+    Warning (13410): Pin "HEX4[6]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 52
+    Warning (13410): Pin "HEX4[7]" is stuck at VCC File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 52
+    Warning (13410): Pin "HEX5[0]" is stuck at VCC File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 53
+    Warning (13410): Pin "HEX5[1]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 53
+    Warning (13410): Pin "HEX5[2]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 53
+    Warning (13410): Pin "HEX5[3]" is stuck at VCC File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 53
+    Warning (13410): Pin "HEX5[4]" is stuck at VCC File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 53
+    Warning (13410): Pin "HEX5[5]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 53
+    Warning (13410): Pin "HEX5[6]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 53
+    Warning (13410): Pin "HEX5[7]" is stuck at VCC File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 53
+    Warning (13410): Pin "LEDR[0]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 59
+    Warning (13410): Pin "LEDR[1]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 59
+    Warning (13410): Pin "LEDR[2]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 59
+    Warning (13410): Pin "LEDR[3]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 59
+    Warning (13410): Pin "LEDR[4]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 59
+    Warning (13410): Pin "LEDR[5]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 59
+    Warning (13410): Pin "LEDR[6]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 59
+    Warning (13410): Pin "LEDR[7]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 59
+    Warning (13410): Pin "LEDR[8]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 59
+    Warning (13410): Pin "LEDR[9]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 59
+    Warning (13410): Pin "VGA_B[0]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 65
+    Warning (13410): Pin "VGA_B[1]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 65
+    Warning (13410): Pin "VGA_B[2]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 65
+    Warning (13410): Pin "VGA_B[3]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 65
+    Warning (13410): Pin "VGA_G[0]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 66
+    Warning (13410): Pin "VGA_G[1]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 66
+    Warning (13410): Pin "VGA_G[2]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 66
+    Warning (13410): Pin "VGA_G[3]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 66
+    Warning (13410): Pin "VGA_HS" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 67
+    Warning (13410): Pin "VGA_R[0]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 68
+    Warning (13410): Pin "VGA_R[1]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 68
+    Warning (13410): Pin "VGA_R[2]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 68
+    Warning (13410): Pin "VGA_R[3]" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 68
+    Warning (13410): Pin "VGA_VS" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 69
+    Warning (13410): Pin "GSENSOR_CS_N" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 72
+    Warning (13410): Pin "GSENSOR_SCLK" is stuck at GND File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 74
+Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
+    Info (16011): Adding 0 node(s), including 0 DDIO, 0 PLL, 0 transceiver and 0 LCELL
+Warning (21074): Design contains 17 input pin(s) that do not drive logic
+    Warning (15610): No output dependent on input pin "ADC_CLK_10" File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 30
+    Warning (15610): No output dependent on input pin "MAX10_CLK1_50" File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 31
+    Warning (15610): No output dependent on input pin "MAX10_CLK2_50" File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 32
+    Warning (15610): No output dependent on input pin "KEY[0]" File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 56
+    Warning (15610): No output dependent on input pin "KEY[1]" File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 56
+    Warning (15610): No output dependent on input pin "SW[0]" File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 62
+    Warning (15610): No output dependent on input pin "SW[1]" File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 62
+    Warning (15610): No output dependent on input pin "SW[2]" File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 62
+    Warning (15610): No output dependent on input pin "SW[3]" File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 62
+    Warning (15610): No output dependent on input pin "SW[4]" File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 62
+    Warning (15610): No output dependent on input pin "SW[5]" File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 62
+    Warning (15610): No output dependent on input pin "SW[6]" File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 62
+    Warning (15610): No output dependent on input pin "SW[7]" File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 62
+    Warning (15610): No output dependent on input pin "SW[8]" File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 62
+    Warning (15610): No output dependent on input pin "SW[9]" File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 62
+    Warning (15610): No output dependent on input pin "GSENSOR_INT[1]" File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 73
+    Warning (15610): No output dependent on input pin "GSENSOR_INT[2]" File: C:/Users/joeru/Documents/gitRepos/scratchComputer/verilog/alteraFgpa/de10lite/Soc2Fpga2/de10_lite_golden_top.v Line: 73
+Info (21057): Implemented 185 device resources after synthesis - the final resource count might be different
+    Info (21058): Implemented 17 input pins
+    Info (21059): Implemented 97 output pins
+    Info (21060): Implemented 71 bidirectional pins
+Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 209 warnings
+    Info: Peak virtual memory: 4797 megabytes
+    Info: Processing ended: Sat Jul 29 21:46:21 2023
+    Info: Elapsed time: 00:00:08
+    Info: Total CPU time (on all processors): 00:00:24
+
+

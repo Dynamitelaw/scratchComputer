@@ -1071,6 +1071,56 @@ def writeLogisimHexFile(integerList, filepath):
 
 	outputFile.close()
 
+def writeMifFile(integerList, filepath):
+	'''
+	Write a list of integers into a MIF file
+	'''
+	outputFile = open(filepath, "w")
+
+	#Calculate the size of the program
+	programWordSize = len(integerList)
+	programWordSize_ceil = 2 ** (int(math.log2(programWordSize)+1))
+	#addressLength = int(math.log2(programWordSize_ceil))
+
+	#Generate mif header
+	mifHeader = '''-- Copyright (C) 1991-2011 Altera Corporation
+-- Your use of Altera Corporation's design tools, logic functions 
+-- and other software and tools, and its AMPP partner logic 
+-- functions, and any output files from any of the foregoing 
+-- (including device programming or simulation files), and any 
+-- associated documentation or information are expressly subject 
+-- to the terms and conditions of the Altera Program License 
+-- Subscription Agreement, Altera MegaCore Function License 
+-- Agreement, or other applicable license agreement, including, 
+-- without limitation, that your use is for the sole purpose of 
+-- programming logic devices manufactured by Altera and sold by 
+-- Altera or its authorized distributors.  Please refer to the 
+-- applicable agreement for further details.
+
+-- Quartus II generated Memory Initialization File (.mif)
+
+WIDTH=32;
+DEPTH={};
+
+ADDRESS_RADIX=HEX;
+DATA_RADIX=HEX;\n\n'''.format(programWordSize_ceil)
+
+	outputFile.write(mifHeader)
+
+	#Populate program contents
+	outputFile.write("CONTENT BEGIN\n")
+
+	memAddress = 0
+	for val in integerList:
+		hexVal = hex(val)[2:].zfill(8)
+		addrVal = hex(memAddress)[2:].zfill(8)
+		outputFile.write("\t{}  :  {};\n".format(addrVal, hexVal))
+		memAddress += 1
+
+	outputFile.write("END;\n")
+
+	outputFile.close()
+
 
 def writeHexFile(integerList, filepath):
 	'''
@@ -1116,7 +1166,7 @@ def generateCsvIndex(instructions, instructionIntValues, filepath):
 	return df
 
 
-def main(asmPath, hexPathArg, indexPath, logisim, debuggerAnnotations):
+def main(asmPath, hexPathArg, indexPath, logisim, mifArg, debuggerAnnotations):
 	try:
 		#Convert asm file to machine code
 		instructions, linedInstructions, initializedData = parseAssemblyFile(asmPath)
@@ -1124,13 +1174,18 @@ def main(asmPath, hexPathArg, indexPath, logisim, debuggerAnnotations):
 		programIntValues.append(0)
 		programIntValues += [dataDef.value for dataDef in initializedData]
 
-		outputPath = asmPath.replace(".asm", "") + ".hex"
+		outputExtenstion = ".hex"
+		if (mifArg):
+			outputExtenstion = ".mif"
+		outputPath = asmPath.replace(".asm", "") + outputExtenstion
 		if (hexPathArg):
 			outputPath = hexPathArg
 
 		if (logisim):
 			outputPath = outputPath.replace(".hex", "_logisim.hex")
 			writeLogisimHexFile(programIntValues, outputPath)
+		elif (mifArg):
+			writeMifFile(programIntValues, outputPath)
 		else:
 			writeHexFile(programIntValues, outputPath)
 
@@ -1178,6 +1233,7 @@ SC Assembler v1.0 | Converts RISC-V assembly files into machine code.
 
 	parser.add_argument("-asm", action="store", dest="asmPath", help="Filepath to input assembly file")
 	parser.add_argument("-o", action="store", dest="hexPath", help="Specify path for output hex file. Defaults to same path as input asm")
+	parser.add_argument("-mif", action="store_true", help="If specified, assembler will output the hex file in the Memory Initialization File format")
 	parser.add_argument("-index", action="store", dest="indexPath", help="If specified, assembler will output a csv index for each instruction")
 	parser.add_argument("-logisim", action="store_true", help="If specified, assembler will add the Logisim-required header to the hex file. Note: This will break verilog simulations.")
 
@@ -1185,13 +1241,14 @@ SC Assembler v1.0 | Converts RISC-V assembly files into machine code.
 
 	asmPath = arguments.asmPath
 	hexPathArg = arguments.hexPath
+	mifArg = arguments.mif
 	indexPath = arguments.indexPath
 	logisim = arguments.logisim
 
 	#Generate machine code
 	print(" ")
 	if (asmPath):
-		main(asmPath, hexPathArg, indexPath, logisim, {})
+		main(asmPath, hexPathArg, indexPath, logisim, mifArg, {})
 	else:
 		print("ERROR: Missing required argument \"-asm\"")
 		sys.exit()

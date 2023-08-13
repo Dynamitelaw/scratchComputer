@@ -1,0 +1,18 @@
+Fitter Status : Successful - Sat Jul 29 20:10:47 2023
+Quartus Prime Version : 19.1.0 Build 670 09/22/2019 SJ Lite Edition
+Revision Name : DE10_LITE_SDRAM_RTL_Test
+Top-level Entity Name : DE10_LITE_SDRAM_RTL_Test
+Family : MAX 10
+Device : 10M50DAF484C7G
+Timing Models : Final
+Total logic elements : 724 / 49,760 ( 1 % )
+    Total combinational functions : 574 / 49,760 ( 1 % )
+    Dedicated logic registers : 533 / 49,760 ( 1 % )
+Total registers : 533
+Total pins : 149 / 360 ( 41 % )
+Total virtual pins : 0
+Total memory bits : 16,384 / 1,677,312 ( < 1 % )
+Embedded Multiplier 9-bit elements : 0 / 288 ( 0 % )
+Total PLLs : 1 / 4 ( 25 % )
+UFM blocks : 0 / 1 ( 0 % )
+ADC blocks : 0 / 2 ( 0 % )

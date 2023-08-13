@@ -14,9 +14,11 @@ module memoryController(
 	input loadIn,
 	input loadUnsigned,
 	output wire [`DATA_WIDTH-1:0] dataReadOut,
+	output wire dataReadValid,
 
-	//RAM interface
+	//Memory interface
 	input [`DATA_WIDTH-1:0] ramDataRead,
+	input ramReadValid,
 	output wire [`DATA_WIDTH-1:0] addressOut,
 	output wire [`DATA_WIDTH-1:0] ramDataWrite,
 	output wire [3:0] byteSelect,
@@ -132,6 +134,7 @@ module memoryController(
 	reg [7:0] readOut_byte2;
 	reg [7:0] readOut_byte3;
 	assign dataReadOut = {readOut_byte3, readOut_byte2, readOut_byte1, readOut_byte0};
+	assign dataReadValid = ramReadValid;
 
 	wire [7:0] byte0_extended;
 	assign byte0_extended = {8{ramRead_byte0[7] && ~loadUnsigned_latch}};

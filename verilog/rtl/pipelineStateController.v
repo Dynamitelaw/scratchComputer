@@ -6,6 +6,7 @@ module pipelineStateController (
 	input reset,
 
 	input loadInst,
+	input memoryReadValid,
 
 	//Outputs
 	output wire fetch_RequestState,
@@ -35,7 +36,8 @@ module pipelineStateController (
 			pipelineState <= 0;
 		end else begin
 			//Increment pipeline from 0 to 6
-			if ((memReadState) || (executeState && ~loadInst))	pipelineState <= 0; //skip memRead state if not required
+			if ((fetch_RequestState || memReadState) && ~memoryReadValid) pipelineState <= pipelineState;
+			else if ((memReadState) || (executeState && ~loadInst))	pipelineState <= 0; //skip memRead state if not required
 			else pipelineState <= pipelineState + 1;
 		end
 	end

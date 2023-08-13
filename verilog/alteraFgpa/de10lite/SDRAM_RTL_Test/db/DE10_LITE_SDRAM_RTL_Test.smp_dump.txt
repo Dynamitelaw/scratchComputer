@@ -1,0 +1,9 @@
+
+State Machine - |DE10_LITE_SDRAM_RTL_Test|testState
+Name testState.00101 testState.00100 testState.00011 testState.00010 testState.00001 testState.00000 
+testState.00000 0 0 0 0 0 0 
+testState.00001 0 0 0 0 1 1 
+testState.00010 0 0 0 1 0 1 
+testState.00011 0 0 1 0 0 1 
+testState.00100 0 1 0 0 0 1 
+testState.00101 1 0 0 0 0 1 

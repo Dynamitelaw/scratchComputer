@@ -1,0 +1,9 @@
+
+State Machine - |DE10_LITE_Golden_Top|testState
+Name testState.0101 testState.0100 testState.0011 testState.0010 testState.0001 testState.0000 
+testState.0000 0 0 0 0 0 0 
+testState.0001 0 0 0 0 1 1 
+testState.0010 0 0 0 1 0 1 
+testState.0011 0 0 1 0 0 1 
+testState.0100 0 1 0 0 0 1 
+testState.0101 1 0 0 0 0 1 

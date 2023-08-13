@@ -10,6 +10,7 @@ module soc(
 
 	//Main memory interface
 	input [`DATA_WIDTH-1:0] memDataRead,
+	input memReadValid,
 
 	output [`DATA_WIDTH-1:0] memAddress,
 	output [`DATA_WIDTH-1:0] memDataWrite,
@@ -24,7 +25,6 @@ module soc(
 	//Instantiate pipeline
 	wire [`DATA_WIDTH-1:0] memoryDataRead_pipeline;
 
-	wire [`DATA_WIDTH-1:0] programCounter;
 	wire [`DATA_WIDTH-1:0] memoryAddress_pipeline;
 	wire [`DATA_WIDTH-1:0] memoryDataWrite_pipeline;
 	wire [1:0] memoryLength_pipeline;
@@ -36,6 +36,7 @@ module soc(
 		.clk(clk),
 		.reset(reset),
 		.memoryDataRead(memoryDataRead_pipeline),
+		.memoryReadValid(dataReadValid_memControl),
 
 		.programCounter_out(programCounter),
 		.memoryAddress(memoryAddress_pipeline),
@@ -60,8 +61,10 @@ module soc(
 		.loadIn(load_pipeline),
 		.loadUnsigned(loadUnsigned_pipeline),
 		.dataReadOut(dataReadOut_memControl),
+		.dataReadValid(dataReadValid_memControl),
 
 		.ramDataRead(memDataRead),
+		.ramReadValid(memReadValid),
 		.addressOut(memAddress),
 		.ramDataWrite(memDataWrite),
 		.byteSelect(memByteSelect),

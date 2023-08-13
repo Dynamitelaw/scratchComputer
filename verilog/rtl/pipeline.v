@@ -13,6 +13,7 @@ module pipeline(
 	input clk,
 	input reset,
 	input [`DATA_WIDTH-1:0] memoryDataRead,
+	input memoryReadValid,
 
 	//Outputs
 	output wire [`DATA_WIDTH-1:0] programCounter_out,
@@ -129,6 +130,7 @@ module pipeline(
 		.clk(clk),
 		.reset(reset),
 		.loadInst(loadInst_scIn),
+		.memoryReadValid(memoryReadValid),
 
 		.fetch_RequestState(fetch_RequestState),
 		.fetch_ReceiveState(fetch_ReceiveState),
